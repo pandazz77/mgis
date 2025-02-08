@@ -35,21 +35,21 @@ inline LatLng LngLat(double lng, double lat){
     return LatLng(lat,lng);
 }
 
-enum class GeometryType{
-    POINT,
-    LINESTRING,
-    LINEARRING,
-    POLYGON,
-    MULTIPOINT,
-    MULTILINESTRING,
-    MULTIPOLYGON,
-
-    BOUNDS
-};
-
 class Geometry{
     public:
-        virtual GeometryType type() = 0;
+        enum class Type{
+            POINT,
+            LINESTRING,
+            LINEARRING,
+            POLYGON,
+            MULTIPOINT,
+            MULTILINESTRING,
+            MULTIPOLYGON,
+
+            BOUNDS
+        };
+
+        virtual Geometry::Type type() = 0;
 };
 
 template<class Unit = LatLng>
@@ -60,7 +60,7 @@ class Bounds: public Geometry{
         Unit NE;
         Unit SW;
 
-        GeometryType type() override { return GeometryType::BOUNDS; }
+        Geometry::Type type() override { return Geometry::Type::BOUNDS; }
 };
 
 template<class Unit = LatLng>
@@ -71,7 +71,7 @@ class Point: public Geometry{
 
         Unit coordinates;
 
-        GeometryType type() override{ return GeometryType::POINT; }
+        Geometry::Type type() override{ return Geometry::Type::POINT; }
 };
 
 template<class Unit = LatLng>
@@ -79,7 +79,7 @@ class LineString: public Geometry, public std::vector<Unit>{
     public:
         LineString(std::vector<Unit> line={}) : std::vector<Unit>(line) { }
 
-        GeometryType type() override{ return GeometryType::LINESTRING; }
+        Geometry::Type type() override{ return Geometry::Type::LINESTRING; }
 };
 
 template<class Unit = LatLng>
@@ -95,7 +95,7 @@ class LinearRing: public LineString<Unit>{
         // }
         
 
-        GeometryType type() override{ return GeometryType::LINEARRING; };
+        Geometry::Type type() override{ return Geometry::Type::LINEARRING; };
 };
 
 template<class Unit = LatLng>
@@ -107,7 +107,7 @@ class Polygon: public Geometry{
 
             }
 
-        GeometryType type() override{ return GeometryType::POLYGON; }
+        Geometry::Type type() override{ return Geometry::Type::POLYGON; }
 
         LinearRing<Unit> exterior;
         std::vector<LinearRing<Unit>> interiors;
@@ -125,7 +125,7 @@ class MultiPoint: public GeometryCollection<Point<Unit>>{
     public:
         MultiPoint(std::vector<Point<Unit>> points = {}) : GeometryCollection<Point<Unit>>(points) { }
 
-        GeometryType type() override{ return GeometryType::MULTIPOINT; }
+        Geometry::Type type() override{ return Geometry::Type::MULTIPOINT; }
 };
 
 template<class Unit = LatLng>
@@ -133,7 +133,7 @@ class MultiLineString: public GeometryCollection<LineString<Unit>>{
     public:
         MultiLineString(std::vector<LineString<Unit>> lines = {}) : GeometryCollection<LineString<Unit>>(lines) { }
 
-        GeometryType type() override{ return GeometryType::MULTILINESTRING; }
+        Geometry::Type type() override{ return Geometry::Type::MULTILINESTRING; }
 };
 
 template<class Unit = LatLng>
@@ -141,5 +141,5 @@ class MutliPolygon: public GeometryCollection<Polygon<Unit>>{
     public:
         MutliPolygon(std::vector<Polygon<Unit>> polygons = {}) : GeometryCollection<Polygon<Unit>>(polygons) { }
 
-        GeometryType type() override{ return GeometryType::MULTIPOLYGON; }
+        Geometry::Type type() override{ return Geometry::Type::MULTIPOLYGON; }
 };
