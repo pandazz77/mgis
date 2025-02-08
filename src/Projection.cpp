@@ -11,65 +11,6 @@ LatLng Projection::transform(Point2D pos){
     return unproject(pos);
 }
 
-#define IS_GEOMETRY(geom_ref,derived_geom_type) dynamic_cast<const derived_geom_type*>(&geom_ref)
-
-template<class SourceUnit,class TargetUnit>
-void Projection::transform(const Geometry<SourceUnit> &sourceGeometry, Geometry<TargetUnit> &targetGeometry, bool project){
-
-    if(IS_GEOMETRY(sourceGeometry,Bounds<SourceUnit>)){
-        Bounds<TargetUnit> &target = dynamic_cast<Bounds<TargetUnit>&>(targetGeometry);
-        const Bounds<SourceUnit> &source = dynamic_cast<const Bounds<SourceUnit>&>(sourceGeometry);
-
-        target.NE = transform(source.NE);
-        target.SW = transform(source.SW);
-    } else if(IS_GEOMETRY(sourceGeometry,Point<SourceUnit>)){
-        Point<TargetUnit> &target = dynamic_cast<Point<TargetUnit>&>(targetGeometry);
-        const Point<SourceUnit> &source = dynamic_cast<const Point<SourceUnit>&>(sourceGeometry);
-
-        target.coordinates = transform(source.coordinates);
-    } else if(IS_GEOMETRY(sourceGeometry,LineString<SourceUnit>)){
-        LineString<TargetUnit> &target = dynamic_cast<LineString<TargetUnit>&>(targetGeometry);
-        const LineString<SourceUnit> &source = dynamic_cast<const LineString<SourceUnit>&>(sourceGeometry);
-        
-        for(SourceUnit sUnit: source.coordinates){
-            target.coordinates.push_back(transform(sUnit));
-        }
-    } else if(IS_GEOMETRY(sourceGeometry,Polygon<SourceUnit>)){
-        Polygon<TargetUnit> &target = dynamic_cast<Polygon<TargetUnit>&>(targetGeometry);
-        const Polygon<SourceUnit> &source = dynamic_cast<const Polygon<SourceUnit>&>(sourceGeometry);
-
-        transform(source.exterior,target.exterior,project);
-        for(LinearRing<SourceUnit> ring: source.interiors){
-            LinearRing<TargetUnit> projected_ring;
-            transform(ring,projected_ring,project);
-            target.interiors.push_back(projected_ring);
-        }
-
-    } 
-    
-    #define TRANSFORM_GCOLLECTION(GUnit){ \
-        GeometryCollection<GUnit<TargetUnit>,TargetUnit> &target = dynamic_cast<GeometryCollection<GUnit<TargetUnit>,TargetUnit>&>(targetGeometry); \
-        const GeometryCollection<GUnit<SourceUnit>,SourceUnit> &source = dynamic_cast<const GeometryCollection<GUnit<SourceUnit>,SourceUnit>&>(sourceGeometry); \
-        for(GUnit<SourceUnit> obj: source){ \
-            GUnit<TargetUnit> projected_obj;  \
-            transform(obj,projected_obj,project); \
-            target.push_back(projected_obj); \
-        } \
-    } \
-
-    else if(IS_GEOMETRY(sourceGeometry,MultiPoint<SourceUnit>)) TRANSFORM_GCOLLECTION(Point)
-    else if(IS_GEOMETRY(sourceGeometry,MultiLineString<SourceUnit>)) TRANSFORM_GCOLLECTION(LineString)
-    else if(IS_GEOMETRY(sourceGeometry,MutliPolygon<SourceUnit>)) TRANSFORM_GCOLLECTION(Polygon)
-}
-
-void Projection::project(const Geometry<LatLng> &geometry, Geometry<Point2D> &projected){
-    return transform(geometry,projected,true);
-}
-
-void Projection::unproject(const Geometry<Point2D> &geometry, Geometry<LatLng> &unprojected){
-    return transform(geometry,unprojected,false);
-}
-
 // ======================
 
 Point2D SimpleProjection::project(LatLng latLng){

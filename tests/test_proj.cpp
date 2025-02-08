@@ -48,35 +48,40 @@ int main(int argc, char *argv){
     LatLng ll1_mercunproj = merc->unproject(ll1_mercproj);
     //assert(ll1 == ll1_mercunproj);
 
-    Point<Point2D> ep1_projected;
-    proj->project(ep1,ep1_projected);
-    Point<LatLng> ep1_unprojected;
-    proj->unproject(ep1_projected,ep1_unprojected);
+    Point<Point2D> ep1_projected = proj->transform<LatLng,Point2D>(ep1);
+    Point<LatLng> ep1_unprojected = proj->transform<Point2D,LatLng>(ep1_projected);
 
-    LineString<Point2D> line_projected;
-    proj->project(line,line_projected);
-    LineString<LatLng> line_unprojected;
-    proj->unproject(line_projected,line_unprojected);
+    LineString<Point2D> line_projected = proj->transform<LatLng,Point2D>(line);
+    LineString<LatLng> line_unprojected = proj->transform<Point2D,LatLng>(line_projected);
 
-    Polygon<Point2D> poly_projected;
-    proj->project(poly,poly_projected);
-    Polygon<LatLng> poly_unprojected;
-    proj->unproject(poly_projected,poly_unprojected);
+    Polygon<Point2D> poly_projected = proj->transform<LatLng,Point2D>(poly);
+    Polygon<LatLng> poly_unprojected = proj->transform<Point2D,LatLng>(poly_projected);
 
-    MultiPoint<Point2D> points_projected;
-    proj->project(points,points_projected);
-    MultiPoint<LatLng> points_unprojected;
-    proj->unproject(points_projected,points_unprojected);
+    MultiPoint<Point2D> points_projected = proj->transform<LatLng,Point2D>(points);
+    MultiPoint<LatLng> points_unprojected = proj->transform<Point2D,LatLng>(points_projected);
 
-    MultiLineString<Point2D> lines_projected;
-    proj->project(lines,lines_projected);
-    MultiLineString<LatLng> lines_unprojected;
-    proj->unproject(lines_projected,lines_unprojected);
+    MultiLineString<Point2D> lines_projected = proj->transform<LatLng,Point2D>(lines);
+    MultiLineString<LatLng> lines_unprojected = proj->transform<Point2D,LatLng>(lines_projected);
 
-    MutliPolygon<Point2D> polys_projected;
-    proj->project(polys,polys_projected);
-    MutliPolygon<LatLng> polys_unprojected;
-    proj->unproject(polys_projected,polys_unprojected);
+    MutliPolygon<Point2D> polys_projected = proj->transform<LatLng,Point2D>(polys);
+    MutliPolygon<LatLng> polys_unprojected = proj->transform<Point2D,LatLng>(polys_projected);
+
+
+    Point<Point2D> pt_pr = proj->project(ep1_unprojected);
+    LineString<Point2D> ls_pr = proj->project(line);
+    LinearRing<Point2D> lr_pr = proj->project(LinearRing(line));
+    Polygon<Point2D> pl_pr = proj->project(poly);
+    MultiPoint<Point2D> mpt_pr = proj->project(points);
+    MultiLineString<Point2D> mls_pr = proj->project(lines);
+    MutliPolygon<Point2D> mpl_pr = proj->project(polys);
+
+    Point<LatLng> pt_unpr = proj->unproject(pt_pr);
+    LineString<LatLng> ls_unpr = proj->unproject(ls_pr);
+    LinearRing<LatLng> lr_unpr = proj->unproject(lr_pr);
+    Polygon<LatLng> pl_unpr = proj->unproject(pl_pr);
+    MultiPoint<LatLng> mpt_unpr = proj->unproject(mpt_pr);
+    MultiLineString<LatLng> mls_unpr = proj->unproject(mls_pr);
+    MutliPolygon<LatLng> mpl_unpr = proj->unproject(mpl_pr);
 
     return 0;
 }

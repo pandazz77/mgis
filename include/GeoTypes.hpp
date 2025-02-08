@@ -47,56 +47,37 @@ enum class GeometryType{
     BOUNDS
 };
 
-template<class PosUnit>
 class Geometry{
     public:
-        Geometry(): postype(typeid(PosUnit)) {}
-        virtual ~Geometry() {};
-
         virtual GeometryType type() = 0;
-
-        const std::type_info &postype;
 };
 
-template<class PosUnit = LatLng>
-class Bounds: public Geometry<PosUnit>{
+template<class Unit = LatLng>
+class Bounds: public Geometry{
     public:
-        Bounds(PosUnit NE, PosUnit SW): NE(NE), SW(SW) { }
-        PosUnit NE;
-        PosUnit SW;
+        Bounds(Unit NE, Unit SW): NE(NE), SW(SW) { }
+
+        Unit NE;
+        Unit SW;
 
         GeometryType type() override { return GeometryType::BOUNDS; }
 };
 
-template<class GeometryUnit, class PosUnit>
-class GeometryObj: public Geometry<PosUnit>{
-    public:
-        GeometryObj(GeometryUnit coords) : coordinates(coords) { }
-
-        GeometryObj<GeometryUnit,PosUnit> &operator =(const GeometryObj<GeometryUnit,PosUnit> &other) { 
-            this->coordinates = other.coordinates;
-            return *this;
-        }
-
-        // operator(const GeometryObj &other) { this = other; }
-
-        GeometryUnit coordinates;
-        ~GeometryObj(){}
-};
-
 template<class Unit = LatLng>
-class Point: public GeometryObj<Unit,Unit>{
+class Point: public Geometry{
     public:
-        Point(Unit pos) : GeometryObj<Unit,Unit>(pos) { }
+        Point(Unit pos) : coordinates(pos) { }
         Point(double val1=0, double val2=0) : Point(Unit(val1,val2)) { }
+
+        Unit coordinates;
 
         GeometryType type() override{ return GeometryType::POINT; }
 };
 
 template<class Unit = LatLng>
-class LineString: public GeometryObj<std::vector<Unit>,Unit>{
+class LineString: public Geometry, public std::vector<Unit>{
     public:
-        LineString(std::vector<Unit> line={}) : GeometryObj<std::vector<Unit>,Unit>(line) { }
+        LineString(std::vector<Unit> line={}) : std::vector<Unit>(line) { }
 
         GeometryType type() override{ return GeometryType::LINESTRING; }
 };
@@ -105,61 +86,60 @@ template<class Unit = LatLng>
 class LinearRing: public LineString<Unit>{
     public:
         LinearRing(std::vector<Unit> line={}) : LineString<Unit>(line) { 
-            if(!line.empty() && LineString<Unit>::coordinates.front() != LineString<Unit>::coordinates.back()){
-                LineString<Unit>::coordinates.push_back(LineString<Unit>::coordinates.front());
+            if(!line.empty() && LineString<Unit>::front() != LineString<Unit>::back()){
+                LineString<Unit>::push_back(LineString<Unit>::front());
             }
         };
-        LinearRing(LineString<Unit> line) : LinearRing<Unit>(line.coordinates) {
+        // LinearRing(LineString<Unit> line) : LinearRing<Unit>(line) {
             
-        }
+        // }
         
 
         GeometryType type() override{ return GeometryType::LINEARRING; };
 };
 
 template<class Unit = LatLng>
-class Polygon: public GeometryObj<std::pair <LinearRing<Unit>, std::vector<LinearRing<Unit>> >,Unit>{
+class Polygon: public Geometry{
     public:
         Polygon(LinearRing<Unit> exterior=LinearRing<Unit>(), std::vector<LinearRing<Unit>> interiors = {}) : 
-            GeometryObj<std::pair <LinearRing<Unit>, std::vector<LinearRing<Unit>> >,Unit>({exterior,interiors}),
-            exterior(GeometryObj<std::pair <LinearRing<Unit>, std::vector<LinearRing<Unit>> >,Unit>::coordinates.first), 
-            interiors(GeometryObj<std::pair <LinearRing<Unit>, std::vector<LinearRing<Unit>> >,Unit>::coordinates.second){ 
+            exterior(exterior), 
+            interiors(interiors){ 
 
             }
 
         GeometryType type() override{ return GeometryType::POLYGON; }
 
-        LinearRing<Unit> &exterior;
-        std::vector<LinearRing<Unit>> &interiors;
+        LinearRing<Unit> exterior;
+        std::vector<LinearRing<Unit>> interiors;
 };
 
-template<typename geometryUnit, class Unit>
-class GeometryCollection: public Geometry<Unit>, public std::vector<geometryUnit>{
+template<typename GeometryUnit>
+class GeometryCollection: public Geometry, public std::vector<GeometryUnit>{
     public:
-        GeometryCollection(std::vector<geometryUnit> units): std::vector<geometryUnit>(units) { }
+        GeometryCollection(std::vector<GeometryUnit> units = {}): std::vector<GeometryUnit>(units) { }
         ~GeometryCollection(){}
 };
 
 template<class Unit = LatLng>
-class MultiPoint: public GeometryCollection<Point<Unit>,Unit>{
+class MultiPoint: public GeometryCollection<Point<Unit>>{
     public:
-        MultiPoint(std::vector<Point<Unit>> points = {}) : GeometryCollection<Point<Unit>,Unit>(points) { }
+        MultiPoint(std::vector<Point<Unit>> points = {}) : GeometryCollection<Point<Unit>>(points) { }
 
         GeometryType type() override{ return GeometryType::MULTIPOINT; }
 };
 
 template<class Unit = LatLng>
-class MultiLineString: public GeometryCollection<LineString<Unit>,Unit>{
+class MultiLineString: public GeometryCollection<LineString<Unit>>{
     public:
-        MultiLineString(std::vector<LineString<Unit>> lines = {}) : GeometryCollection<LineString<Unit>,Unit>(lines) { }
+        MultiLineString(std::vector<LineString<Unit>> lines = {}) : GeometryCollection<LineString<Unit>>(lines) { }
 
         GeometryType type() override{ return GeometryType::MULTILINESTRING; }
 };
 
 template<class Unit = LatLng>
-class MutliPolygon: public GeometryCollection<Polygon<Unit>,Unit>{
+class MutliPolygon: public GeometryCollection<Polygon<Unit>>{
     public:
-        MutliPolygon(std::vector<Polygon<Unit>> polygons = {}) : GeometryCollection<Polygon<Unit>,Unit>(polygons) { }
+        MutliPolygon(std::vector<Polygon<Unit>> polygons = {}) : GeometryCollection<Polygon<Unit>>(polygons) { }
 
         GeometryType type() override{ return GeometryType::MULTIPOLYGON; }
 };

@@ -1,6 +1,6 @@
 #include "Features.h"
 
-Feature::Feature(Geometry<LatLng> *geometry): geometry(geometry){
+Feature::Feature(Geometry *geometry): geometry(geometry){
 
 }
 

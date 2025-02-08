@@ -31,14 +31,14 @@ QVector<QPointF> qlineString(std::vector<Point2D> line){
 
 QPainterPath buildLineGeometry(LineString<Point2D> line){
     QPainterPath path(QPointF(
-        line.coordinates[0].x,
-        line.coordinates[0].y
+        line[0].x,
+        line[0].y
     ));
 
-    for(int i = 1; i < line.coordinates.size(); i++){
+    for(int i = 1; i < line.size(); i++){
         path.lineTo(
-            line.coordinates[i].x,
-            line.coordinates[i].y
+            line[i].x,
+            line[i].y
         );
     }
 
@@ -46,9 +46,9 @@ QPainterPath buildLineGeometry(LineString<Point2D> line){
 }
 
 QPolygonF buildPolyGeometry(Polygon<Point2D> poly){
-    QPolygonF exterior = qlineString(poly.exterior.coordinates);
+    QPolygonF exterior = qlineString(poly.exterior);
     for(auto interior: poly.interiors){
-        exterior = exterior.subtracted(QPolygonF(qlineString(interior.coordinates)));
+        exterior = exterior.subtracted(QPolygonF(qlineString(interior)));
     }
 
     return exterior;
@@ -82,8 +82,7 @@ QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
         
         if(dynamic_cast<Point<LatLng>*>(feature->geometry)){
             Point<LatLng> *geometry = dynamic_cast<Point<LatLng>*>(feature->geometry);
-            Point<Point2D> projected;
-            proj->project(*geometry,projected);
+            Point<Point2D> projected = proj->project(*geometry);
 
             QGraphicsRectItem *item = new QGraphicsRectItem(
                 projected.coordinates.x,
@@ -96,8 +95,7 @@ QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
 
         } else if(dynamic_cast<LineString<LatLng>*>(feature->geometry)){
             LineString<LatLng> *geometry = dynamic_cast<LineString<LatLng>*>(feature->geometry);
-            LineString<Point2D> projected;
-            proj->project(*geometry,projected);
+            LineString<Point2D> projected = proj->project(*geometry);
 
             QGraphicsPathItem *item = new QGraphicsPathItem(
                 buildLineGeometry(projected)
@@ -108,8 +106,7 @@ QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
             
         } else if(dynamic_cast<Polygon<LatLng>*>(feature->geometry)){
             Polygon<LatLng> *geometry = dynamic_cast<Polygon<LatLng>*>(feature->geometry);
-            Polygon<Point2D> projected;
-            proj->project(*geometry,projected);
+            Polygon<Point2D> projected = proj->project(*geometry);
 
             QGraphicsPolygonItem *item = new QGraphicsPolygonItem(
                 buildPolyGeometry(projected)

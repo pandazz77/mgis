@@ -15,10 +15,10 @@ class IFeature{
 
 class Feature : public IFeature{
     public:
-        Feature(Geometry<LatLng> *geometry);
+        Feature(Geometry *geometry);
         ~Feature();
 
-        Geometry<LatLng> *geometry;
+        Geometry *geometry;
         IStyler *styler = RandomStyler::getInstance(); /// TODO: styler field as shared ptr 
         std::unordered_map<std::string,std::variant<int,double,bool,std::string>> properties;
 };
