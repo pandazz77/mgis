@@ -1,4 +1,5 @@
 #include "Stylers.h"
+#include "MapView.h"
 
 #include <QRandomGenerator>
 
@@ -8,12 +9,12 @@ PointStyler::PointStyler(){
 
 }
 
-void PointStyler::apply(QGraphicsItem *item){
-
+void PointStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
+    
 }
 
-bool PointStyler::isCompabilityWith(QGraphicsItem *item){
-    return true;
+bool PointStyler::isCompatibilityWith(const Geometry::Type &type){
+    return type == Geometry::Type::POINT;
 }
 
 // =====================
@@ -26,13 +27,13 @@ LineStyler::LineStyler(const QPen &pen) : pen(pen){
 
 }
 
-void LineStyler::apply(QGraphicsItem *item){
+void LineStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     QGraphicsPathItem *lineItem = dynamic_cast<QGraphicsPathItem*>(item);
     lineItem->setPen(pen);
 }
 
-bool LineStyler::isCompabilityWith(QGraphicsItem *item){
-    return dynamic_cast<QGraphicsPathItem*>(item);
+bool LineStyler::isCompatibilityWith(const Geometry::Type &type){
+    return type == Geometry::Type::LINESTRING || type == Geometry::Type::LINEARRING;
 }
 
 void LineStyler::setPen(const QPen &pen){
@@ -54,14 +55,14 @@ PolyStyler::PolyStyler(const QPen &pen, const QBrush &brush): LineStyler(pen), b
 
 }
 
-void PolyStyler::apply(QGraphicsItem *item){
+void PolyStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     QGraphicsPolygonItem *polyItem = dynamic_cast<QGraphicsPolygonItem*>(item);
     polyItem->setPen(pen);
     polyItem->setBrush(brush);
 }
 
-bool PolyStyler::isCompabilityWith(QGraphicsItem *item){
-    return dynamic_cast<QGraphicsPolygonItem*>(item);
+bool PolyStyler::isCompatibilityWith(const Geometry::Type &type){
+    return type == Geometry::Type::POLYGON;
 }
 
 void PolyStyler::setBrush(const QBrush &brush){
@@ -94,20 +95,20 @@ RandomStyler::~RandomStyler(){
     delete polyStyler;
 }
 
-void RandomStyler::apply(QGraphicsItem *item){
-    if(polyStyler->isCompabilityWith(item)){
-        polyStyler->apply(item);
+void RandomStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
+    if(polyStyler->isCompatibilityWith(type)){
+        polyStyler->apply(item,type);
         reloadPolyStyler();
-    } else if(lineStyler->isCompabilityWith(item)){
-        lineStyler->isCompabilityWith(item);
+    } else if(lineStyler->isCompatibilityWith(type)){
+        lineStyler->apply(item,type);
         reloadLineStyler();
-    } else if(pointStyler->isCompabilityWith(item)){
-        pointStyler->isCompabilityWith(item);
+    } else if(pointStyler->isCompatibilityWith(type)){
+        pointStyler->apply(item,type);
         reloadPointStyler();
     }
 }
 
-bool RandomStyler::isCompabilityWith(QGraphicsItem *item){
+bool RandomStyler::isCompatibilityWith(const Geometry::Type &type){
     return true;
 }
 

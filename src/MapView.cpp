@@ -77,6 +77,8 @@ IFeature *FeatureLayer::getFeature(){
 }
 
 QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
+    QGraphicsItem *item = nullptr;
+
     if(dynamic_cast<Feature*>(ifeature)){
         Feature* feature = dynamic_cast<Feature*>(ifeature);
         
@@ -84,37 +86,30 @@ QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
             Point<LatLng> *geometry = dynamic_cast<Point<LatLng>*>(feature->geometry);
             Point<Point2D> projected = proj->project(*geometry);
 
-            QGraphicsRectItem *item = new QGraphicsRectItem(
+            item = new QGraphicsRectItem(
                 projected.coordinates.x,
                 projected.coordinates.y,
                 10, 10 // test width and height
             );
-            feature->styler->apply(item);
-
-            return item;
 
         } else if(dynamic_cast<LineString<LatLng>*>(feature->geometry)){
             LineString<LatLng> *geometry = dynamic_cast<LineString<LatLng>*>(feature->geometry);
             LineString<Point2D> projected = proj->project(*geometry);
 
-            QGraphicsPathItem *item = new QGraphicsPathItem(
+            item = new QGraphicsPathItem(
                 buildLineGeometry(projected)
             );
-            feature->styler->apply(item);
-
-            return item;
             
         } else if(dynamic_cast<Polygon<LatLng>*>(feature->geometry)){
             Polygon<LatLng> *geometry = dynamic_cast<Polygon<LatLng>*>(feature->geometry);
             Polygon<Point2D> projected = proj->project(*geometry);
 
-            QGraphicsPolygonItem *item = new QGraphicsPolygonItem(
+            item = new QGraphicsPolygonItem(
                 buildPolyGeometry(projected)
             );
-            feature->styler->apply(item);
-
-            return item;
         }
+
+        feature->styler->apply(item,feature->geometry->type());
 
     } else if(dynamic_cast<FeatureCollection*>(ifeature)){
         FeatureCollection *collection = dynamic_cast<FeatureCollection*>(ifeature);
@@ -122,14 +117,14 @@ QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
         QGraphicsItemGroup *group = new QGraphicsItemGroup;
 
         for(IFeature *feature: *collection){
-            QGraphicsItem *item = buildFeature(feature,proj);
-            group->addToGroup(item);
+            QGraphicsItem *subItem = buildFeature(feature,proj);
+            group->addToGroup(subItem);
         }
 
-        return group;
+        item = group;
     }
 
-    return nullptr;
+    return item;
 }
 
 // =====
