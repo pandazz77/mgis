@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QWidget>
 #include <QWheelEvent>
+#include <QGraphicsSceneMouseEvent>
 
 #include "Projection.h"
 #include "Features.h"
@@ -69,10 +70,32 @@ class MapCamera: public QObject{
         void projectedPosChanged(Point2D pos);
         void scaleChanged(double scale);
 
+        void clicked(LatLng pos);
+        void dblClicked(LatLng pos);
+        void mouseMoved(LatLng pos);
+
     private:
         MapGraphicsView *map;
         LatLng pos;
         double scale; // 1 physical meter per 1 projected unit
+};
+
+class MapGraphicsScene: public QGraphicsScene{
+    Q_OBJECT
+
+    public:
+        MapGraphicsScene(QObject *parent=nullptr);
+        ~MapGraphicsScene();
+
+    signals:
+        void mouseMoved(Point2D pos);
+        void clicked(Point2D pos);
+        void doubleClicked(Point2D pos);
+
+    protected:
+        void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
 };
 
 class MapGraphicsView: public QGraphicsView{
@@ -90,9 +113,15 @@ class MapGraphicsView: public QGraphicsView{
         void addLayer(ILayer *layer);
         void removeLayer(ILayer *layer);
 
+        MapGraphicsScene *scene() { return dynamic_cast<MapGraphicsScene*>(QGraphicsView::scene()); };
+
     private slots:
         void onPosChanged(Point2D pos);
         void onScaleChanged(double scale);
+
+        void onMouseMove(Point2D pos);
+        void onMouseClick(Point2D pos);
+        void onMouseDoubleClick(Point2D pos);
 
     protected:
         void wheelEvent(QWheelEvent *event) override;

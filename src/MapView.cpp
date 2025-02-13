@@ -169,10 +169,42 @@ void MapCamera::zoomBy(double zoom){
     setScale(this->scale*zoom);
 }
 
+// =====
+
+Point2D _mgisConvert(QPointF point){
+    return Point2D(point.x(),point.y());
+}
+
+MapGraphicsScene::MapGraphicsScene(QObject *parent) : QGraphicsScene(parent){
+
+}
+
+MapGraphicsScene::~MapGraphicsScene(){
+
+}
+
+void MapGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
+    emit mouseMoved(_mgisConvert(mouseEvent->scenePos()));
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
+}
+
+void MapGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
+    if(mouseEvent->lastScreenPos()==mouseEvent->screenPos())
+        emit clicked(_mgisConvert(mouseEvent->scenePos()));
+    QGraphicsScene::mouseReleaseEvent(mouseEvent);
+}
+
+void MapGraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent){
+    if(mouseEvent->lastScreenPos()==mouseEvent->screenPos())
+        emit doubleClicked(_mgisConvert(mouseEvent->scenePos()));
+    QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
+}
+
+
 
 // =====
 
-MapGraphicsView::MapGraphicsView(QWidget *parent) : QGraphicsView(new QGraphicsScene(),parent), proj(new SphericalMercator), cam(new MapCamera({0,0},1,this)){
+MapGraphicsView::MapGraphicsView(QWidget *parent) : QGraphicsView(new MapGraphicsScene,parent), proj(new SphericalMercator), cam(new MapCamera({0,0},1,this)){
     scale(1,-1);
 
     setRenderHint(QPainter::RenderHint::Antialiasing);
@@ -198,7 +230,12 @@ MapGraphicsView::MapGraphicsView(QWidget *parent) : QGraphicsView(new QGraphicsS
     connect(cam,&MapCamera::projectedPosChanged,this,&MapGraphicsView::onPosChanged);
     connect(cam,&MapCamera::scaleChanged,this,&MapGraphicsView::onScaleChanged);
 
+    connect(scene(),&MapGraphicsScene::mouseMoved,this,&MapGraphicsView::onMouseMove);
+    connect(scene(),&MapGraphicsScene::clicked,this,&MapGraphicsView::onMouseClick);
+    connect(scene(),&MapGraphicsScene::doubleClicked,this,&MapGraphicsView::onMouseDoubleClick);
+
     setDragMode(QGraphicsView::ScrollHandDrag);
+    setMouseTracking(true); // for mouse tracking in MapGraphicsScene without click
 }
 
 void MapGraphicsView::onPosChanged(Point2D pos){
@@ -213,6 +250,17 @@ void MapGraphicsView::onScaleChanged(double scale){
     previousScale = scale;
 }
 
+void MapGraphicsView::onMouseMove(Point2D pos){
+    emit cam->mouseMoved(proj->unproject(pos));
+}
+
+void MapGraphicsView::onMouseClick(Point2D pos){
+    emit cam->clicked(proj->unproject(pos));
+}
+
+void MapGraphicsView::onMouseDoubleClick(Point2D pos){
+    emit cam->dblClicked(proj->unproject(pos));
+}
 
 void MapGraphicsView::addLayer(ILayer *layer){
     scene()->addItem(layer->getItem());

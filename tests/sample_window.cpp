@@ -26,11 +26,17 @@ int main(int argc, char *argv[]){
     waterFeature->styler = new PolyStyler(QPen(Qt::black),QBrush(Qt::blue));
     water->addTo(map);
 
-    FeatureLayer *line = new FeatureLayer(new Feature(new LineString({
-        {-2,-2},
-        {2,2}
+    FeatureLayer *line = new FeatureLayer(new Feature(new LineString(std::vector<LatLng>{
+        {-10,-10},
+        {10,10}
     })),map);
+    Feature *lineFeature = dynamic_cast<Feature*>(line->getFeature());
+    lineFeature->styler = new LineStyler(QPen(
+        QBrush(Qt::white),
+        5000
+    ));
     line->addTo(map);
+    line->getItem()->setZValue(100);
 
     // ====
 
@@ -114,6 +120,19 @@ int main(int argc, char *argv[]){
     australia->addTo(map);
     greenland->addTo(map);
     antarctica->addTo(map);
+
+    MapCamera *cam = map->getCam();
+    cam->connect(cam,&MapCamera::mouseMoved,[=](LatLng pos){
+        qDebug() << "Mouse moved: " << pos.lat << pos.lng;
+    });
+
+    cam->connect(cam,&MapCamera::clicked,[=](LatLng pos){
+        qDebug() << "Mouse clicked: " << pos.lat << pos.lng;
+    });
+
+    cam->connect(cam,&MapCamera::dblClicked,[=](LatLng pos){
+        qDebug() << "Mouse dblclicked: " << pos.lat << pos.lng;
+    });
 
     return app.exec();
 }
