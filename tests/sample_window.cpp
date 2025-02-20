@@ -32,8 +32,7 @@ int main(int argc, char *argv[]){
     })),map);
     Feature *lineFeature = dynamic_cast<Feature*>(line->getFeature());
     lineFeature->styler = new LineStyler(QPen(
-        QBrush(Qt::white),
-        5000
+        QBrush(Qt::white),0 /* COSMETIC (SAVE WIDTH) */
     ));
     line->addTo(map);
     line->getItem()->setZValue(100);

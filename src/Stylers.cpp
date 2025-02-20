@@ -20,7 +20,7 @@ bool PointStyler::isCompatibilityWith(const Geometry::Type &type){
 // =====================
 
 LineStyler::LineStyler(){
-
+    pen.setCosmetic(true);
 }
 
 LineStyler::LineStyler(const QPen &pen) : pen(pen){
@@ -47,7 +47,7 @@ QPen LineStyler::getPen(){
 
 // =====================
 
-PolyStyler::PolyStyler(){
+PolyStyler::PolyStyler() : LineStyler(){
 
 }
 
@@ -84,9 +84,7 @@ QColor _randomColor(){
 }
 
 RandomStyler::RandomStyler() : pointStyler(new PointStyler), lineStyler(new LineStyler), polyStyler(new PolyStyler) {
-    reloadPointStyler();
-    reloadLineStyler();
-    reloadPolyStyler();
+    polyStyler->setBrush(QBrush(Qt::white)); // init brush
 }
 
 RandomStyler::~RandomStyler(){
@@ -117,12 +115,20 @@ void RandomStyler::reloadPointStyler(){
 }
 
 void RandomStyler::reloadLineStyler(){
-    lineStyler->setPen(QPen(_randomColor()));
+    QPen pen = lineStyler->getPen();
+    pen.setColor(_randomColor());
+    lineStyler->setPen(pen);
 }
 
 void RandomStyler::reloadPolyStyler(){
-    polyStyler->setPen(QPen(_randomColor()));
-    polyStyler->setBrush(QBrush(_randomColor()));
+    QPen pen = polyStyler->getPen();
+    QBrush brush = polyStyler->getBrush();
+
+    pen.setColor(_randomColor());
+    brush.setColor(_randomColor());
+    
+    polyStyler->setPen(pen);
+    polyStyler->setBrush(brush);
 }
 
 RandomStyler *RandomStyler::getInstance(){
