@@ -9,12 +9,28 @@ PointStyler::PointStyler(){
 
 }
 
+PointStyler::PointStyler(const QPixmap &pixmap, const QPointF &anchor) : pixmap(pixmap), anchor(anchor){
+
+}
+
 void PointStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
-    
+    QGraphicsPixmapItem *pixItem = dynamic_cast<QGraphicsPixmapItem*>(item);
+
+    if(!scalable) pixItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+    pixItem->setPixmap(this->pixmap);
+    pixItem->setOffset(-anchor.x(),-anchor.y());
 }
 
 bool PointStyler::isCompatibilityWith(const Geometry::Type &type){
     return type == Geometry::Type::POINT;
+}
+
+void PointStyler::setPixmap(const QPixmap &pixmap){
+    this->pixmap = pixmap;
+}
+
+void PointStyler::setAnchor(const QPointF &anchor){
+    this->anchor = anchor;
 }
 
 // =====================
@@ -85,6 +101,7 @@ QColor _randomColor(){
 
 RandomStyler::RandomStyler() : pointStyler(new PointStyler), lineStyler(new LineStyler), polyStyler(new PolyStyler) {
     polyStyler->setBrush(QBrush(Qt::white)); // init brush
+    reloadPointStyler(); // init point styler
 }
 
 RandomStyler::~RandomStyler(){
@@ -111,7 +128,19 @@ bool RandomStyler::isCompatibilityWith(const Geometry::Type &type){
 }
 
 void RandomStyler::reloadPointStyler(){
-    
+    QPixmap pixmap(12,12);
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter(&pixmap);
+    QPen pen(_randomColor(),1);
+    QBrush brush(_randomColor());
+
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    painter.drawEllipse(pixmap.rect());
+
+    pointStyler->setPixmap(pixmap);
+    pointStyler->setAnchor(QPointF(pixmap.height()/2,pixmap.width()/2));
 }
 
 void RandomStyler::reloadLineStyler(){

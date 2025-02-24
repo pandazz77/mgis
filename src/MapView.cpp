@@ -86,11 +86,8 @@ QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
             Point<LatLng> *geometry = dynamic_cast<Point<LatLng>*>(feature->geometry);
             Point<Point2D> projected = proj->project(*geometry);
 
-            item = new QGraphicsRectItem(
-                projected.coordinates.x,
-                projected.coordinates.y,
-                10, 10 // test width and height
-            );
+            item = new QGraphicsPixmapItem();
+            item->setPos(projected.coordinates.x,projected.coordinates.y);
 
         } else if(dynamic_cast<LineString<LatLng>*>(feature->geometry)){
             LineString<LatLng> *geometry = dynamic_cast<LineString<LatLng>*>(feature->geometry);

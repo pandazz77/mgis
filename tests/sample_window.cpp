@@ -127,6 +127,11 @@ int main(int argc, char *argv[]){
         qDebug() << "Mouse moved: " << pos.lat << pos.lng;
     });
 
+    FeatureLayer *pointTest = new FeatureLayer(new Feature(new Point(
+        0,0
+    )),map);
+    pointTest->addTo(map);
+
     cam->connect(cam,&MapCamera::clicked,[=](LatLng pos){
         qDebug() << "Mouse clicked: " << pos.lat << pos.lng;
     });
