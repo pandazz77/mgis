@@ -5,6 +5,16 @@
 
 // =====================
 
+void IStyler::applyCollection(QGraphicsItem *item, const Geometry::Type &type){
+    QGraphicsItemGroup *group = dynamic_cast<QGraphicsItemGroup*>(item);
+    if(group){
+        for(QGraphicsItem *subItem: group->childItems()) 
+            apply(subItem,type);
+    }
+}
+
+// =====================
+
 PointStyler::PointStyler(){
 
 }
@@ -14,6 +24,7 @@ PointStyler::PointStyler(const QPixmap &pixmap, const QPointF &anchor) : pixmap(
 }
 
 void PointStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
+    if(dynamic_cast<QGraphicsItemGroup*>(item)) return applyCollection(item,type);
     QGraphicsPixmapItem *pixItem = dynamic_cast<QGraphicsPixmapItem*>(item);
 
     if(!scalable) pixItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
@@ -22,7 +33,7 @@ void PointStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
 }
 
 bool PointStyler::isCompatibilityWith(const Geometry::Type &type){
-    return type == Geometry::Type::POINT;
+    return type == Geometry::Type::POINT || type == Geometry::Type::MULTIPOINT;
 }
 
 void PointStyler::setPixmap(const QPixmap &pixmap){
@@ -44,12 +55,13 @@ LineStyler::LineStyler(const QPen &pen) : pen(pen){
 }
 
 void LineStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
+    if(dynamic_cast<QGraphicsItemGroup*>(item)) return applyCollection(item,type);
     QGraphicsPathItem *lineItem = dynamic_cast<QGraphicsPathItem*>(item);
     lineItem->setPen(pen);
 }
 
 bool LineStyler::isCompatibilityWith(const Geometry::Type &type){
-    return type == Geometry::Type::LINESTRING || type == Geometry::Type::LINEARRING;
+    return type == Geometry::Type::LINESTRING || type == Geometry::Type::LINEARRING || type == Geometry::Type::MULTILINESTRING;
 }
 
 void LineStyler::setPen(const QPen &pen){
@@ -72,13 +84,14 @@ PolyStyler::PolyStyler(const QPen &pen, const QBrush &brush): LineStyler(pen), b
 }
 
 void PolyStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
+    if(dynamic_cast<QGraphicsItemGroup*>(item)) return applyCollection(item,type);
     QGraphicsPolygonItem *polyItem = dynamic_cast<QGraphicsPolygonItem*>(item);
     polyItem->setPen(pen);
     polyItem->setBrush(brush);
 }
 
 bool PolyStyler::isCompatibilityWith(const Geometry::Type &type){
-    return type == Geometry::Type::POLYGON;
+    return type == Geometry::Type::POLYGON || type == Geometry::Type::MULTIPOLYGON;
 }
 
 void PolyStyler::setBrush(const QBrush &brush){

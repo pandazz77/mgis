@@ -76,34 +76,64 @@ IFeature *FeatureLayer::getFeature(){
     return feature;
 }
 
+QGraphicsItem *FeatureLayer::buildFeatureGeometry(Geometry *_geometry,Projection *proj){
+    QGraphicsItem *item = nullptr;
+
+    if(dynamic_cast<Point<LatLng>*>(_geometry)){
+        Point<LatLng> *geometry = dynamic_cast<Point<LatLng>*>(_geometry);
+        Point<Point2D> projected = proj->project(*geometry);
+
+        item = new QGraphicsPixmapItem();
+        item->setPos(projected.coordinates.x,projected.coordinates.y);
+
+    } else if(dynamic_cast<LineString<LatLng>*>(_geometry)){
+        LineString<LatLng> *geometry = dynamic_cast<LineString<LatLng>*>(_geometry);
+        LineString<Point2D> projected = proj->project(*geometry);
+
+        item = new QGraphicsPathItem(
+            buildLineGeometry(projected)
+        );
+        
+    } else if(dynamic_cast<Polygon<LatLng>*>(_geometry)){
+        Polygon<LatLng> *geometry = dynamic_cast<Polygon<LatLng>*>(_geometry);
+        Polygon<Point2D> projected = proj->project(*geometry);
+
+        item = new QGraphicsPolygonItem(
+            buildPolyGeometry(projected)
+        );
+    }
+
+    return item;
+}
+
+template<class GeometryUnit>
+QGraphicsItemGroup *FeatureLayer::buildFeatureGeometryCollection(GeometryCollection<GeometryUnit> *collection, Projection *proj){
+    QGraphicsItemGroup *group = new QGraphicsItemGroup;
+    for(auto gunit: *collection){
+        QGraphicsItem *subItem = buildFeatureGeometry(&gunit,proj);
+        group->addToGroup(subItem);
+    }
+    return group;
+}
+
 QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
     QGraphicsItem *item = nullptr;
 
     if(dynamic_cast<Feature*>(ifeature)){
         Feature* feature = dynamic_cast<Feature*>(ifeature);
         
-        if(dynamic_cast<Point<LatLng>*>(feature->geometry)){
-            Point<LatLng> *geometry = dynamic_cast<Point<LatLng>*>(feature->geometry);
-            Point<Point2D> projected = proj->project(*geometry);
-
-            item = new QGraphicsPixmapItem();
-            item->setPos(projected.coordinates.x,projected.coordinates.y);
-
-        } else if(dynamic_cast<LineString<LatLng>*>(feature->geometry)){
-            LineString<LatLng> *geometry = dynamic_cast<LineString<LatLng>*>(feature->geometry);
-            LineString<Point2D> projected = proj->project(*geometry);
-
-            item = new QGraphicsPathItem(
-                buildLineGeometry(projected)
-            );
-            
-        } else if(dynamic_cast<Polygon<LatLng>*>(feature->geometry)){
-            Polygon<LatLng> *geometry = dynamic_cast<Polygon<LatLng>*>(feature->geometry);
-            Polygon<Point2D> projected = proj->project(*geometry);
-
-            item = new QGraphicsPolygonItem(
-                buildPolyGeometry(projected)
-            );
+        item = buildFeatureGeometry(feature->geometry,proj);
+        if(!item) {
+            if(dynamic_cast<MultiPoint<LatLng>*>(feature->geometry)){
+                MultiPoint<LatLng> *geometry = dynamic_cast<MultiPoint<LatLng>*>(feature->geometry);
+                item = buildFeatureGeometryCollection(geometry,proj);
+            } else if(dynamic_cast<MultiLineString<LatLng>*>(feature->geometry)){
+                MultiLineString<LatLng> *geometry = dynamic_cast<MultiLineString<LatLng>*>(feature->geometry);
+                item = buildFeatureGeometryCollection(geometry,proj);
+            } else if(dynamic_cast<MutliPolygon<LatLng>*>(feature->geometry)){
+                MutliPolygon<LatLng> *geometry = dynamic_cast<MutliPolygon<LatLng>*>(feature->geometry);
+                item = buildFeatureGeometryCollection(geometry,proj);
+            }
         }
 
         feature->styler->apply(item,feature->geometry->type());

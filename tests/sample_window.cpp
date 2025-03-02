@@ -26,17 +26,6 @@ int main(int argc, char *argv[]){
     waterFeature->styler = new PolyStyler(QPen(Qt::black),QBrush(Qt::blue));
     water->addTo(map);
 
-    FeatureLayer *line = new FeatureLayer(new Feature(new LineString(std::vector<LatLng>{
-        {-10,-10},
-        {10,10}
-    })),map);
-    Feature *lineFeature = dynamic_cast<Feature*>(line->getFeature());
-    lineFeature->styler = new LineStyler(QPen(
-        QBrush(Qt::white),0 /* COSMETIC (SAVE WIDTH) */
-    ));
-    line->addTo(map);
-    line->getItem()->setZValue(100);
-
     // ====
 
     FeatureLayer *eurasia = new FeatureLayer(new Feature(new Polygon(LinearRing({
@@ -122,15 +111,135 @@ int main(int argc, char *argv[]){
     greenland->addTo(map);
     antarctica->addTo(map);
 
+
+    FeatureLayer *pointTest = new FeatureLayer(new Feature(new Point(
+        -62.7798,-154.177
+    )),map);
+    pointTest->addTo(map);
+
+    FeatureLayer *lineTest = new FeatureLayer(new Feature(new LineString({
+        {-48.3894, -112.405},
+        {-69.76, -113.924},
+        {-57.4991, -64.557},
+    })),map);
+    lineTest->addTo(map);
+
+    FeatureLayer *ringTest = new FeatureLayer(new Feature(new LinearRing({
+        {-54.529, -37.2152},
+        {-66.0551, -42.5316},
+        {-65.745, -6.07595},
+        {-53.1853, -20.5063}, // will be closed at LinearRing constructor
+    })),map);
+    ringTest->addTo(map);
+
+    FeatureLayer *polyTest = new FeatureLayer(new Feature(new Polygon(
+        LinearRing({
+            {-53.638, 12.1519},
+            {-64.4664, 5.31646},
+            {-64.1371, 30.3797},
+            {-57.9049, 18.2278},
+            {-52.2654, 27.3418},
+        }),
+        {
+            LinearRing({
+                {-59.2272, 16.9158},
+                {-63.4983, 25.6086},
+                {-63.4983, 10.4157},
+            }),
+            LinearRing({
+                {-54.3452, 13.235},
+                {-53.7012, 22.3194},
+                {-56.994, 16.4459},
+            })
+        }
+    )),map);
+    polyTest->addTo(map);
+
+    FeatureLayer *multiPointTest = new FeatureLayer(new Feature(new MultiPoint({
+        {-52.359, 42.5831},
+        {-58.7971, 43.3989},
+        {-63.6551, 43.3989},
+    })),map);
+    multiPointTest->addTo(map);
+
+    FeatureLayer *multiLineStringTest = new FeatureLayer(new Feature(new MultiLineString({
+        LineString({
+            {-52.1734, 49.4735},
+            {-52.1734, 64.8833},
+            {-56.4281, 72.453},
+        }),
+        LineString({
+            {-57.1734, 49.4735},
+            {-57.1734, 64.8833},
+            {-61.4281, 72.453},
+        }),
+        LineString({
+            {-62.1734, 49.4735},
+            {-62.1734, 64.8833},
+            {-66.4281, 72.453},
+        })
+    })),map);
+    multiLineStringTest->addTo(map);
+
+
+    FeatureLayer *multiPolygonTest = new FeatureLayer(new Feature(new MutliPolygon({
+        Polygon(
+            LinearRing({
+                {-52.5269, 80.5571},
+                {-64.6115, 80.5571},
+                {-64.392, 89.7345},
+                {-52.5269, 94.0683},
+            }),
+            {
+                LinearRing({
+                    {-54.0841, 82.8783},
+                    {-63.6098, 83.4866},
+                    {-63.5082, 87.6685},
+                    {-54.0395, 89.4933},
+                })
+            }
+        ),
+
+        Polygon(
+            LinearRing({
+                {-52.5269, 100.5571},
+                {-64.6115, 100.5571},
+                {-64.392, 109.7345},
+                {-52.5269, 114.0683},
+            }),
+            {
+                LinearRing({
+                    {-54.0841, 102.8783},
+                    {-63.6098, 103.4866},
+                    {-63.5082, 107.6685},
+                    {-54.0395, 109.4933},
+                })
+            }
+        ),
+
+        Polygon(
+            LinearRing({
+                {-52.5269, 120.5571},
+                {-64.6115, 120.5571},
+                {-64.392, 129.7345},
+                {-52.5269, 134.0683},
+            }),
+            {
+                LinearRing({
+                    {-54.0841, 122.8783},
+                    {-63.6098, 123.4866},
+                    {-63.5082, 127.6685},
+                    {-54.0395, 129.4933},
+                })
+            }
+        ),
+    })),map);
+    multiPolygonTest->addTo(map);
+
     MapCamera *cam = map->getCam();
     cam->connect(cam,&MapCamera::mouseMoved,[=](LatLng pos){
         qDebug() << "Mouse moved: " << pos.lat << pos.lng;
     });
-
-    FeatureLayer *pointTest = new FeatureLayer(new Feature(new Point(
-        0,0
-    )),map);
-    pointTest->addTo(map);
 
     cam->connect(cam,&MapCamera::clicked,[=](LatLng pos){
         qDebug() << "Mouse clicked: " << pos.lat << pos.lng;
