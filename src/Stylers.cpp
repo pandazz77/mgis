@@ -85,7 +85,7 @@ PolyStyler::PolyStyler(const QPen &pen, const QBrush &brush): LineStyler(pen), b
 
 void PolyStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     if(dynamic_cast<QGraphicsItemGroup*>(item)) return applyCollection(item,type);
-    QGraphicsPolygonItem *polyItem = dynamic_cast<QGraphicsPolygonItem*>(item);
+    QGraphicsPathItem *polyItem = dynamic_cast<QGraphicsPathItem*>(item);
     polyItem->setPen(pen);
     polyItem->setBrush(brush);
 }

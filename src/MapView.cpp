@@ -45,13 +45,44 @@ QPainterPath buildLineGeometry(LineString<Point2D> line){
     return path;
 }
 
-QPolygonF buildPolyGeometry(Polygon<Point2D> poly){
-    QPolygonF exterior = qlineString(poly.exterior);
-    for(auto interior: poly.interiors){
-        exterior = exterior.subtracted(QPolygonF(qlineString(interior)));
+bool isClockwise(const QPolygonF &polygon) {
+    double sum = 0.0;
+    int n = polygon.size();
+
+    for (int i = 0; i < n; ++i) {
+        const QPointF &p1 = polygon[i];
+        const QPointF &p2 = polygon[(i + 1) % n];
+        sum += (p2.x() - p1.x()) * (p2.y() + p1.y());
     }
 
-    return exterior;
+    return sum > 0;
+}
+
+QPolygonF reversePolygon(const QPolygonF &polygon) {
+    QPolygonF reversed = polygon;
+    std::reverse(reversed.begin(), reversed.end());
+    return reversed;
+}
+
+QPolygonF ensurePolygonOrder(const QPolygonF &polygon, bool clockwise) {
+    if ((isClockwise(polygon) && !clockwise) || (!isClockwise(polygon) && clockwise)) {
+        return reversePolygon(polygon);
+    }
+    return polygon;
+}
+
+QPainterPath buildPolyGeometry(Polygon<Point2D> poly){
+    QPainterPath path;
+
+    QPolygonF exterior = ensurePolygonOrder(qlineString(poly.exterior),true);
+    path.addPolygon(exterior);
+    for(auto interiorRaw: poly.interiors){
+        QPolygonF interior = ensurePolygonOrder(qlineString(interiorRaw),false);
+        path.addPolygon(interior);
+    }
+    path.setFillRule(Qt::OddEvenFill);
+
+    return path;
 }
 
 // =====
@@ -98,7 +129,7 @@ QGraphicsItem *FeatureLayer::buildFeatureGeometry(Geometry *_geometry,Projection
         Polygon<LatLng> *geometry = dynamic_cast<Polygon<LatLng>*>(_geometry);
         Polygon<Point2D> projected = proj->project(*geometry);
 
-        item = new QGraphicsPolygonItem(
+        item = new QGraphicsPathItem(
             buildPolyGeometry(projected)
         );
     }
