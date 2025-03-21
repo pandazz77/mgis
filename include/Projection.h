@@ -64,17 +64,12 @@ class Projection{
         _transformCollection(MultiLineString)
         _transformCollection(MutliPolygon)
 
-        #define _projUnproj(Gtype) \
-        Gtype<Point2D> project(Gtype<LatLng> geometry) { return transform<LatLng,Point2D>(geometry); } \
-        Gtype<LatLng> unproject(Gtype<Point2D> geometry) { return transform<Point2D,LatLng>(geometry); } 
+        // transform alias:
 
-        _projUnproj(Bounds)
-        _projUnproj(Point)
-        _projUnproj(LineString)
-        _projUnproj(Polygon)
-        _projUnproj(MultiPoint)
-        _projUnproj(MultiLineString)
-        _projUnproj(MutliPolygon)
+        template<template<typename> typename T>
+        T<Point2D> project(T<LatLng> geometry){ return transform<LatLng,Point2D>(geometry); }
+        template<template<typename> typename T>
+        T<LatLng> unproject(T<Point2D> geometry){ return transform<Point2D,LatLng>(geometry); }
 
         virtual Bounds<Point2D> bounds() = 0;
 };
