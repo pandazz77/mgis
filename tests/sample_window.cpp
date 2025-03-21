@@ -117,14 +117,14 @@ int main(int argc, char *argv[]){
     )),map);
     pointTest->addTo(map);
 
-    FeatureLayer *lineTest = new FeatureLayer(new Feature(new LineString(std::vector<LatLng>{
+    FeatureLayer *lineTest = new FeatureLayer(new Feature(new LineString({
         {-48.3894, -112.405},
         {-69.76, -113.924},
         {-57.4991, -64.557},
     })),map);
     lineTest->addTo(map);
 
-    FeatureLayer *ringTest = new FeatureLayer(new Feature(new LinearRing(std::vector<LatLng>{
+    FeatureLayer *ringTest = new FeatureLayer(new Feature(new LinearRing({
         {-54.529, -37.2152},
         {-66.0551, -42.5316},
         {-65.745, -6.07595},
@@ -155,14 +155,14 @@ int main(int argc, char *argv[]){
     )),map);
     polyTest->addTo(map);
 
-    FeatureLayer *multiPointTest = new FeatureLayer(new Feature(new MultiPoint(std::vector<Point<LatLng>>{
+    FeatureLayer *multiPointTest = new FeatureLayer(new Feature(new MultiPoint({
         {-52.359, 42.5831},
         {-58.7971, 43.3989},
         {-63.6551, 43.3989},
     })),map);
     multiPointTest->addTo(map);
 
-    FeatureLayer *multiLineStringTest = new FeatureLayer(new Feature(new MultiLineString(std::vector<LineString<LatLng>>{
+    FeatureLayer *multiLineStringTest = new FeatureLayer(new Feature(new MultiLineString({
         LineString({
             {-52.1734, 49.4735},
             {-52.1734, 64.8833},
@@ -182,7 +182,7 @@ int main(int argc, char *argv[]){
     multiLineStringTest->addTo(map);
 
 
-    FeatureLayer *multiPolygonTest = new FeatureLayer(new Feature(new MutliPolygon(std::vector<Polygon<LatLng>>{
+    FeatureLayer *multiPolygonTest = new FeatureLayer(new Feature(new MutliPolygon({
         Polygon(
             LinearRing({
                 {-52.5269, 80.5571},

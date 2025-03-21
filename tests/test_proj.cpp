@@ -3,7 +3,7 @@
 
 #include "Projection.h"
 
-int main(int argc, char *argv){
+int main(int argc, char *argv[]){
     Point ep1(47.51626409685045, 69.645822358462);
     Point ep2(47.51626409685045, 68.5207540327172);
     Point ep3(50.99910796212228, 68.5207540327172);

@@ -77,7 +77,8 @@ class Point: public Geometry{
 template<class Unit = LatLng>
 class LineString: public Geometry, public std::vector<Unit>{
     public:
-        LineString(std::vector<Unit> line={}) : std::vector<Unit>(line) { }
+        LineString(std::vector<Unit> line = {}): std::vector<Unit>(line) { }
+        LineString(std::initializer_list<Unit> line) : LineString(std::vector<Unit>(std::move(line))) { }
 
         Geometry::Type type() override{ return Geometry::Type::LINESTRING; }
 };
@@ -85,15 +86,12 @@ class LineString: public Geometry, public std::vector<Unit>{
 template<class Unit = LatLng>
 class LinearRing: public LineString<Unit>{
     public:
-        LinearRing(std::vector<Unit> line={}) : LineString<Unit>(line) { 
+        LinearRing(std::vector<Unit> line = {}) : LineString<Unit>(line) { 
             if(!line.empty() && LineString<Unit>::front() != LineString<Unit>::back()){
                 LineString<Unit>::push_back(LineString<Unit>::front());
             }
         };
-        // LinearRing(LineString<Unit> line) : LinearRing<Unit>(line) {
-            
-        // }
-        
+        LinearRing(std::initializer_list<Unit> line) : LinearRing(std::vector<Unit>(line)) { } 
 
         Geometry::Type type() override{ return Geometry::Type::LINEARRING; };
 };
@@ -124,6 +122,7 @@ template<class Unit = LatLng>
 class MultiPoint: public GeometryCollection<Point<Unit>>{
     public:
         MultiPoint(std::vector<Point<Unit>> points = {}) : GeometryCollection<Point<Unit>>(points) { }
+        MultiPoint(std::initializer_list<Point<Unit>> points) : MultiPoint(std::vector<Point<Unit>>(points)) { }
 
         Geometry::Type type() override{ return Geometry::Type::MULTIPOINT; }
 };
@@ -132,6 +131,7 @@ template<class Unit = LatLng>
 class MultiLineString: public GeometryCollection<LineString<Unit>>{
     public:
         MultiLineString(std::vector<LineString<Unit>> lines = {}) : GeometryCollection<LineString<Unit>>(lines) { }
+        MultiLineString(std::initializer_list<LineString<Unit>> points) : MultiLineString(std::vector<LineString<Unit>>(points)) { }
 
         Geometry::Type type() override{ return Geometry::Type::MULTILINESTRING; }
 };
@@ -140,6 +140,7 @@ template<class Unit = LatLng>
 class MutliPolygon: public GeometryCollection<Polygon<Unit>>{
     public:
         MutliPolygon(std::vector<Polygon<Unit>> polygons = {}) : GeometryCollection<Polygon<Unit>>(polygons) { }
+        MutliPolygon(std::initializer_list<Polygon<Unit>> points) : MutliPolygon(std::vector<Polygon<Unit>>(points)) { }
 
         Geometry::Type type() override{ return Geometry::Type::MULTIPOLYGON; }
 };
