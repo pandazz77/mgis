@@ -3,7 +3,7 @@
 #include "Projection.h"
 
 #include <QApplication>
-#include "MapView.h"
+#include "MapGraphicsView.h"
 
 #include <cassert>
 

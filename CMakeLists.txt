@@ -10,7 +10,11 @@ set(SRCS
     src/Projection.cpp
     
     src/Stylers.cpp
-    src/MapView.cpp
+
+    src/MapView/MapGraphicsScene.cpp
+    src/MapView/MapGraphicsView.cpp
+    src/MapView/MapLayers.cpp
+    src/MapView/MapCamera.cpp
 )
 
 set(HDRS
@@ -19,7 +23,11 @@ set(HDRS
     include/Projection.h
 
     include/Stylers.h
-    include/MapView.h
+
+    include/MapView/MapGraphicsScene.h
+    include/MapView/MapGraphicsView.h
+    include/MapView/MapLayers.h
+    include/MapView/MapCamera.h
 )
 
 find_package(Qt6 COMPONENTS 
@@ -34,7 +42,11 @@ SET(LIBS
 
 add_library(${PROJECT_NAME} ${SHARED} ${SRCS} ${HDRS})
 target_link_libraries(${PROJECT_NAME} ${LIBS})
-target_include_directories(${PROJECT_NAME} PUBLIC include/)
+
+target_include_directories(${PROJECT_NAME} PUBLIC 
+    include/
+    include/MapView
+)
 
 option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)

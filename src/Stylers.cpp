@@ -1,5 +1,4 @@
 #include "Stylers.h"
-#include "MapView.h"
 
 #include <QRandomGenerator>
 
