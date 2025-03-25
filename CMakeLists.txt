@@ -8,8 +8,13 @@ set(CMAKE_AUTOUIC ON)
 set(SRCS
     src/Features.cpp
     src/Projection.cpp
-    
-    src/Stylers.cpp
+
+    src/Stylers/IStyler.cpp
+    src/Stylers/PointStyler.cpp
+    src/Stylers/LineStyler.cpp
+    src/Stylers/PolyStyler.cpp
+    src/Stylers/RandomStyler.cpp
+    src/Stylers/Stylers.cpp
 
     src/MapView/MapGraphicsScene.cpp
     src/MapView/MapGraphicsView.cpp
@@ -24,7 +29,12 @@ set(HDRS
     include/Features.h
     include/Projection.h
 
-    include/Stylers.h
+    include/Stylers/IStyler.h
+    include/Stylers/PointStyler.h
+    include/Stylers/LineStyler.h
+    include/Stylers/PolyStyler.h
+    include/Stylers/RandomStyler.h
+    include/Stylers/Stylers.h
 
     include/MapView/MapGraphicsScene.h
     include/MapView/MapGraphicsView.h
@@ -51,6 +61,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     include/
     include/MapView
     include/MapView/Layers
+    include/Stylers
 )
 
 option(BUILD_TESTS "Build tests" ON)
