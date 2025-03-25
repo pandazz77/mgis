@@ -34,6 +34,10 @@ MapGraphicsView::MapGraphicsView(QWidget *parent) : QGraphicsView(new MapGraphic
     setMouseTracking(true); // for mouse tracking in MapGraphicsScene without click
 }
 
+MapGraphicsScene *MapGraphicsView::scene(){
+    return dynamic_cast<MapGraphicsScene*>(QGraphicsView::scene());
+}
+
 void MapGraphicsView::onPosChanged(Point2D pos){
     auto previousRect = scene()->sceneRect();
     scene()->setSceneRect(pos.x,pos.y,previousRect.width(),previousRect.height());

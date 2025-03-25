@@ -23,7 +23,7 @@ class MapGraphicsView: public QGraphicsView{
         void addLayer(ILayer *layer);
         void removeLayer(ILayer *layer);
 
-        MapGraphicsScene *scene() { return dynamic_cast<MapGraphicsScene*>(QGraphicsView::scene()); };
+        MapGraphicsScene *scene();
 
     private slots:
         void onPosChanged(Point2D pos);
