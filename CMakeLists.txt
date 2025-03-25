@@ -13,8 +13,10 @@ set(SRCS
 
     src/MapView/MapGraphicsScene.cpp
     src/MapView/MapGraphicsView.cpp
-    src/MapView/MapLayers.cpp
     src/MapView/MapCamera.cpp
+
+    src/MapView/Layers/ILayer.cpp
+    src/MapView/Layers/FeatureLayer.cpp
 )
 
 set(HDRS
@@ -26,8 +28,10 @@ set(HDRS
 
     include/MapView/MapGraphicsScene.h
     include/MapView/MapGraphicsView.h
-    include/MapView/MapLayers.h
     include/MapView/MapCamera.h
+
+    include/MapView/Layers/ILayer.h
+    include/MapView/Layers/FeatureLayer.h
 )
 
 find_package(Qt6 COMPONENTS 
@@ -46,6 +50,7 @@ target_link_libraries(${PROJECT_NAME} ${LIBS})
 target_include_directories(${PROJECT_NAME} PUBLIC 
     include/
     include/MapView
+    include/MapView/Layers
 )
 
 option(BUILD_TESTS "Build tests" ON)

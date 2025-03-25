@@ -5,7 +5,7 @@
 
 #include "MapGraphicsScene.h"
 #include "MapCamera.h"
-#include "MapLayers.h"
+#include "ILayer.h"
 #include "Projection.h"
 
 class MapGraphicsView: public QGraphicsView{

@@ -4,6 +4,7 @@
 
 #include <QApplication>
 #include "MapGraphicsView.h"
+#include "FeatureLayer.h"
 
 #include <cassert>
 
