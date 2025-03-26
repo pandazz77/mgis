@@ -1,12 +1,4 @@
-#include "Features.h"
-
-Feature::Feature(Geometry *geometry): geometry(geometry){
-
-}
-
-Feature::~Feature(){
-    delete geometry;
-}
+#include "FeatureCollection.h"
 
 FeatureCollection::FeatureCollection(std::vector<IFeature*> features): std::vector<IFeature*>(features){
 

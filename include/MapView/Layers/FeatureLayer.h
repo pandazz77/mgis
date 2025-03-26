@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ILayer.h"
-#include "Features.h"
+#include "Feature.h"
+#include "FeatureCollection.h"
 #include "Projection.h"
 
 using FGraphicsItem         = QGraphicsItem;

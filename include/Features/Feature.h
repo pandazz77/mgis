@@ -1,17 +1,12 @@
 #pragma once
 
-#include <unordered_map>
-#include <string>
-#include <variant>
-
+#include "IFeature.h"
 #include "GeoTypes.hpp"
 #include "Stylers.h"
 
-class IFeature{
-    public:
-        IFeature(){};
-        virtual ~IFeature(){}; 
-};
+#include <unordered_map>
+#include <string>
+#include <variant>
 
 class Feature : public IFeature{
     public:
@@ -21,10 +16,4 @@ class Feature : public IFeature{
         Geometry *geometry;
         IStyler *styler = RandomStyler::getInstance(); /// TODO: styler field as shared ptr 
         std::unordered_map<std::string,std::variant<int,double,bool,std::string>> properties;
-};
-
-class FeatureCollection: public std::vector<IFeature*>, IFeature{
-    public:
-        FeatureCollection(std::vector<IFeature*> features = {});
-        ~FeatureCollection();
 };

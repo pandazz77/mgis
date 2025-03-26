@@ -6,8 +6,11 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(SRCS
-    src/Features.cpp
     src/Projection.cpp
+
+    src/Features/IFeature.cpp
+    src/Features/Feature.cpp
+    src/Features/FeatureCollection.cpp
 
     src/Stylers/IStyler.cpp
     src/Stylers/PointStyler.cpp
@@ -28,8 +31,11 @@ set(SRCS
 
 set(HDRS
     include/GeoTypes.hpp
-    include/Features.h
     include/Projection.h
+
+    include/Features/IFeature.h
+    include/Features/Feature.h
+    include/Features/FeatureCollection.h
 
     include/Stylers/IStyler.h
     include/Stylers/PointStyler.h
@@ -66,6 +72,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     include/MapView
     include/MapView/Layers
     include/Stylers
+    include/Features
 )
 
 option(BUILD_TESTS "Build tests" ON)
