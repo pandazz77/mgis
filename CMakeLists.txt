@@ -20,6 +20,8 @@ set(SRCS
     src/MapView/MapGraphicsView.cpp
     src/MapView/MapCamera.cpp
 
+    src/MapView/QFeatureConvertor.cpp
+
     src/MapView/Layers/ILayer.cpp
     src/MapView/Layers/FeatureLayer.cpp
 )
@@ -39,6 +41,8 @@ set(HDRS
     include/MapView/MapGraphicsScene.h
     include/MapView/MapGraphicsView.h
     include/MapView/MapCamera.h
+
+    include/MapView/QFeatureConvertor.h
 
     include/MapView/Layers/ILayer.h
     include/MapView/Layers/FeatureLayer.h
