@@ -1,4 +1,5 @@
 #include "MapGraphicsView.h"
+#include "SphericalMercator.h"
 
 MapGraphicsView::MapGraphicsView(QWidget *parent) : QGraphicsView(new MapGraphicsScene,parent), proj(new SphericalMercator), cam(new MapCamera({0,0},1,this)){
     scale(1,-1);

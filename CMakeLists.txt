@@ -6,7 +6,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(SRCS
-    src/Projection.cpp
+    src/Projection/Projection.cpp
+    src/Projection/SimpleProjection.cpp
+    src/Projection/Mercator.cpp
+    src/Projection/SphericalMercator.cpp
 
     src/Features/IFeature.cpp
     src/Features/Feature.cpp
@@ -31,7 +34,11 @@ set(SRCS
 
 set(HDRS
     include/GeoTypes.hpp
-    include/Projection.h
+
+    include/Projection/Projection.h
+    include/Projection/SimpleProjection.h
+    include/Projection/Mercator.h
+    include/Projection/SphericalMercator.h
 
     include/Features/IFeature.h
     include/Features/Feature.h
@@ -69,6 +76,7 @@ target_link_libraries(${PROJECT_NAME} ${LIBS})
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
     include/
+    include/Projection
     include/MapView
     include/MapView/Layers
     include/Stylers

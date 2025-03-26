@@ -2,6 +2,8 @@
 #include <iostream>
 
 #include "Projection.h"
+#include "Mercator.h"
+#include "SphericalMercator.h"
 
 int main(int argc, char *argv[]){
     Point ep1(47.51626409685045, 69.645822358462);
