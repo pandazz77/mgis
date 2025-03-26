@@ -2,14 +2,27 @@
 
 #include "MapGraphicsView.h"
 
+Point2D QFeatureConvertor::qPoint(QPointF point){
+    return Point2D(
+        point.x(),
+        point.y()
+    );
+}
 
-QVector<QPointF> qlineString(std::vector<Point2D> line){
+QPointF QFeatureConvertor::qPoint(Point2D point){
+    return QPointF(
+        point.x,
+        point.y
+    );
+}
+
+QVector<QPointF> QFeatureConvertor::qLineString(std::vector<Point2D> line){
     QVector<QPointF> result;
     for(Point2D point: line) result.push_back(QPointF(point.x,point.y));
     return result;
 }
 
-QPainterPath buildLineGeometry(LineString<Point2D> line){
+QPainterPath QFeatureConvertor::buildLine(LineString<Point2D> line){
     QPainterPath path(QPointF(
         line[0].x,
         line[0].y
@@ -25,7 +38,7 @@ QPainterPath buildLineGeometry(LineString<Point2D> line){
     return path;
 }
 
-bool isClockwise(const QPolygonF &polygon) {
+bool QFeatureConvertor::isClockwise(const QPolygonF &polygon) {
     double sum = 0.0;
     int n = polygon.size();
 
@@ -38,26 +51,26 @@ bool isClockwise(const QPolygonF &polygon) {
     return sum > 0;
 }
 
-QPolygonF reversePolygon(const QPolygonF &polygon) {
+QPolygonF QFeatureConvertor::reversePolygon(const QPolygonF &polygon) {
     QPolygonF reversed = polygon;
     std::reverse(reversed.begin(), reversed.end());
     return reversed;
 }
 
-QPolygonF ensurePolygonOrder(const QPolygonF &polygon, bool clockwise) {
+QPolygonF QFeatureConvertor::ensurePolygonOrder(const QPolygonF &polygon, bool clockwise) {
     if ((isClockwise(polygon) && !clockwise) || (!isClockwise(polygon) && clockwise)) {
         return reversePolygon(polygon);
     }
     return polygon;
 }
 
-QPainterPath buildPolyGeometry(Polygon<Point2D> poly){
+QPainterPath QFeatureConvertor::buildPoly(Polygon<Point2D> poly){
     QPainterPath path;
 
-    QPolygonF exterior = ensurePolygonOrder(qlineString(poly.exterior),true);
+    QPolygonF exterior = ensurePolygonOrder(qLineString(poly.exterior),true);
     path.addPolygon(exterior);
     for(auto interiorRaw: poly.interiors){
-        QPolygonF interior = ensurePolygonOrder(qlineString(interiorRaw),false);
+        QPolygonF interior = ensurePolygonOrder(qLineString(interiorRaw),false);
         path.addPolygon(interior);
     }
     path.setFillRule(Qt::OddEvenFill);
@@ -87,30 +100,30 @@ IFeature *FeatureLayer::getFeature(){
     return feature;
 }
 
-QGraphicsItem *FeatureLayer::buildFeatureGeometry(Geometry *_geometry,Projection *proj){
-    QGraphicsItem *item = nullptr;
+FGraphicsItem *FeatureLayer::buildFeatureGeometry(Geometry *_geometry,Projection *proj){
+    FGraphicsItem *item = nullptr;
 
     if(dynamic_cast<Point<LatLng>*>(_geometry)){
         Point<LatLng> *geometry = dynamic_cast<Point<LatLng>*>(_geometry);
         Point<Point2D> projected = proj->project(*geometry);
 
-        item = new QGraphicsPixmapItem();
+        item = new FGraphicsPoint();
         item->setPos(projected.coordinates.x,projected.coordinates.y);
 
     } else if(dynamic_cast<LineString<LatLng>*>(_geometry)){
         LineString<LatLng> *geometry = dynamic_cast<LineString<LatLng>*>(_geometry);
         LineString<Point2D> projected = proj->project(*geometry);
 
-        item = new QGraphicsPathItem(
-            buildLineGeometry(projected)
+        item = new FGraphicsLineString(
+            QFeatureConvertor::buildLine(projected)
         );
         
     } else if(dynamic_cast<Polygon<LatLng>*>(_geometry)){
         Polygon<LatLng> *geometry = dynamic_cast<Polygon<LatLng>*>(_geometry);
         Polygon<Point2D> projected = proj->project(*geometry);
 
-        item = new QGraphicsPathItem(
-            buildPolyGeometry(projected)
+        item = new FGraphicsPolygon(
+            QFeatureConvertor::buildPoly(projected)
         );
     }
 
@@ -118,17 +131,17 @@ QGraphicsItem *FeatureLayer::buildFeatureGeometry(Geometry *_geometry,Projection
 }
 
 template<class GeometryUnit>
-QGraphicsItemGroup *FeatureLayer::buildFeatureGeometryCollection(GeometryCollection<GeometryUnit> *collection, Projection *proj){
-    QGraphicsItemGroup *group = new QGraphicsItemGroup;
+FGraphicsCollection *FeatureLayer::buildFeatureGeometryCollection(GeometryCollection<GeometryUnit> *collection, Projection *proj){
+    FGraphicsCollection *group = new FGraphicsCollection;
     for(auto gunit: *collection){
-        QGraphicsItem *subItem = buildFeatureGeometry(&gunit,proj);
+        FGraphicsItem *subItem = buildFeatureGeometry(&gunit,proj);
         group->addToGroup(subItem);
     }
     return group;
 }
 
-QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
-    QGraphicsItem *item = nullptr;
+FGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
+    FGraphicsItem *item = nullptr;
 
     if(dynamic_cast<Feature*>(ifeature)){
         Feature* feature = dynamic_cast<Feature*>(ifeature);
@@ -152,10 +165,10 @@ QGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
     } else if(dynamic_cast<FeatureCollection*>(ifeature)){
         FeatureCollection *collection = dynamic_cast<FeatureCollection*>(ifeature);
 
-        QGraphicsItemGroup *group = new QGraphicsItemGroup;
+        FGraphicsCollection *group = new FGraphicsCollection;
 
         for(IFeature *feature: *collection){
-            QGraphicsItem *subItem = buildFeature(feature,proj);
+            FGraphicsItem *subItem = buildFeature(feature,proj);
             group->addToGroup(subItem);
         }
 
