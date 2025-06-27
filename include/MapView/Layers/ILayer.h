@@ -11,7 +11,7 @@ class ILayer: public QObject{
         ILayer(QObject *parent = nullptr);
         virtual ~ILayer() = default;
 
-        QGraphicsItem *getItem();
+        virtual QGraphicsItem *getItem() = 0;
         void addTo(MapGraphicsView *map);
         void removeFrom(MapGraphicsView *map);
 
@@ -19,6 +19,5 @@ class ILayer: public QObject{
         virtual void onMapChanged() = 0;
 
     protected:
-        QGraphicsItem *item = nullptr;
         MapGraphicsView *map = nullptr;
 };

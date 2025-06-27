@@ -6,10 +6,6 @@ ILayer::ILayer(QObject *parent): QObject(parent){
 
 }
 
-QGraphicsItem *ILayer::getItem(){
-    return item;
-}
-
 void ILayer::addTo(MapGraphicsView *map){
     // STRONG ORDER / DO NOT CHANGE
     this->map = map;
