@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
 
     MultiPoint points({ep1,ep2});
     MultiLineString lines({line,ring});
-    MutliPolygon polys({poly,poly});
+    MultiPolygon polys({poly,poly});
 
     // ==========
 
@@ -65,8 +65,8 @@ int main(int argc, char *argv[]){
     MultiLineString<Point2D> lines_projected = proj->transform<LatLng,Point2D>(lines);
     MultiLineString<LatLng> lines_unprojected = proj->transform<Point2D,LatLng>(lines_projected);
 
-    MutliPolygon<Point2D> polys_projected = proj->transform<LatLng,Point2D>(polys);
-    MutliPolygon<LatLng> polys_unprojected = proj->transform<Point2D,LatLng>(polys_projected);
+    MultiPolygon<Point2D> polys_projected = proj->transform<LatLng,Point2D>(polys);
+    MultiPolygon<LatLng> polys_unprojected = proj->transform<Point2D,LatLng>(polys_projected);
 
 
     Point<Point2D> pt_pr = proj->project(ep1_unprojected);
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]){
     Polygon<Point2D> pl_pr = proj->project(poly);
     MultiPoint<Point2D> mpt_pr = proj->project(points);
     MultiLineString<Point2D> mls_pr = proj->project(lines);
-    MutliPolygon<Point2D> mpl_pr = proj->project(polys);
+    MultiPolygon<Point2D> mpl_pr = proj->project(polys);
 
     Point<LatLng> pt_unpr = proj->unproject(pt_pr);
     LineString<LatLng> ls_unpr = proj->unproject(ls_pr);
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
     Polygon<LatLng> pl_unpr = proj->unproject(pl_pr);
     MultiPoint<LatLng> mpt_unpr = proj->unproject(mpt_pr);
     MultiLineString<LatLng> mls_unpr = proj->unproject(mls_pr);
-    MutliPolygon<LatLng> mpl_unpr = proj->unproject(mpl_pr);
+    MultiPolygon<LatLng> mpl_unpr = proj->unproject(mpl_pr);
 
     return 0;
 }

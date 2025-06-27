@@ -77,8 +77,8 @@ FGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
             } else if(dynamic_cast<MultiLineString<LatLng>*>(feature->geometry)){
                 MultiLineString<LatLng> *geometry = dynamic_cast<MultiLineString<LatLng>*>(feature->geometry);
                 item = buildFeatureGeometryCollection(geometry,proj);
-            } else if(dynamic_cast<MutliPolygon<LatLng>*>(feature->geometry)){
-                MutliPolygon<LatLng> *geometry = dynamic_cast<MutliPolygon<LatLng>*>(feature->geometry);
+            } else if(dynamic_cast<MultiPolygon<LatLng>*>(feature->geometry)){
+                MultiPolygon<LatLng> *geometry = dynamic_cast<MultiPolygon<LatLng>*>(feature->geometry);
                 item = buildFeatureGeometryCollection(geometry,proj);
             }
         }

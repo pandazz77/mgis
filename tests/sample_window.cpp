@@ -183,7 +183,7 @@ int main(int argc, char *argv[]){
     multiLineStringTest->addTo(map);
 
 
-    FeatureLayer *multiPolygonTest = new FeatureLayer(new Feature(new MutliPolygon({
+    FeatureLayer *multiPolygonTest = new FeatureLayer(new Feature(new MultiPolygon({
         Polygon(
             LinearRing({
                 {-52.5269, 80.5571},

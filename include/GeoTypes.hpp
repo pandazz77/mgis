@@ -137,10 +137,10 @@ class MultiLineString: public GeometryCollection<LineString<Unit>>{
 };
 
 template<class Unit = LatLng>
-class MutliPolygon: public GeometryCollection<Polygon<Unit>>{
+class MultiPolygon: public GeometryCollection<Polygon<Unit>>{
     public:
-        MutliPolygon(std::vector<Polygon<Unit>> polygons = {}) : GeometryCollection<Polygon<Unit>>(polygons) { }
-        MutliPolygon(std::initializer_list<Polygon<Unit>> points) : MutliPolygon(std::vector<Polygon<Unit>>(points)) { }
+        MultiPolygon(std::vector<Polygon<Unit>> polygons = {}) : GeometryCollection<Polygon<Unit>>(polygons) { }
+        MultiPolygon(std::initializer_list<Polygon<Unit>> points) : MultiPolygon(std::vector<Polygon<Unit>>(points)) { }
 
         Geometry::Type type() override{ return Geometry::Type::MULTIPOLYGON; }
 };

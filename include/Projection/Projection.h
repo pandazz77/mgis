@@ -69,8 +69,8 @@ class Projection{
         }
         
         template<typename SourceUnit, typename TargetUnit>
-        MutliPolygon<TargetUnit> transform(const MutliPolygon<SourceUnit> &source){
-            return transformCollection<MutliPolygon, SourceUnit, TargetUnit>(source);
+        MultiPolygon<TargetUnit> transform(const MultiPolygon<SourceUnit> &source){
+            return transformCollection<MultiPolygon, SourceUnit, TargetUnit>(source);
         }
 
         template<template<typename> typename T>
