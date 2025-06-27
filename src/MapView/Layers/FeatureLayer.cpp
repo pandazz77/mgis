@@ -15,9 +15,10 @@ QGraphicsItem *FeatureLayer::getItem(){
     return item;
 }
 
-void FeatureLayer::onMapChanged(){
-    if(this->map){
-        this->item = buildFeature(this->feature,this->map->getProjection());
+void FeatureLayer::rebuildItem(){
+    MapGraphicsView *map = this->pane->map();
+    if(map){
+        this->item = buildFeature(this->feature,map->getProjection());
     } else {
         delete this->item;
     }

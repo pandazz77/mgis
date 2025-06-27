@@ -71,6 +71,10 @@ void MapGraphicsView::addLayer(ILayer *layer){
     }
 }
 
+MapGraphicsView *MapGraphicsView::map(){
+    return this;
+}
+
 void MapGraphicsView::removeLayer(ILayer *layer){
     scene()->removeItem(layer->getItem());
     layerSet.remove(layer);

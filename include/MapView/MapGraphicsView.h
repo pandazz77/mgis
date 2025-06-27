@@ -5,10 +5,11 @@
 
 #include "MapGraphicsScene.h"
 #include "MapCamera.h"
+#include "MapPane.h"
 #include "ILayer.h"
 #include "Projection.h"
 
-class MapGraphicsView: public QGraphicsView{
+class MapGraphicsView: public QGraphicsView, public MapPane{
     Q_OBJECT
 
     public:
@@ -22,6 +23,10 @@ class MapGraphicsView: public QGraphicsView{
 
         void addLayer(ILayer *layer);
         void removeLayer(ILayer *layer);
+
+        MapGraphicsView *map() override;
+        MapPane *parentPane() = delete;
+        void setParentPane(MapPane *parent) = delete;
 
         MapGraphicsScene *scene();
 

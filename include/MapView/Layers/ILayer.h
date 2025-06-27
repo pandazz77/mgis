@@ -1,8 +1,7 @@
 #pragma once
 
 #include <QGraphicsItem>
-
-class MapGraphicsView;
+#include "MapPane.h"
 
 class ILayer: public QObject{
     Q_OBJECT
@@ -12,12 +11,11 @@ class ILayer: public QObject{
         virtual ~ILayer() = default;
 
         virtual QGraphicsItem *getItem() = 0;
-        void addTo(MapGraphicsView *map);
-        void removeFrom(MapGraphicsView *map);
+        void addTo(MapPane *pane);
+        void removeFrom(MapPane *pane);
+        
+        virtual void rebuildItem() = 0;
 
     protected:
-        virtual void onMapChanged() = 0;
-
-    protected:
-        MapGraphicsView *map = nullptr;
+        MapPane *pane = nullptr;
 };

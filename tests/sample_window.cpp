@@ -5,6 +5,7 @@
 #include <QApplication>
 #include "MapGraphicsView.h"
 #include "FeatureLayer.h"
+#include "LayerGroup.h"
 
 #include <cassert>
 
@@ -28,6 +29,7 @@ int main(int argc, char *argv[]){
     water->addTo(map);
 
     // ====
+    
 
     FeatureLayer *eurasia = new FeatureLayer(new Feature(new Polygon(LinearRing({
         {76.50781849872428, 103.39301162991251},
@@ -41,7 +43,7 @@ int main(int argc, char *argv[]){
         {67.40252064879135, 185.19323232884108},
         {71.03847712017372, 129.4742414179766},
         {76.50781849872428, 103.39301162991251}
-    }))),map);
+    }))),nullptr);
 
     FeatureLayer *africa = new FeatureLayer(new Feature(new Polygon(LinearRing({
         {32.9836001676598, 9.342516333559956},
@@ -51,7 +53,10 @@ int main(int argc, char *argv[]){
         {-30.292519947040205, 35.028575973320045},
         {9.246104233908426, 48.859531163960156},
         {32.9836001676598, 9.342516333559956}
-    }))),map);
+    }))),nullptr);
+
+    LayerGroup *group = new LayerGroup({eurasia,africa},map);
+    group->addTo(map);
 
     FeatureLayer *northAmerica = new FeatureLayer(new Feature(new Polygon(LinearRing({
         {69.57428548514784, -162.9516683269849},
@@ -104,8 +109,8 @@ int main(int argc, char *argv[]){
         {-78,-180}
     }))),map);
 
-    eurasia->addTo(map);
-    africa->addTo(map);
+    // eurasia->addTo(map);
+    // africa->addTo(map);
     northAmerica->addTo(map);
     southAmerica->addTo(map);
     australia->addTo(map);

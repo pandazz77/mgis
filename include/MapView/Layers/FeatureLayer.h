@@ -28,7 +28,7 @@ class FeatureLayer: public ILayer{
         static FGraphicsCollection *buildFeatureGeometryCollection(GeometryCollection<GeometryUnit> *collection,Projection *proj);
 
     protected:
-        void onMapChanged() override;
+        void rebuildItem() override;
 
     private:
         FGraphicsItem *item = nullptr;
