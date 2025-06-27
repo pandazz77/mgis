@@ -48,23 +48,30 @@ class Projection{
             return result;
         }
 
-        #define _transformCollection(Collection)                                \
-        template<typename SourceUnit, typename TargetUnit>                      \
-        Collection<TargetUnit> transform(const Collection<SourceUnit> &source){ \
-            Collection<TargetUnit> result;                                      \
-                                                                                \
-            for(auto sGeometry: source)                                         \
-                result.push_back(transform<SourceUnit,TargetUnit>(sGeometry));  \
-                                                                                \
-                                                                                \
-            return result;                                                      \
-        }                                                                       \
+        template<template<typename> class Collection, typename SourceUnit, typename TargetUnit>
+        Collection<TargetUnit> transformCollection(const Collection<SourceUnit>& source) {
+            Collection<TargetUnit> result;
 
-        _transformCollection(MultiPoint)
-        _transformCollection(MultiLineString)
-        _transformCollection(MutliPolygon)
+            for (const auto& sGeometry : source)
+                result.push_back(transform<SourceUnit, TargetUnit>(sGeometry));
 
-        // transform alias:
+            return result;
+        }
+
+        template<typename SourceUnit, typename TargetUnit>
+        MultiPoint<TargetUnit> transform(const MultiPoint<SourceUnit> &source){
+            return transformCollection<MultiPoint, SourceUnit, TargetUnit>(source);
+        }
+
+        template<typename SourceUnit, typename TargetUnit>
+        MultiLineString<TargetUnit> transform(const MultiLineString<SourceUnit> &source){
+            return transformCollection<MultiLineString, SourceUnit, TargetUnit>(source);
+        }
+        
+        template<typename SourceUnit, typename TargetUnit>
+        MutliPolygon<TargetUnit> transform(const MutliPolygon<SourceUnit> &source){
+            return transformCollection<MutliPolygon, SourceUnit, TargetUnit>(source);
+        }
 
         template<template<typename> typename T>
         T<Point2D> project(T<LatLng> geometry){ return transform<LatLng,Point2D>(geometry); }
