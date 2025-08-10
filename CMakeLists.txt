@@ -91,22 +91,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)
-
-    # =============
-    set(SRCS_TEST_PROJ
-        tests/test_proj.cpp
-    )
-    add_executable(ProjTest ${SRCS_TEST_PROJ})
-    target_link_libraries(ProjTest ${LIBS} ${PROJECT_NAME})
-    # ==============
-
-    # =============
-    set(SRCS_SAMPLE_WINDOW
-        tests/sample_window.cpp
-    )
-    add_executable(SampleWindow ${SRCS_SAMPLE_WINDOW})
-    target_link_libraries(SampleWindow ${LIBS} ${PROJECT_NAME})
-    # ==============
-
-
+    add_subdirectory(./tests)
 endif()
