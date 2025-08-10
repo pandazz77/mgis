@@ -18,5 +18,4 @@ class LayerGroup: public ILayer, public MapPane{
         
     private:
         QGraphicsItemGroup *group = nullptr;
-        QSet<ILayer*> layers;
 };
