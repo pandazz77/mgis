@@ -7,7 +7,7 @@ class FeatureCollectionLayer: public LayerGroup{
     Q_OBJECT
 
     public:
-        FeatureCollectionLayer(FeatureCollection *collection,QObject *parent);
+        FeatureCollectionLayer(FeatureCollection *collection,QObject *parent=nullptr);
         ~FeatureCollectionLayer();
 
         FeatureCollection *getCollection();
