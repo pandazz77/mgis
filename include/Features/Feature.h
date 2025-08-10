@@ -2,7 +2,6 @@
 
 #include "IFeature.h"
 #include "GeoTypes.hpp"
-#include "Stylers.h"
 
 #include <unordered_map>
 #include <string>
@@ -14,6 +13,5 @@ class Feature : public IFeature{
         ~Feature();
 
         Geometry *geometry;
-        IStyler *styler = RandomStyler::getInstance(); /// TODO: styler field as shared ptr 
         std::unordered_map<std::string,std::variant<int,double,bool,std::string>> properties;
 };
