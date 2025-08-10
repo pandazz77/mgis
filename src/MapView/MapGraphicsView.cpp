@@ -64,16 +64,22 @@ void MapGraphicsView::onMouseDoubleClick(Point2D pos){
 }
 
 void MapGraphicsView::addLayer(ILayer *layer){
+    MapPane::addLayer(layer);
+    layer->rebuildItem(this);
     scene()->addItem(layer->getItem());
-    layerSet.insert(layer);
     if(!layer->getItem()->zValue()){ // if not specified
-        layer->getItem()->setZValue(layerSet.size());
+        layer->getItem()->setZValue(layers.size());
     }
 }
 
+MapGraphicsView *MapGraphicsView::map(){
+    return this;
+}
+
 void MapGraphicsView::removeLayer(ILayer *layer){
+    MapPane::removeLayer(layer);
+    layer->rebuildItem(nullptr);
     scene()->removeItem(layer->getItem());
-    layerSet.remove(layer);
 }
 
 void MapGraphicsView::setProjection(Projection *proj){

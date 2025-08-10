@@ -6,20 +6,10 @@ ILayer::ILayer(QObject *parent): QObject(parent){
 
 }
 
-QGraphicsItem *ILayer::getItem(){
-    return item;
+void ILayer::addTo(MapPane *pane){
+    pane->addLayer(this);
 }
 
-void ILayer::addTo(MapGraphicsView *map){
-    // STRONG ORDER / DO NOT CHANGE
-    this->map = map;
-    onMapChanged();
-    map->addLayer(this);
-}
-
-void ILayer::removeFrom(MapGraphicsView *map){
-    // STRONG ORDER / DO NOT CHANGE
-    map->removeLayer(this);
-    this->map = nullptr;
-    onMapChanged();
+void ILayer::removeFrom(MapPane *pane){
+    pane->addLayer(this);
 }

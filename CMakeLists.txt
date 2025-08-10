@@ -28,7 +28,9 @@ set(SRCS
 
     src/MapView/QFeatureConvertor.cpp
 
+    src/MapView/Layers/MapPane.cpp
     src/MapView/Layers/ILayer.cpp
+    src/MapView/Layers/LayerGroup.cpp
     src/MapView/Layers/FeatureLayer.cpp
 )
 
@@ -57,7 +59,9 @@ set(HDRS
 
     include/MapView/QFeatureConvertor.h
 
+    include/MapView/Layers/MapPane.h
     include/MapView/Layers/ILayer.h
+    include/MapView/Layers/LayerGroup.h
     include/MapView/Layers/FeatureLayer.h
 )
 

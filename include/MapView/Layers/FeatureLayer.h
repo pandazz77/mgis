@@ -20,14 +20,17 @@ class FeatureLayer: public ILayer{
 
         IFeature *getFeature();
 
+        QGraphicsItem *getItem() override;
+
         static FGraphicsItem *buildFeature(IFeature *feature,Projection *proj);
         static FGraphicsItem *buildFeatureGeometry(Geometry *geometry,Projection *proj); // ONLY SINGULAR GEOMETRY OBJECTS, NOT COLLECTION
         template<class GeometryUnit>
         static FGraphicsCollection *buildFeatureGeometryCollection(GeometryCollection<GeometryUnit> *collection,Projection *proj);
 
     protected:
-        void onMapChanged() override;
+        void rebuildItem(MapPane *pane) override;
 
     private:
+        FGraphicsItem *item = nullptr;
         IFeature *feature;
 };

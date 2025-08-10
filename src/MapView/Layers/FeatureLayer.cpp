@@ -11,9 +11,14 @@ FeatureLayer::~FeatureLayer(){
     delete feature;
 }
 
-void FeatureLayer::onMapChanged(){
-    if(this->map){
-        this->item = buildFeature(this->feature,this->map->getProjection());
+QGraphicsItem *FeatureLayer::getItem(){
+    return item;
+}
+
+void FeatureLayer::rebuildItem(MapPane *pane){
+    MapGraphicsView *map = pane->map();
+    if(map){
+        this->item = buildFeature(this->feature,map->getProjection());
     } else {
         delete this->item;
     }
