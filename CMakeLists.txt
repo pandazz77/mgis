@@ -32,6 +32,7 @@ set(SRCS
     src/MapView/Layers/ILayer.cpp
     src/MapView/Layers/LayerGroup.cpp
     src/MapView/Layers/FeatureLayer.cpp
+    src/MapView/Layers/FeatureCollectionLayer.cpp
 )
 
 set(HDRS
@@ -63,6 +64,7 @@ set(HDRS
     include/MapView/Layers/ILayer.h
     include/MapView/Layers/LayerGroup.h
     include/MapView/Layers/FeatureLayer.h
+    include/MapView/Layers/FeatureCollectionLayer.h
 )
 
 find_package(Qt6 COMPONENTS 

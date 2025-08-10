@@ -3,7 +3,7 @@
 #include "MapGraphicsView.h"
 #include "QFeatureConvertor.h"
 
-FeatureLayer::FeatureLayer(IFeature *feature, QObject *parent) : ILayer(parent), feature(feature){
+FeatureLayer::FeatureLayer(Feature *feature, QObject *parent) : ILayer(parent), feature(feature){
 
 }
 
@@ -24,7 +24,7 @@ void FeatureLayer::rebuildItem(MapPane *pane){
     }
 }
 
-IFeature *FeatureLayer::getFeature(){
+Feature *FeatureLayer::getFeature(){
     return feature;
 }
 
@@ -68,40 +68,24 @@ FGraphicsCollection *FeatureLayer::buildFeatureGeometryCollection(GeometryCollec
     return group;
 }
 
-FGraphicsItem *FeatureLayer::buildFeature(IFeature *ifeature,Projection *proj){
+FGraphicsItem *FeatureLayer::buildFeature(Feature *feature,Projection *proj){
     FGraphicsItem *item = nullptr;
-
-    if(dynamic_cast<Feature*>(ifeature)){
-        Feature* feature = dynamic_cast<Feature*>(ifeature);
-        
-        item = buildFeatureGeometry(feature->geometry,proj);
-        if(!item) {
-            if(dynamic_cast<MultiPoint<LatLng>*>(feature->geometry)){
-                MultiPoint<LatLng> *geometry = dynamic_cast<MultiPoint<LatLng>*>(feature->geometry);
-                item = buildFeatureGeometryCollection(geometry,proj);
-            } else if(dynamic_cast<MultiLineString<LatLng>*>(feature->geometry)){
-                MultiLineString<LatLng> *geometry = dynamic_cast<MultiLineString<LatLng>*>(feature->geometry);
-                item = buildFeatureGeometryCollection(geometry,proj);
-            } else if(dynamic_cast<MultiPolygon<LatLng>*>(feature->geometry)){
-                MultiPolygon<LatLng> *geometry = dynamic_cast<MultiPolygon<LatLng>*>(feature->geometry);
-                item = buildFeatureGeometryCollection(geometry,proj);
-            }
+    
+    item = buildFeatureGeometry(feature->geometry,proj);
+    if(!item) {
+        if(dynamic_cast<MultiPoint<LatLng>*>(feature->geometry)){
+            MultiPoint<LatLng> *geometry = dynamic_cast<MultiPoint<LatLng>*>(feature->geometry);
+            item = buildFeatureGeometryCollection(geometry,proj);
+        } else if(dynamic_cast<MultiLineString<LatLng>*>(feature->geometry)){
+            MultiLineString<LatLng> *geometry = dynamic_cast<MultiLineString<LatLng>*>(feature->geometry);
+            item = buildFeatureGeometryCollection(geometry,proj);
+        } else if(dynamic_cast<MultiPolygon<LatLng>*>(feature->geometry)){
+            MultiPolygon<LatLng> *geometry = dynamic_cast<MultiPolygon<LatLng>*>(feature->geometry);
+            item = buildFeatureGeometryCollection(geometry,proj);
         }
-
-        feature->styler->apply(item,feature->geometry->type());
-
-    } else if(dynamic_cast<FeatureCollection*>(ifeature)){
-        FeatureCollection *collection = dynamic_cast<FeatureCollection*>(ifeature);
-
-        FGraphicsCollection *group = new FGraphicsCollection;
-
-        for(IFeature *feature: *collection){
-            FGraphicsItem *subItem = buildFeature(feature,proj);
-            group->addToGroup(subItem);
-        }
-
-        item = group;
     }
+
+    feature->styler->apply(item,feature->geometry->type());
 
     return item;
 }

@@ -1,6 +1,10 @@
 #include "LayerGroup.h"
 
-LayerGroup::LayerGroup(std::initializer_list<ILayer *> layers, QObject *parent): ILayer(parent){
+LayerGroup::LayerGroup(QObject *parent): ILayer(parent){
+
+}
+
+LayerGroup::LayerGroup(std::initializer_list<ILayer *> layers, QObject *parent): LayerGroup(parent){
     for(ILayer *l: layers){
         addLayer(l);
     }
