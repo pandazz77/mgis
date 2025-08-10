@@ -25,8 +25,7 @@ int main(int argc, char *argv[]){
         {90,-180},
         {90,180}
     }))),map);
-    Feature *waterFeature = dynamic_cast<Feature*>(water->getFeature());
-    waterFeature->styler = new PolyStyler(QPen(Qt::black),QBrush(Qt::blue));
+    water->styler = new PolyStyler(QPen(Qt::black),QBrush(Qt::blue));
     water->addTo(map);
 
     // ====

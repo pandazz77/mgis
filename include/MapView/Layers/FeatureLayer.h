@@ -2,8 +2,8 @@
 
 #include "ILayer.h"
 #include "Feature.h"
-#include "FeatureCollection.h"
 #include "Projection.h"
+#include "Stylers.h"
 
 using FGraphicsItem         = QGraphicsItem;
 using FGraphicsPoint        = QGraphicsPixmapItem;
@@ -22,12 +22,14 @@ class FeatureLayer: public ILayer{
 
         QGraphicsItem *getItem() override;
 
+        IStyler *styler = RandomStyler::getInstance(); /// TODO: styler field as shared ptr 
+
+    protected:
         static FGraphicsItem *buildFeature(Feature *feature,Projection *proj);
         static FGraphicsItem *buildFeatureGeometry(Geometry *geometry,Projection *proj); // ONLY SINGULAR GEOMETRY OBJECTS, NOT COLLECTION
         template<class GeometryUnit>
         static FGraphicsCollection *buildFeatureGeometryCollection(GeometryCollection<GeometryUnit> *collection,Projection *proj);
 
-    protected:
         void rebuildItem(MapPane *pane) override;
 
     private:
