@@ -33,6 +33,8 @@ set(SRCS
     src/MapView/Layers/LayerGroup.cpp
     src/MapView/Layers/FeatureLayer.cpp
     src/MapView/Layers/FeatureCollectionLayer.cpp
+
+    src/Providers/GeoJsonProvider.cpp
 )
 
 set(HDRS
@@ -65,6 +67,8 @@ set(HDRS
     include/MapView/Layers/LayerGroup.h
     include/MapView/Layers/FeatureLayer.h
     include/MapView/Layers/FeatureCollectionLayer.h
+
+    include/Providers/GeoJsonProvider.h
 )
 
 find_package(Qt6 COMPONENTS 
@@ -87,6 +91,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     include/MapView/Layers
     include/Stylers
     include/Features
+    include/Providers
 )
 
 option(BUILD_TESTS "Build tests" ON)
