@@ -21,8 +21,8 @@ class MapGraphicsView: public QGraphicsView, public MapPane{
 
         MapCamera *getCam();
 
-        void addLayer(ILayer *layer);
-        void removeLayer(ILayer *layer);
+        void addLayer(ILayer *layer) override;
+        void removeLayer(ILayer *layer) override;
 
         MapGraphicsView *map() override;
         MapPane *parentPane() = delete;
@@ -44,8 +44,6 @@ class MapGraphicsView: public QGraphicsView, public MapPane{
     private:
         Projection *proj;
         MapCamera *cam;
-
-        QSet<ILayer*> layerSet;
 
         double previousScale = 0;
 };

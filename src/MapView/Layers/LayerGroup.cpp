@@ -10,14 +10,6 @@ LayerGroup::~LayerGroup(){
     }
 }
 
-void LayerGroup::addLayer(ILayer *layer){
-    layers.insert(layer);
-}
-
-void LayerGroup::removeLayer(ILayer *layer){
-    layers.remove(layer);
-}
-
 QSet<ILayer*> LayerGroup::getLayers(){
     return layers;
 }
@@ -27,11 +19,12 @@ QGraphicsItem *LayerGroup::getItem(){
     return group;
 }
 
-void LayerGroup::rebuildItem(){
+void LayerGroup::rebuildItem(MapPane *pane){
     if(group) delete group;
 
     group = new QGraphicsItemGroup;
     for(ILayer *l: layers){
-        l->rebuildItem();
+        l->rebuildItem(pane);
+        group->addToGroup(l->getItem());
     }
 }

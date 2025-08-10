@@ -14,8 +14,5 @@ class ILayer: public QObject{
         void addTo(MapPane *pane);
         void removeFrom(MapPane *pane);
         
-        virtual void rebuildItem() = 0;
-
-    protected:
-        MapPane *pane = nullptr;
+        virtual void rebuildItem(MapPane *pane) = 0;
 };

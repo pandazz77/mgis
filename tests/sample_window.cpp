@@ -55,8 +55,7 @@ int main(int argc, char *argv[]){
         {32.9836001676598, 9.342516333559956}
     }))),nullptr);
 
-    LayerGroup *group = new LayerGroup({eurasia,africa},map);
-    group->addTo(map);
+    LayerGroup *eurasia_N_africa = new LayerGroup({eurasia,africa},map);
 
     FeatureLayer *northAmerica = new FeatureLayer(new Feature(new Polygon(LinearRing({
         {69.57428548514784, -162.9516683269849},
@@ -109,8 +108,7 @@ int main(int argc, char *argv[]){
         {-78,-180}
     }))),map);
 
-    // eurasia->addTo(map);
-    // africa->addTo(map);
+    eurasia_N_africa->addTo(map);
     northAmerica->addTo(map);
     southAmerica->addTo(map);
     australia->addTo(map);

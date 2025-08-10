@@ -4,6 +4,15 @@ MapPane::MapPane(MapPane *parent): parent(parent){
 
 }
 
+void MapPane::addLayer(ILayer *layer){
+    layers.insert(layer);
+}
+
+void MapPane::removeLayer(ILayer *layer){
+    layers.remove(layer);
+}
+
+
 MapPane *MapPane::parentPane(){
     return parent;
 }
