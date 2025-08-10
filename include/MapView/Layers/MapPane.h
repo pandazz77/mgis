@@ -11,6 +11,7 @@ class MapPane{
 
         virtual void addLayer(ILayer *layer);
         virtual void removeLayer(ILayer *layer);
+        QSet<ILayer*> getLayers();
 
         virtual MapGraphicsView *map();
 

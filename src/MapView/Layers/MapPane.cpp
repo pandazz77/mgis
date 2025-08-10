@@ -12,6 +12,9 @@ void MapPane::removeLayer(ILayer *layer){
     layers.remove(layer);
 }
 
+QSet<ILayer*> MapPane::getLayers(){
+    return layers;
+}
 
 MapPane *MapPane::parentPane(){
     return parent;

@@ -12,11 +12,6 @@ LayerGroup::~LayerGroup(){
     }
 }
 
-QSet<ILayer*> LayerGroup::getLayers(){
-    return layers;
-}
-
-
 QGraphicsItem *LayerGroup::getItem(){
     return group;
 }

@@ -9,8 +9,6 @@ class LayerGroup: public ILayer, public MapPane{
         LayerGroup(std::initializer_list<ILayer*> layers = {}, QObject *parent=nullptr);
         ~LayerGroup();
 
-        QSet<ILayer*> getLayers();
-
         QGraphicsItem *getItem() override;
 
     protected:
