@@ -2,7 +2,7 @@
 #include "FeatureLayer.h"
 
 
-FeatureCollectionLayer::FeatureCollectionLayer(FeatureCollection *collection,QObject *parent) : TLayerGroup<IFeatureLayer>(parent){
+FeatureCollectionLayer::FeatureCollectionLayer(FeatureCollection *collection,QObject *parent) : TLayerGroupUnited<IFeatureLayer>(parent){
     for(IFeature* ifeature: *collection){
         if(dynamic_cast<Feature*>(ifeature)) 
             addLayer(new FeatureLayer(dynamic_cast<Feature*>(ifeature),this));

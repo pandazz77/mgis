@@ -4,7 +4,7 @@
 #include "FeatureCollection.h"
 #include "IFeatureLayer.h"
 
-class FeatureCollectionLayer: public TLayerGroup<IFeatureLayer>{
+class FeatureCollectionLayer: public TLayerGroupUnited<IFeatureLayer>{
     Q_OBJECT
 
     public:
