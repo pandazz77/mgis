@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ILayer.h"
+#include "IFeatureLayer.h"
 #include "Feature.h"
 #include "Projection.h"
 #include "Stylers.h"
@@ -11,14 +11,14 @@ using FGraphicsLineString   = QGraphicsPathItem;
 using FGraphicsPolygon      = QGraphicsPathItem;
 using FGraphicsCollection   = QGraphicsItemGroup;
 
-class FeatureLayer: public ILayer{
+class FeatureLayer: public IFeatureLayer{
     Q_OBJECT
 
     public:
         FeatureLayer(Feature *feature, QObject *parent = nullptr);
         ~FeatureLayer();
 
-        Feature *getFeature();
+        Feature *getFeature() override;
 
         QGraphicsItem *getItem() override;
 

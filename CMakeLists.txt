@@ -31,6 +31,7 @@ set(SRCS
     src/MapView/Layers/MapPane.cpp
     src/MapView/Layers/ILayer.cpp
     src/MapView/Layers/LayerGroup.cpp
+    src/MapView/Layers/IFeatureLayer.cpp
     src/MapView/Layers/FeatureLayer.cpp
     src/MapView/Layers/FeatureCollectionLayer.cpp
 
@@ -61,10 +62,13 @@ set(HDRS
     include/MapView/MapCamera.h
 
     include/MapView/QFeatureConvertor.h
-
+    
+    include/MapView/Layers/LayerSet.hpp
     include/MapView/Layers/MapPane.h
     include/MapView/Layers/ILayer.h
+    include/MapView/Layers/TLayerGroup.hpp
     include/MapView/Layers/LayerGroup.h
+    include/MapView/Layers/IFeatureLayer.h
     include/MapView/Layers/FeatureLayer.h
     include/MapView/Layers/FeatureCollectionLayer.h
 
