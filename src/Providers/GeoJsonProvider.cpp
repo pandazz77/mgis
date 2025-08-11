@@ -78,7 +78,7 @@ MultiLineString<LatLng> fetchMutliLineString(QVariantList lst){
 MultiPolygon<LatLng> fetchMultiPolygon(QVariantList lst){
     MultiPolygon<LatLng> result;
     for(QVariant poly: lst){
-        result.push_back(fetchPolygon(lst));
+        result.push_back(fetchPolygon(poly.toList()));
     }
     return result;
 }
