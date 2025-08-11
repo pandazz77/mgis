@@ -3,18 +3,17 @@
 #include <QSet>
 
 template<typename TLayer>
-class LayerSet{
+class LayerSet: private QSet<TLayer*>{
+    using super = QSet<TLayer*>;
+
     public:
         virtual void addLayer(TLayer *layer){ 
-            layers.insert(layer);
+            super::insert(layer);
         }
         virtual void removeLayer(TLayer *layer){
-            layers.remove(layer);
+            super::remove(layer);
         }
         QSet<TLayer*> getLayers(){
-            return layers;
+            return *this;
         }
-
-    protected:
-        QSet<TLayer *> layers;
 };

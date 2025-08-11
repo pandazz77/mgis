@@ -11,7 +11,7 @@ class TLayerGroup: public TLayer, public LayerSet<TLayer>{
             for(auto layer: layers) LayerSet<TLayer>::addLayer(layer);
         }
         ~TLayerGroup(){
-            for(ILayer *l: LayerSet<TLayer>::layers) l->deleteLater();
+            for(ILayer *l: this->getLayers()) l->deleteLater();
         }
 
         QGraphicsItem *getItem() override{
@@ -23,7 +23,7 @@ class TLayerGroup: public TLayer, public LayerSet<TLayer>{
             if(group) delete group;
 
             group = new QGraphicsItemGroup;
-            for(ILayer *l: LayerSet<TLayer>::layers){
+            for(ILayer *l: this->getLayers()){
                 l->rebuildItem(pane);
                 group->addToGroup(l->getItem());
             }
