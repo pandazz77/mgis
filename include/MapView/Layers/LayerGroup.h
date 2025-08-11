@@ -1,20 +1,13 @@
 #pragma once
 
 #include "ILayer.h"
+#include "TLayerGroup.hpp"
 
-class LayerGroup: public ILayer, public MapPane{
+class LayerGroup: public TLayerGroup<ILayer>{
     Q_OBJECT
 
     public:
         LayerGroup(QObject *parent=nullptr);
         LayerGroup(std::initializer_list<ILayer*> layers, QObject *parent=nullptr);
         ~LayerGroup();
-
-        QGraphicsItem *getItem() override;
-
-    protected:
-        void rebuildItem(MapPane *pane) override;
-        
-    private:
-        QGraphicsItemGroup *group = nullptr;
 };

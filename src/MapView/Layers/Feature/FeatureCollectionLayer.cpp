@@ -2,7 +2,7 @@
 #include "FeatureLayer.h"
 
 
-FeatureCollectionLayer::FeatureCollectionLayer(FeatureCollection *collection,QObject *parent) : LayerGroup(parent){
+FeatureCollectionLayer::FeatureCollectionLayer(FeatureCollection *collection,QObject *parent) : TLayerGroupUnited<IFeatureLayer>(parent){
     for(IFeature* ifeature: *collection){
         if(dynamic_cast<Feature*>(ifeature)) 
             addLayer(new FeatureLayer(dynamic_cast<Feature*>(ifeature),this));
@@ -11,7 +11,7 @@ FeatureCollectionLayer::FeatureCollectionLayer(FeatureCollection *collection,QOb
     }
 }
 
-FeatureCollection *FeatureCollectionLayer::getCollection(){
+FeatureCollection *FeatureCollectionLayer::getFeature(){
     return collection;
 }
 
