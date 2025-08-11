@@ -125,10 +125,31 @@ void test_serialize(){
     writeJson(geojson_file_out, doc);
 }
 
+template <typename T>
+void check_property(const FProps &props, std::string key, T value){
+    auto var_value = props.at(key);
+    assert(std::holds_alternative<T>(var_value));
+    assert(std::get<T>(var_value) == value);
+}
+
+void test_properties(){
+    QJsonDocument doc = readJson("test_properties.json");
+    QVariantMap map = doc.toVariant().toMap();
+
+    FeatureCollection collection = GeoJsonProvider::transformCollection(map);
+    Feature *feature = dynamic_cast<Feature*>(collection[0]);
+    assert(feature->properties.size() == 4);
+    check_property(feature->properties, "str_val",std::string("string"));
+    check_property(feature->properties,"bool_val",false);
+    check_property(feature->properties,"double_val",0.314);
+    check_property(feature->properties,"int_val",7);
+}
+
 
 int main(int argc, char *argv[]){
     test_types();
     test_serialize();
+    test_properties();
 
     return 0;
 }

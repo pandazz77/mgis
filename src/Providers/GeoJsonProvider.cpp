@@ -181,10 +181,11 @@ FProps GeoJsonProvider::transformProperites(QVariantMap properties){
     for(auto kv: properties.asKeyValueRange()){
         std::string key = kv.first.toStdString();
         switch(kv.second.typeId()){
-            case QMetaType::Int: result[key] = kv.second.toInt();
-            case QMetaType::Double: result[key] = kv.second.toDouble();
-            case QMetaType::Bool: result[key] = kv.second.toBool();
-            case QMetaType::QString: result[key] = kv.second.toString().toStdString();
+            case QMetaType::Double: result[key] = kv.second.toDouble(); break;
+            case QMetaType::Int:
+            case QMetaType::LongLong: result[key] = kv.second.toInt(); break;
+            case QMetaType::Bool: result[key] = kv.second.toBool(); break;
+            case QMetaType::QString: result[key] = kv.second.toString().toStdString(); break;
             /// TODO: enhance Feature::properties  
         }
     }
