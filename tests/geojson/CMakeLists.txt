@@ -24,3 +24,11 @@ set(SRCS_TEST_GEOJSON
 )
 add_executable(GeojsonTest ${SRCS_TEST_GEOJSON})
 target_link_libraries(GeojsonTest mgis Qt6::Core Qt6::Widgets)
+
+# ============================
+
+set(SRCS_GEOJSON_VIEWER
+    ./geojson_viewer.cpp
+)
+add_executable(GeojsonViewer ${SRCS_GEOJSON_VIEWER})
+target_link_libraries(GeojsonViewer mgis Qt6::Core Qt6::Widgets)
