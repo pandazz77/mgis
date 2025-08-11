@@ -131,6 +131,7 @@ FeatureCollection collectionFromVariant(QVariantMap map){
     for(auto var_feature: var_features){
         collection.push_back(ifeatureFromVariant(var_feature.toMap()));
     }
+    return collection;
 }
 
 IFeature *ifeatureFromVariant(QVariantMap map){

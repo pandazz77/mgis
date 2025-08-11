@@ -16,8 +16,4 @@ target_link_libraries(SampleWindow mgis Qt6::Core Qt6::Widgets)
 
 # =======================================================
 
-set(SRCS_TEST_GEOJSON
-    ./test_geojson.cpp
-)
-add_executable(GeojsonTest ${SRCS_TEST_GEOJSON})
-target_link_libraries(GeojsonTest mgis Qt6::Core Qt6::Widgets)
+add_subdirectory(./geojson)
