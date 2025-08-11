@@ -1,18 +1,6 @@
 #include "GeoJsonProvider.h"
 #include <QSet>
 
-// latlng <-> lnglat
-QVariantList wrapCoords(QVariantList coords){
-    if(coords[0].typeId() != QMetaType::QVariantList) {
-        return QVariantList{coords[1], coords[0]};
-    } else {
-        QVariantList result;
-        for(QVariant item : coords)
-            result.push_back(wrapCoords(item.toList()));
-        return result;
-    }
-}
-
 const QSet<QPair<Geometry::Type,QString>> GEOMETRIES_STR = {
     {Geometry::Type::POINT,"Point"},
     {Geometry::Type::LINESTRING,"LineString"},
@@ -37,7 +25,7 @@ Geometry::Type GeoJsonProvider::transformGeometryType(QString str){
 }
 
 LatLng GeoJsonProvider::transformLatLng(QVariantList lst){
-    return LatLng(lst[0].toDouble(),lst[1].toDouble());
+    return LngLat(lst[0].toDouble(),lst[1].toDouble());
 }
 
 LineString<LatLng> GeoJsonProvider::transformLineString(QVariantList lst){
@@ -87,7 +75,7 @@ Geometry *GeoJsonProvider::geometryfromVariant(QVariantMap map){
     using T = Geometry::Type;
 
     Geometry::Type type = GeoJsonProvider::transformGeometryType(map["type"].toString());
-    QVariantList coords = wrapCoords(map["coordinates"].toList()); // latlng values
+    QVariantList coords = map["coordinates"].toList(); // latlng values
 
     switch(type){
         case T::POINT:
