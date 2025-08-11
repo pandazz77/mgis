@@ -38,7 +38,7 @@ G *check_geometry(IFeature *ifeature){
 void test_types(){
     QJsonDocument doc = readJson("all_types.json");
     QVariantMap map = doc.toVariant().toMap();
-    FeatureCollection collection = GeoJsonProvider::collectionFromVariant(map);
+    FeatureCollection collection = GeoJsonProvider::transformCollection(map);
 
     assert(collection.size()==8);
 
@@ -119,8 +119,8 @@ void test_serialize(){
     QJsonDocument doc = readJson(geojson_file_in);
     QVariantMap map = doc.toVariant().toMap();
 
-    IFeature *feature = GeoJsonProvider::ifeatureFromVariant(map);
-    map = GeoJsonProvider::ifeatureToVariant(feature);
+    IFeature *feature = GeoJsonProvider::transformIFeature(map);
+    map = GeoJsonProvider::transformIFeature(feature);
     doc = QJsonDocument::fromVariant(map);
     writeJson(geojson_file_out, doc);
 }

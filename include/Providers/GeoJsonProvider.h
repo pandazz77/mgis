@@ -31,12 +31,12 @@ class GeoJsonProvider{
         static FProps transformProperites(QVariantMap properties);
         static QVariantMap transformProperties(FProps properties);
 
-        static Geometry *geometryfromVariant(QVariantMap map);
-        static QVariantMap geometryToVariant(Geometry *geometry);
-        static Feature featureFromVariant(QVariantMap map);
-        static QVariantMap featureToVariant(const Feature &feature);
-        static FeatureCollection collectionFromVariant(QVariantMap map);
-        static QVariantMap collectionToVariant(const FeatureCollection &collection);
-        static IFeature *ifeatureFromVariant(QVariantMap map);
-        static QVariantMap ifeatureToVariant(IFeature *feature);
+        static Geometry *transformGeometry(QVariantMap map);
+        static QVariantMap transformGeometry(Geometry *geometry);
+        static Feature transformFeature(QVariantMap map);
+        static QVariantMap transformFeature(const Feature &feature);
+        static FeatureCollection transformCollection(QVariantMap map);
+        static QVariantMap transformCollection(const FeatureCollection &collection);
+        static IFeature *transformIFeature(QVariantMap map);
+        static QVariantMap transformIFeature(IFeature *feature);
 };

@@ -121,7 +121,7 @@ QVariantList GeoJsonProvider::transformMultiPolygon(MultiPolygon<LatLng> polys){
     return result;
 }
 
-Geometry *GeoJsonProvider::geometryfromVariant(QVariantMap map){
+Geometry *GeoJsonProvider::transformGeometry(QVariantMap map){
     using T = Geometry::Type;
 
     Geometry::Type type = transformGeometryType(map["type"].toString());
@@ -143,7 +143,7 @@ Geometry *GeoJsonProvider::geometryfromVariant(QVariantMap map){
     }
 }
 
-QVariantMap GeoJsonProvider::geometryToVariant(Geometry *geometry){
+QVariantMap GeoJsonProvider::transformGeometry(Geometry *geometry){
     using T = Geometry::Type;
     QString type = transformGeometryType(geometry->type());
     QVariantList coords;
@@ -206,15 +206,15 @@ QVariantMap GeoJsonProvider::transformProperties(FProps properties){
 }
 
 
-Feature GeoJsonProvider::featureFromVariant(QVariantMap map){
-    Feature feature(geometryfromVariant(map["geometry"].toMap()));
+Feature GeoJsonProvider::transformFeature(QVariantMap map){
+    Feature feature(transformGeometry(map["geometry"].toMap()));
     feature.properties = transformProperites(map["properties"].toMap());
 
     return feature;
 }
 
-QVariantMap GeoJsonProvider::featureToVariant(const Feature &feature){
-    QVariantMap geometry = geometryToVariant(feature.geometry);
+QVariantMap GeoJsonProvider::transformFeature(const Feature &feature){
+    QVariantMap geometry = transformGeometry(feature.geometry);
     QVariantMap properties = transformProperties(feature.properties);
 
     return QVariantMap({
@@ -224,19 +224,19 @@ QVariantMap GeoJsonProvider::featureToVariant(const Feature &feature){
     });
 }
 
-FeatureCollection GeoJsonProvider::collectionFromVariant(QVariantMap map){
+FeatureCollection GeoJsonProvider::transformCollection(QVariantMap map){
     FeatureCollection collection;
     QVariantList var_features = map["features"].toList();
     for(auto var_feature: var_features){
-        collection.push_back(ifeatureFromVariant(var_feature.toMap()));
+        collection.push_back(transformIFeature(var_feature.toMap()));
     }
     return collection;
 }
 
-QVariantMap GeoJsonProvider::collectionToVariant(const FeatureCollection &collection){
+QVariantMap GeoJsonProvider::transformCollection(const FeatureCollection &collection){
     QVariantList features;
     for(IFeature* feature: collection){
-        features.push_back(ifeatureToVariant(feature));
+        features.push_back(transformIFeature(feature));
     }
     return QVariantMap{
         {"type","FeatureCollection"},
@@ -244,15 +244,15 @@ QVariantMap GeoJsonProvider::collectionToVariant(const FeatureCollection &collec
     };
 }
 
-IFeature *GeoJsonProvider::ifeatureFromVariant(QVariantMap map){
+IFeature *GeoJsonProvider::transformIFeature(QVariantMap map){
     QString type = map["type"].toString();
     IFeature *result = nullptr;
-    if(type == "Feature") result = new Feature(featureFromVariant(map));
-    else if(type == "FeatureCollection") result = new FeatureCollection(collectionFromVariant(map));
+    if(type == "Feature") result = new Feature(transformFeature(map));
+    else if(type == "FeatureCollection") result = new FeatureCollection(transformCollection(map));
     return result;
 }
 
-QVariantMap GeoJsonProvider::ifeatureToVariant(IFeature *feature){
-    if(dynamic_cast<Feature*>(feature)) return featureToVariant(*dynamic_cast<Feature*>(feature));
-    else if(dynamic_cast<FeatureCollection*>(feature)) return collectionToVariant(*dynamic_cast<FeatureCollection*>(feature));
+QVariantMap GeoJsonProvider::transformIFeature(IFeature *feature){
+    if(dynamic_cast<Feature*>(feature)) return transformFeature(*dynamic_cast<Feature*>(feature));
+    else if(dynamic_cast<FeatureCollection*>(feature)) return transformCollection(*dynamic_cast<FeatureCollection*>(feature));
 }
