@@ -28,12 +28,14 @@ set(SRCS
 
     src/MapView/QFeatureConvertor.cpp
 
-    src/MapView/Layers/MapPane.cpp
-    src/MapView/Layers/ILayer.cpp
+    src/MapView/Layers/Base/MapPane.cpp
+    src/MapView/Layers/Base/ILayer.cpp
+    
     src/MapView/Layers/LayerGroup.cpp
-    src/MapView/Layers/IFeatureLayer.cpp
-    src/MapView/Layers/FeatureLayer.cpp
-    src/MapView/Layers/FeatureCollectionLayer.cpp
+
+    src/MapView/Layers/Feature/IFeatureLayer.cpp
+    src/MapView/Layers/Feature/FeatureLayer.cpp
+    src/MapView/Layers/Feature/FeatureCollectionLayer.cpp
 
     src/Providers/GeoJsonProvider.cpp
 )
@@ -63,14 +65,16 @@ set(HDRS
 
     include/MapView/QFeatureConvertor.h
     
-    include/MapView/Layers/LayerSet.hpp
-    include/MapView/Layers/MapPane.h
-    include/MapView/Layers/ILayer.h
-    include/MapView/Layers/TLayerGroup.hpp
+    include/MapView/Layers/Base/LayerSet.hpp
+    include/MapView/Layers/Base/MapPane.h
+    include/MapView/Layers/Base/ILayer.h
+    include/MapView/Layers/Base/TLayerGroup.hpp
+
     include/MapView/Layers/LayerGroup.h
-    include/MapView/Layers/IFeatureLayer.h
-    include/MapView/Layers/FeatureLayer.h
-    include/MapView/Layers/FeatureCollectionLayer.h
+
+    include/MapView/Layers/Feature/IFeatureLayer.h
+    include/MapView/Layers/Feature/FeatureLayer.h
+    include/MapView/Layers/Feature/FeatureCollectionLayer.h
 
     include/Providers/GeoJsonProvider.h
 )
@@ -93,6 +97,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     include/Projection
     include/MapView
     include/MapView/Layers
+    include/MapView/Layers/Base
+    include/MapView/Layers/Feature
     include/Stylers
     include/Features
     include/Providers
