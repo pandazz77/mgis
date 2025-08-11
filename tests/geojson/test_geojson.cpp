@@ -30,7 +30,7 @@ G *check_geometry(IFeature *ifeature){
 void test_types(){
     QJsonDocument doc = readJson("all_types.json");
     QVariantMap map = doc.toVariant().toMap();
-    FeatureCollection collection = collectionFromVariant(map);
+    FeatureCollection collection = GeoJsonProvider::collectionFromVariant(map);
 
     assert(collection.size()==8);
 
