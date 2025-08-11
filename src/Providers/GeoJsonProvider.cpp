@@ -28,6 +28,10 @@ LatLng GeoJsonProvider::transformLatLng(QVariantList lst){
     return LngLat(lst[0].toDouble(),lst[1].toDouble());
 }
 
+QVariantList GeoJsonProvider::transformLatLng(LatLng coords){
+    return QVariantList({coords.lng,coords.lat});
+}
+
 LineString<LatLng> GeoJsonProvider::transformLineString(QVariantList lst){
     LineString<LatLng> result;
     for(auto pos: lst) 
@@ -35,10 +39,26 @@ LineString<LatLng> GeoJsonProvider::transformLineString(QVariantList lst){
     return result;
 }
 
+QVariantList GeoJsonProvider::transformLineString(LineString<LatLng> coords){
+    QVariantList result;
+    for(auto pos: coords){
+        result.push_back(transformLatLng(pos));
+    }
+    return result;
+}
+
 std::vector<LineString<LatLng>> GeoJsonProvider::transformLineStrings(QVariantList lst){
     std::vector<LineString<LatLng>> result;
     for(auto line: lst){
         result.push_back(transformLineString(line.toList()));
+    }
+    return result;
+}
+
+QVariantList GeoJsonProvider::transformLineStrings(std::vector<LineString<LatLng>> coords){
+    QVariantList result;
+    for(auto line: coords){
+        result.push_back(transformLineString(line));
     }
     return result;
 }
@@ -52,6 +72,15 @@ Polygon<LatLng> GeoJsonProvider::transformPolygon(QVariantList lst){
     return Polygon<LatLng>(exterior,interiors);
 }
 
+QVariantList GeoJsonProvider::transformPolygon(Polygon<LatLng> coords){
+    QVariantList exterior = transformLineString(coords.exterior);
+    QVariantList interiors;
+    for(auto interior: coords.interiors){
+        interiors.push_back(transformLineString(interior));
+    }
+    return QVariantList({exterior,interiors});
+}
+
 MultiPoint<LatLng> GeoJsonProvider::transformMultiPoint(QVariantList lst){
     auto line = transformLineString(lst);
     std::vector<Point<LatLng>> points;
@@ -59,8 +88,21 @@ MultiPoint<LatLng> GeoJsonProvider::transformMultiPoint(QVariantList lst){
     return MultiPoint<LatLng>(points);
 }
 
+QVariantList GeoJsonProvider::transformMultiPoint(MultiPoint<LatLng> coords){
+    QVariantList points;
+    for(auto p: coords){
+        points.push_back(transformLatLng(p.coordinates));
+    }
+    return points;
+}
+
+
 MultiLineString<LatLng> GeoJsonProvider::transformMultiLineString(QVariantList lst){
     return MultiLineString<LatLng>(transformLineStrings(lst));
+}
+
+QVariantList GeoJsonProvider::transformMultiLineString(MultiLineString<LatLng> coords){
+    return transformLineStrings(coords);
 }
 
 MultiPolygon<LatLng> GeoJsonProvider::transformMultiPolygon(QVariantList lst){
@@ -71,10 +113,18 @@ MultiPolygon<LatLng> GeoJsonProvider::transformMultiPolygon(QVariantList lst){
     return result;
 }
 
+QVariantList GeoJsonProvider::transformMultiPolygon(MultiPolygon<LatLng> polys){
+    QVariantList result;
+    for(auto poly: polys){
+        result.push_back(transformPolygon(poly));
+    }
+    return result;
+}
+
 Geometry *GeoJsonProvider::geometryfromVariant(QVariantMap map){
     using T = Geometry::Type;
 
-    Geometry::Type type = GeoJsonProvider::transformGeometryType(map["type"].toString());
+    Geometry::Type type = transformGeometryType(map["type"].toString());
     QVariantList coords = map["coordinates"].toList(); // latlng values
 
     switch(type){
@@ -93,24 +143,85 @@ Geometry *GeoJsonProvider::geometryfromVariant(QVariantMap map){
     }
 }
 
-Feature GeoJsonProvider::featureFromVariant(QVariantMap map){
-    Feature feature(geometryfromVariant(map["geometry"].toMap()));
-    QVariantMap var_props = map["properties"].toMap();
+QVariantMap GeoJsonProvider::geometryToVariant(Geometry *geometry){
+    using T = Geometry::Type;
+    QString type = transformGeometryType(geometry->type());
+    QVariantList coords;
 
-    std::unordered_map<std::string,std::variant<int,double,bool,std::string>> properties;
+    switch(geometry->type()){
+        case T::POINT:
+            coords = transformLatLng(dynamic_cast<Point<LatLng>*>(geometry)->coordinates);
+            break;
+        case T::LINESTRING:
+            coords = transformLineString(*dynamic_cast<LineString<LatLng>*>(geometry));
+            break;
+        case T::POLYGON:
+            coords = transformPolygon(*dynamic_cast<Polygon<LatLng>*>(geometry));
+            break;
+        case T::MULTIPOINT:
+            coords = transformMultiPoint(*dynamic_cast<MultiPoint<LatLng>*>(geometry));
+            break;
+        case T::MULTILINESTRING:
+            coords = transformMultiLineString(*dynamic_cast<MultiLineString<LatLng>*>(geometry));
+            break;
+        case T::MULTIPOLYGON:
+            coords = transformMultiPolygon(*dynamic_cast<MultiPolygon<LatLng>*>(geometry));
+            break;
+    }
 
-    for(auto kv: var_props.asKeyValueRange()){
+    return QVariantMap({
+        {"type",type},
+        {"coordinates",coords}
+    });
+}
+
+FProps GeoJsonProvider::transformProperites(QVariantMap properties){
+    FProps result;
+
+    for(auto kv: properties.asKeyValueRange()){
         std::string key = kv.first.toStdString();
         switch(kv.second.typeId()){
-            case QMetaType::Int: feature.properties[key] = kv.second.toInt();
-            case QMetaType::Double: feature.properties[key] = kv.second.toDouble();
-            case QMetaType::Bool: feature.properties[key] = kv.second.toBool();
-            case QMetaType::QString: feature.properties[key] = kv.second.toString().toStdString();
+            case QMetaType::Int: result[key] = kv.second.toInt();
+            case QMetaType::Double: result[key] = kv.second.toDouble();
+            case QMetaType::Bool: result[key] = kv.second.toBool();
+            case QMetaType::QString: result[key] = kv.second.toString().toStdString();
             /// TODO: enhance Feature::properties  
         }
     }
 
+    return result;
+}
+
+QVariantMap GeoJsonProvider::transformProperties(FProps properties){
+    QVariantMap result;
+    for(auto kv: properties){
+        QString key = QString::fromStdString(kv.first);
+        if(std::holds_alternative<int>(kv.second)) result[key] = std::get<int>(kv.second);
+        else if(std::holds_alternative<double>(kv.second)) result[key] = std::get<double>(kv.second);
+        else if(std::holds_alternative<bool>(kv.second)) result[key] = std::get<bool>(kv.second);
+        else if(std::holds_alternative<std::string>(kv.second)) result[key] = QString::fromStdString(std::get<std::string>(kv.second));
+    }
+
+    return result;
+}
+
+
+Feature GeoJsonProvider::featureFromVariant(QVariantMap map){
+    Feature feature(geometryfromVariant(map["geometry"].toMap()));
+    feature.properties = transformProperites(map["properties"].toMap());
+
     return feature;
+}
+
+QVariantMap GeoJsonProvider::featureToVariant(const Feature &feature){
+    QVariantMap geometry = geometryToVariant(feature.geometry);
+    QVariantMap properties = transformProperties(feature.properties);
+
+    return QVariantMap({
+        {"type","Feature"},
+        {"geometry",geometry},
+        {"properties",properties}
+    });
 }
 
 FeatureCollection GeoJsonProvider::collectionFromVariant(QVariantMap map){
@@ -122,10 +233,26 @@ FeatureCollection GeoJsonProvider::collectionFromVariant(QVariantMap map){
     return collection;
 }
 
+QVariantMap GeoJsonProvider::collectionToVariant(const FeatureCollection &collection){
+    QVariantList features;
+    for(IFeature* feature: collection){
+        features.push_back(ifeatureToVariant(feature));
+    }
+    return QVariantMap{
+        {"type","FeatureCollection"},
+        {"features",features}
+    };
+}
+
 IFeature *GeoJsonProvider::ifeatureFromVariant(QVariantMap map){
     QString type = map["type"].toString();
     IFeature *result = nullptr;
     if(type == "Feature") result = new Feature(featureFromVariant(map));
     else if(type == "FeatureCollection") result = new FeatureCollection(collectionFromVariant(map));
     return result;
+}
+
+QVariantMap GeoJsonProvider::ifeatureToVariant(IFeature *feature){
+    if(dynamic_cast<Feature*>(feature)) return featureToVariant(*dynamic_cast<Feature*>(feature));
+    else if(dynamic_cast<FeatureCollection*>(feature)) return collectionToVariant(*dynamic_cast<FeatureCollection*>(feature));
 }

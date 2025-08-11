@@ -12,6 +12,14 @@ QJsonDocument readJson(QString filename){
     return doc;
 }
 
+void writeJson(QString filename, QJsonDocument doc){
+    QFile file(filename);
+    bool opened = file.open(QIODevice::WriteOnly);
+    assert(opened);
+    file.write(doc.toJson(QJsonDocument::JsonFormat::Indented));
+    file.close();
+}
+
 /*
 checks:
     - ifeature is feature?
@@ -102,9 +110,25 @@ void test_types(){
     // ===================================================
 }
 
+void test_serialize(){
+    const QString geojson_test_case = "all_types";
+
+    QString geojson_file_in = geojson_test_case + ".json";
+    QString geojson_file_out = geojson_test_case + "_back.json";
+
+    QJsonDocument doc = readJson(geojson_file_in);
+    QVariantMap map = doc.toVariant().toMap();
+
+    IFeature *feature = GeoJsonProvider::ifeatureFromVariant(map);
+    map = GeoJsonProvider::ifeatureToVariant(feature);
+    doc = QJsonDocument::fromVariant(map);
+    writeJson(geojson_file_out, doc);
+}
+
 
 int main(int argc, char *argv[]){
     test_types();
+    test_serialize();
 
     return 0;
 }
