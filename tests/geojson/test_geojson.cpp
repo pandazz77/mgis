@@ -126,7 +126,7 @@ void test_serialize(){
 }
 
 template <typename T>
-void check_property(const FProps &props, std::string key, T value){
+void check_property(const Feature::Properties &props, std::string key, T value){
     auto var_value = props.at(key);
     assert(std::holds_alternative<T>(var_value));
     assert(std::get<T>(var_value) == value);

@@ -193,7 +193,7 @@ Feature::Properties GeoJsonProvider::transformProperites(QVariantMap properties)
     return result;
 }
 
-QVariantMap GeoJsonProvider::transformProperties(FProps properties){
+QVariantMap GeoJsonProvider::transformProperties(Feature::Properties properties){
     QVariantMap result;
     for(auto kv: properties){
         QString key = QString::fromStdString(kv.first);
