@@ -3,15 +3,15 @@
 #include "LayerSet.hpp"
 #include "ILayer.h"
 
-template <typename T>
-class TLayerGroup: public T, public LayerSet<T>{
+template <typename TLayer>
+class TLayerGroup: public TLayer, public LayerSet<TLayer>{
     public:
-        TLayerGroup(QObject *parent=nullptr): T(parent){}
-        TLayerGroup(std::initializer_list<T*> layers, QObject *parent=nullptr): TLayerGroup<T>(parent){
-            for(auto layer: layers) LayerSet<T>::addLayer(layer);
+        TLayerGroup(QObject *parent=nullptr): TLayer(parent){}
+        TLayerGroup(std::initializer_list<TLayer*> layers, QObject *parent=nullptr): TLayerGroup<TLayer>(parent){
+            for(auto layer: layers) LayerSet<TLayer>::addLayer(layer);
         }
         ~TLayerGroup(){
-            for(ILayer *l: LayerSet<T>::layers) l->deleteLater();
+            for(ILayer *l: LayerSet<TLayer>::layers) l->deleteLater();
         }
 
         QGraphicsItem *getItem() override{
@@ -23,7 +23,7 @@ class TLayerGroup: public T, public LayerSet<T>{
             if(group) delete group;
 
             group = new QGraphicsItemGroup;
-            for(ILayer *l: LayerSet<T>::layers){
+            for(ILayer *l: LayerSet<TLayer>::layers){
                 l->rebuildItem(pane);
                 group->addToGroup(l->getItem());
             }

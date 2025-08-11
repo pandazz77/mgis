@@ -2,19 +2,19 @@
 
 #include <QSet>
 
-template<typename T>
+template<typename TLayer>
 class LayerSet{
     public:
-        virtual void addLayer(T *layer){ 
+        virtual void addLayer(TLayer *layer){ 
             layers.insert(layer);
         }
-        virtual void removeLayer(T *layer){
+        virtual void removeLayer(TLayer *layer){
             layers.remove(layer);
         }
-        QSet<T*> getLayers(){
+        QSet<TLayer*> getLayers(){
             return layers;
         }
 
     protected:
-        QSet<T *> layers;
+        QSet<TLayer *> layers;
 };
