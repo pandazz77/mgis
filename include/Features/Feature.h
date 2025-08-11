@@ -9,9 +9,11 @@
 
 class Feature : public IFeature{
     public:
+        using Properties = std::unordered_map<std::string,std::variant<int,double,bool,std::string>>;
+
         Feature(Geometry *geometry);
         ~Feature();
 
         Geometry *geometry;
-        std::unordered_map<std::string,std::variant<int,double,bool,std::string>> properties;
+        Properties properties;
 };

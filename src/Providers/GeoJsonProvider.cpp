@@ -175,8 +175,8 @@ QVariantMap GeoJsonProvider::transformGeometry(Geometry *geometry){
     });
 }
 
-FProps GeoJsonProvider::transformProperites(QVariantMap properties){
-    FProps result;
+Feature::Properties GeoJsonProvider::transformProperites(QVariantMap properties){
+    Feature::Properties result;
 
     for(auto kv: properties.asKeyValueRange()){
         std::string key = kv.first.toStdString();

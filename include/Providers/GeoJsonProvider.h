@@ -5,8 +5,6 @@
 #include "Feature.h"
 #include "FeatureCollection.h"
 
-using FProps = std::unordered_map<std::string,std::variant<int,double,bool,std::string>>;
-
 class GeoJsonProvider{
     public:
 
@@ -28,8 +26,8 @@ class GeoJsonProvider{
         static MultiPolygon<LatLng> transformMultiPolygon(QVariantList coords);
         static QVariantList transformMultiPolygon(MultiPolygon<LatLng> coords);
 
-        static FProps transformProperites(QVariantMap properties);
-        static QVariantMap transformProperties(FProps properties);
+        static Feature::Properties transformProperites(QVariantMap properties);
+        static QVariantMap transformProperties(Feature::Properties properties);
 
         static Geometry *transformGeometry(QVariantMap map);
         static QVariantMap transformGeometry(Geometry *geometry);
