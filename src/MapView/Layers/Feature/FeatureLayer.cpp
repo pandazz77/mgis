@@ -3,7 +3,7 @@
 #include "MapGraphicsView.h"
 #include "QFeatureConvertor.h"
 
-FeatureLayer::FeatureLayer(Feature *feature, QObject *parent) : ILayer(parent), feature(feature){
+FeatureLayer::FeatureLayer(Feature *feature, QObject *parent) : IFeatureLayer(parent), feature(feature){
 
 }
 

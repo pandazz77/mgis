@@ -1,16 +1,17 @@
 #pragma once
 
-#include "LayerGroup.h"
+#include "TLayerGroup.hpp"
 #include "FeatureCollection.h"
+#include "IFeatureLayer.h"
 
-class FeatureCollectionLayer: public LayerGroup{
+class FeatureCollectionLayer: public TLayerGroupUnited<IFeatureLayer>{
     Q_OBJECT
 
     public:
         FeatureCollectionLayer(FeatureCollection *collection,QObject *parent=nullptr);
         ~FeatureCollectionLayer();
 
-        FeatureCollection *getCollection();
+        FeatureCollection *getFeature() override;
 
     private:
         FeatureCollection *collection;

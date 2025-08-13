@@ -15,3 +15,5 @@ target_link_libraries(SampleWindow mgis Qt6::Core Qt6::Widgets)
 
 
 # =======================================================
+
+add_subdirectory(./geojson)

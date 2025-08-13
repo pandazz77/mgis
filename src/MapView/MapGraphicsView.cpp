@@ -68,7 +68,7 @@ void MapGraphicsView::addLayer(ILayer *layer){
     layer->rebuildItem(this);
     scene()->addItem(layer->getItem());
     if(!layer->getItem()->zValue()){ // if not specified
-        layer->getItem()->setZValue(layers.size());
+        layer->getItem()->setZValue(this->getLayers().size());
     }
 }
 
