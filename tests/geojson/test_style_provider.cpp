@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 
     parser.process(app);
 
-    QString filename = "all_types.json";
+    QString filename = "style_properties.json";
     if(parser.isSet(input_file_option)){
         filename = parser.value(input_file_option);
     }
