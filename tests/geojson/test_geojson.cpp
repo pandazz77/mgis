@@ -145,11 +145,32 @@ void test_properties(){
     check_property(feature->properties,"int_val",7);
 }
 
+void test_properties_quickaccess(){
+    QJsonDocument doc = readJson("test_properties.json");
+    QVariantMap map = doc.toVariant().toMap();
+
+    FeatureCollection collection = GeoJsonProvider::transformCollection(map);
+    Feature *feature = dynamic_cast<Feature*>(collection[0]);
+    assert(feature->properties.size() == 4);
+
+    assert(feature->properties.has("int_val"));
+    assert(!feature->properties.has("sdsadsdadsadsad"));
+
+    assert(feature->properties.holds<double>("double_val"));
+    assert(!feature->properties.holds<double>("str_val"));
+
+    assert(feature->properties.get<std::string>("str_val")==std::string("string"));
+    assert(feature->properties.get<bool>("bool_val")==false);
+    assert(feature->properties.get<double>("double_val")==0.314);
+    assert(feature->properties.get<int>("int_val")==7);
+}
+
 
 int main(int argc, char *argv[]){
     test_types();
     test_serialize();
     test_properties();
+    test_properties_quickaccess();
 
     return 0;
 }
