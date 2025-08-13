@@ -39,6 +39,9 @@ set(SRCS
 
     src/Providers/FeatureLayerProvider.cpp
     src/Providers/GeoJsonProvider.cpp
+
+    src/Providers/StyleProvider.cpp
+    src/Providers/SimpleStyleProvider.cpp
 )
 
 set(HDRS
@@ -80,6 +83,9 @@ set(HDRS
     include/Providers/LayerProvider.hpp
     include/Providers/FeatureLayerProvider.h
     include/Providers/GeoJsonProvider.h
+
+    include/Providers/StyleProvider.h
+    include/Providers/SimpleStyleProvider.h
 )
 
 find_package(Qt6 COMPONENTS 
