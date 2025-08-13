@@ -1,5 +1,6 @@
 #include "GeoJsonProvider.h"
 #include <QSet>
+#include <QFile>
 
 const QSet<QPair<Geometry::Type,QString>> GEOMETRIES_STR = {
     {Geometry::Type::POINT,"Point"},
@@ -256,4 +257,24 @@ IFeature *GeoJsonProvider::transformIFeature(QVariantMap map){
 QVariantMap GeoJsonProvider::transformIFeature(IFeature *feature){
     if(dynamic_cast<Feature*>(feature)) return transformFeature(*dynamic_cast<Feature*>(feature));
     else if(dynamic_cast<FeatureCollection*>(feature)) return transformCollection(*dynamic_cast<FeatureCollection*>(feature));
+}
+
+// ========================
+
+GeoJsonProvider::GeoJsonProvider(QObject *parent) : FeatureLayerProvider(parent){
+
+}
+
+void GeoJsonProvider::load(QJsonDocument &doc){
+    IFeature *feature = transformIFeature(doc.toVariant().toMap());
+    IFeatureLayer *layer = createFeatureLayer(feature);
+    addLayer(layer);
+}
+
+void GeoJsonProvider::fromFile(QString filePath){
+    QFile file(filePath);
+    bool opened = file.open(QIODevice::ReadOnly);
+    assert(opened);
+    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    load(doc);
 }

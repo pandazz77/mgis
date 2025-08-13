@@ -4,10 +4,16 @@
 #include <QJsonDocument>
 #include "Feature.h"
 #include "FeatureCollection.h"
+#include "FeatureLayerProvider.h"
 
-class GeoJsonProvider{
+class GeoJsonProvider: public FeatureLayerProvider{
     public:
+        GeoJsonProvider(QObject *parent=nullptr);
 
+        void load(QJsonDocument &doc);
+        void fromFile(QString filePath);
+
+    public:
         static QString transformGeometryType(Geometry::Type type);
         static Geometry::Type transformGeometryType(QString type);
 

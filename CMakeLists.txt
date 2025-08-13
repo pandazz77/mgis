@@ -37,6 +37,7 @@ set(SRCS
     src/MapView/Layers/Feature/FeatureLayer.cpp
     src/MapView/Layers/Feature/FeatureCollectionLayer.cpp
 
+    src/Providers/FeatureLayerProvider.cpp
     src/Providers/GeoJsonProvider.cpp
 )
 
@@ -76,6 +77,8 @@ set(HDRS
     include/MapView/Layers/Feature/FeatureLayer.h
     include/MapView/Layers/Feature/FeatureCollectionLayer.h
 
+    include/Providers/LayerProvider.hpp
+    include/Providers/FeatureLayerProvider.h
     include/Providers/GeoJsonProvider.h
 )
 

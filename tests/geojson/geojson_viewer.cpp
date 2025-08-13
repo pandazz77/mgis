@@ -21,13 +21,9 @@ int main(int argc, char *argv[]){
 
     MapGraphicsView *map = new MapGraphicsView();
 
-    QFile file(filename);
-    file.open(QIODevice::ReadOnly);
-    QJsonDocument json = QJsonDocument::fromJson(file.readAll());
-    FeatureCollection collection = GeoJsonProvider::transformCollection(json.toVariant().toMap());
-
-    FeatureCollectionLayer *layer = new FeatureCollectionLayer(&collection,map);
-    layer->addTo(map);
+    GeoJsonProvider *geojsonProvider = new GeoJsonProvider(map);
+    geojsonProvider->fromFile(filename);
+    geojsonProvider->addTo(map);
 
     map->show();
     return app.exec(); 
