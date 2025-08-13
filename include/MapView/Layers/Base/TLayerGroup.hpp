@@ -25,8 +25,22 @@ class TLayerGroupBase: public TLayerPrime, public LayerSet<TLayerUnit>{
             return group;
         }
 
+        virtual void addLayer(TLayerUnit *layer) override{
+            LayerSet<TLayerUnit>::addLayer(layer);
+            if(!group) return; 
+            layer->rebuildItem(assignedPane);
+            group->addToGroup(layer->getItem());
+        }
+
+        virtual void removeLayer(TLayerUnit *layer) override{
+            LayerSet<TLayerUnit>::removeLayer(layer);
+            group->removeFromGroup(layer->getItem());
+            layer->rebuildItem(nullptr);
+        }
+
     protected:
         void rebuildItem(MapPane *pane) override{
+            assignedPane = pane;
             if(group) delete group;
 
             group = new QGraphicsItemGroup;
@@ -38,6 +52,7 @@ class TLayerGroupBase: public TLayerPrime, public LayerSet<TLayerUnit>{
         
     private:
         QGraphicsItemGroup *group = nullptr;
+        MapPane *assignedPane = nullptr;
 };
 
 /**

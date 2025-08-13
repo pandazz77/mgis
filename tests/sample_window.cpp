@@ -109,8 +109,12 @@ int main(int argc, char *argv[]){
     }))),map);
 
     eurasia_N_africa->addTo(map);
-    northAmerica->addTo(map);
-    southAmerica->addTo(map);
+
+    LayerGroup *america = new LayerGroup(map);
+    america->addTo(map);
+    america->addLayer(northAmerica);
+    america->addLayer(southAmerica);
+
     australia->addTo(map);
     greenland->addTo(map);
     antarctica->addTo(map);
