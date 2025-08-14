@@ -3,6 +3,8 @@
 #include <QFile>
 #include <QJsonDocument>
 
+using namespace std::string_literals;
+
 QJsonDocument readJson(QString filename){
     QFile file(filename);
     bool opened = file.open(QIODevice::ReadOnly);
@@ -161,8 +163,20 @@ void test_properties_subnodes(Feature::Properties &props){
     auto sub_node2 = sub_node1["node_val"].to<Feature::Properties>();
     assert(sub_node2["node_num"]==2);
 
-    auto sub_node3 = sub_node2["node_val"].to<FeatureProperties>();
+    auto sub_node3 = sub_node2["node_val"].to<Feature::Properties>();
     assert(sub_node3["node_num"]==3);
+}
+
+void test_properties_list(Feature::Properties &props){
+    assert(props.has("list_val"));
+
+    assert(props["list_val"].is<PropertiesList>());
+    
+    auto lst = props["list_val"].to<PropertiesList>();
+    assert(lst[0]==3);
+    assert(lst[1]=="point"s);
+    assert(lst[2]==1);
+    assert(lst[3]==4);
 }
 
 void test_properties(){
@@ -171,11 +185,12 @@ void test_properties(){
 
     FeatureCollection collection = GeoJsonProvider::transformCollection(map);
     Feature *feature = dynamic_cast<Feature*>(collection[0]);
-    assert(feature->properties.size() == 5);
+    assert(feature->properties.size() == 6);
 
     test_base_properties_types(feature->properties);
     test_properties_quickaccess(feature->properties);
     test_properties_subnodes(feature->properties);
+    test_properties_list(feature->properties);
 }
 
 
