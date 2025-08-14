@@ -132,37 +132,37 @@ void check_property(const Feature::Properties &props, std::string key, T value){
     assert(std::get<T>(var_value) == value);
 }
 
-void test_base_properties_types(const Feature::Properties &props){
+void test_base_properties_types(Feature::Properties &props){
     check_property(props, "str_val",std::string("string"));
     check_property(props,"bool_val",false);
     check_property(props,"double_val",0.314);
     check_property(props,"int_val",7);
 };
 
-void test_properties_quickaccess(const Feature::Properties &props){
+void test_properties_quickaccess(Feature::Properties &props){
     assert(props.has("int_val"));
     assert(!props.has("sdsadsdadsadsad"));
 
-    assert(props.holds<double>("double_val"));
-    assert(!props.holds<double>("str_val"));
+    assert(props["double_val"].is<double>());
+    assert(!props["str_val"].is<double>());
 
-    assert(props.get<std::string>("str_val")==std::string("string"));
-    assert(props.get<bool>("bool_val")==false);
-    assert(props.get<double>("double_val")==0.314);
-    assert(props.get<int>("int_val")==7);
+    assert(props["str_val"]==std::string("string"));
+    assert(props["bool_val"]==false);
+    assert(props["double_val"]==0.314);
+    assert(props["int_val"]==7);
 }
 
-void test_properties_subnodes(const Feature::Properties &props){
+void test_properties_subnodes(Feature::Properties &props){
     assert(props.has("node_val"));
 
-    auto sub_node1 = props.get<Feature::Properties>("node_val");
-    assert(sub_node1.get<int>("node_num")==1);
+    auto sub_node1 = props["node_val"].to<Feature::Properties>();
+    assert(sub_node1["node_num"]==1);
 
-    auto sub_node2 = sub_node1.get<Feature::Properties>("node_val");
-    assert(sub_node2.get<int>("node_num")==2);
+    auto sub_node2 = sub_node1["node_val"].to<Feature::Properties>();
+    assert(sub_node2["node_num"]==2);
 
-    auto sub_node3 = sub_node2.get<Feature::Properties>("node_val");
-    assert(sub_node3.get<int>("node_num")==3);
+    auto sub_node3 = sub_node2["node_val"].to<FeatureProperties>();
+    assert(sub_node3["node_num"]==3);
 }
 
 void test_properties(){
