@@ -176,19 +176,42 @@ QVariantMap GeoJsonProvider::transformGeometry(Geometry *geometry){
     });
 }
 
+PropertyValue GeoJsonProvider::transformProperty(QVariant property){
+    switch(property.typeId()){
+        case QMetaType::Double: return property.toDouble();
+        case QMetaType::Int:
+        case QMetaType::LongLong: return property.toInt();
+        case QMetaType::Bool: return property.toBool();
+        case QMetaType::QString: return property.toString().toStdString();
+        case QMetaType::QVariantMap: return transformProperites(property.toMap());
+        case QMetaType::QVariantList:{
+            PropertiesList result;
+            for(auto var: property.toList()) result.push_back(transformProperty(var));
+            return result;
+        }
+    }
+}
+
+QVariant GeoJsonProvider::transformProperty(PropertyValue property){
+    if(std::holds_alternative<int>(property)) return std::get<int>(property);
+    else if(std::holds_alternative<double>(property)) return std::get<double>(property);
+    else if(std::holds_alternative<bool>(property)) return std::get<bool>(property);
+    else if(std::holds_alternative<std::string>(property)) return QString::fromStdString(std::get<std::string>(property));
+    else if(std::holds_alternative<Feature::Properties>(property)) return transformProperties(std::get<Feature::Properties>(property));
+    else if(std::holds_alternative<PropertiesList>(property)){
+        QVariantList result;
+        for(auto var: std::get<PropertiesList>(property)) result.push_back(transformProperty(var));
+        return result;
+    }
+}
+
+
 Feature::Properties GeoJsonProvider::transformProperites(QVariantMap properties){
     Feature::Properties result;
 
     for(auto kv: properties.asKeyValueRange()){
         std::string key = kv.first.toStdString();
-        switch(kv.second.typeId()){
-            case QMetaType::Double: result[key] = kv.second.toDouble(); break;
-            case QMetaType::Int:
-            case QMetaType::LongLong: result[key] = kv.second.toInt(); break;
-            case QMetaType::Bool: result[key] = kv.second.toBool(); break;
-            case QMetaType::QString: result[key] = kv.second.toString().toStdString(); break;
-            /// TODO: enhance Feature::properties  
-        }
+        result[key] = transformProperty(kv.second);
     }
 
     return result;
@@ -198,10 +221,7 @@ QVariantMap GeoJsonProvider::transformProperties(Feature::Properties properties)
     QVariantMap result;
     for(auto kv: properties){
         QString key = QString::fromStdString(kv.first);
-        if(std::holds_alternative<int>(kv.second)) result[key] = std::get<int>(kv.second);
-        else if(std::holds_alternative<double>(kv.second)) result[key] = std::get<double>(kv.second);
-        else if(std::holds_alternative<bool>(kv.second)) result[key] = std::get<bool>(kv.second);
-        else if(std::holds_alternative<std::string>(kv.second)) result[key] = QString::fromStdString(std::get<std::string>(kv.second));
+        result[key] = transformProperty(kv.second);
     }
 
     return result;

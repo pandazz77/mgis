@@ -3,6 +3,8 @@
 #include <QFile>
 #include <QJsonDocument>
 
+using namespace std::string_literals;
+
 QJsonDocument readJson(QString filename){
     QFile file(filename);
     bool opened = file.open(QIODevice::ReadOnly);
@@ -132,17 +134,63 @@ void check_property(const Feature::Properties &props, std::string key, T value){
     assert(std::get<T>(var_value) == value);
 }
 
+void test_base_properties_types(Feature::Properties &props){
+    check_property(props, "str_val",std::string("string"));
+    check_property(props,"bool_val",false);
+    check_property(props,"double_val",0.314);
+    check_property(props,"int_val",7);
+};
+
+void test_properties_quickaccess(Feature::Properties &props){
+    assert(props.has("int_val"));
+    assert(!props.has("sdsadsdadsadsad"));
+
+    assert(props["double_val"].is<double>());
+    assert(!props["str_val"].is<double>());
+
+    assert(props["str_val"]==std::string("string"));
+    assert(props["bool_val"]==false);
+    assert(props["double_val"]==0.314);
+    assert(props["int_val"]==7);
+}
+
+void test_properties_subnodes(Feature::Properties &props){
+    assert(props.has("node_val"));
+
+    auto sub_node1 = props["node_val"].to<Feature::Properties>();
+    assert(sub_node1["node_num"]==1);
+
+    auto sub_node2 = sub_node1["node_val"].to<Feature::Properties>();
+    assert(sub_node2["node_num"]==2);
+
+    auto sub_node3 = sub_node2["node_val"].to<Feature::Properties>();
+    assert(sub_node3["node_num"]==3);
+}
+
+void test_properties_list(Feature::Properties &props){
+    assert(props.has("list_val"));
+
+    assert(props["list_val"].is<PropertiesList>());
+    
+    auto lst = props["list_val"].to<PropertiesList>();
+    assert(lst[0]==3);
+    assert(lst[1]=="point"s);
+    assert(lst[2]==1);
+    assert(lst[3]==4);
+}
+
 void test_properties(){
     QJsonDocument doc = readJson("test_properties.json");
     QVariantMap map = doc.toVariant().toMap();
 
     FeatureCollection collection = GeoJsonProvider::transformCollection(map);
     Feature *feature = dynamic_cast<Feature*>(collection[0]);
-    assert(feature->properties.size() == 4);
-    check_property(feature->properties, "str_val",std::string("string"));
-    check_property(feature->properties,"bool_val",false);
-    check_property(feature->properties,"double_val",0.314);
-    check_property(feature->properties,"int_val",7);
+    assert(feature->properties.size() == 6);
+
+    test_base_properties_types(feature->properties);
+    test_properties_quickaccess(feature->properties);
+    test_properties_subnodes(feature->properties);
+    test_properties_list(feature->properties);
 }
 
 
