@@ -7,7 +7,16 @@
         "str_val": "string",
         "bool_val": false,
         "double_val": 0.314,
-        "int_val": 7
+        "int_val": 7,
+        "node_val":{
+          "node_num":1,
+          "node_val":{
+            "node_num":2,
+            "node_val":{
+              "node_num":3
+            }
+          }
+        }
       },
       "geometry": {
         "coordinates": [

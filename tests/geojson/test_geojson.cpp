@@ -152,16 +152,30 @@ void test_properties_quickaccess(const Feature::Properties &props){
     assert(props.get<int>("int_val")==7);
 }
 
+void test_properties_subnodes(const Feature::Properties &props){
+    assert(props.has("node_val"));
+
+    auto sub_node1 = props.get<Feature::Properties>("node_val");
+    assert(sub_node1.get<int>("node_num")==1);
+
+    auto sub_node2 = sub_node1.get<Feature::Properties>("node_val");
+    assert(sub_node2.get<int>("node_num")==2);
+
+    auto sub_node3 = sub_node2.get<Feature::Properties>("node_val");
+    assert(sub_node3.get<int>("node_num")==3);
+}
+
 void test_properties(){
     QJsonDocument doc = readJson("test_properties.json");
     QVariantMap map = doc.toVariant().toMap();
 
     FeatureCollection collection = GeoJsonProvider::transformCollection(map);
     Feature *feature = dynamic_cast<Feature*>(collection[0]);
-    assert(feature->properties.size() == 4);
+    assert(feature->properties.size() == 5);
 
     test_base_properties_types(feature->properties);
     test_properties_quickaccess(feature->properties);
+    test_properties_subnodes(feature->properties);
 }
 
 
