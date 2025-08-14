@@ -1,23 +1,27 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
 #include <string>
 #include <variant>
 
 class PropertiesNode;
-class PropertiesNode: public std::unordered_map<std::string,std::variant<int,double,bool,std::string,PropertiesNode>>{
+using PropertyValue = std::variant<int,double,bool,std::string,PropertiesNode>;
+
+class PropertiesNode: public std::map<std::string,PropertyValue>{
     public:
+        using std::map<std::string,PropertyValue>::map;
+
         bool has(const std::string &key){
-            auto it = find(key);
-            return it != end();
+            auto it = this->find(key);
+            return it != this->end();
         }
-    
+
         template<typename T>
         bool holds(const std::string &key) const{
             auto variant = this->at(key);
             return std::holds_alternative<T>(variant);
         }
-        
+
         template<typename T>
         T get(const std::string &key) const{
             auto variant = this->at(key);
