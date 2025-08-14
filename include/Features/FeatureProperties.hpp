@@ -11,7 +11,7 @@ class PropertiesNode: public std::map<std::string,PropertyValue>{
     public:
         using std::map<std::string,PropertyValue>::map;
 
-        bool has(const std::string &key){
+        bool has(const std::string &key) const{
             auto it = this->find(key);
             return it != this->end();
         }

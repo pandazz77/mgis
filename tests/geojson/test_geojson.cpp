@@ -132,6 +132,26 @@ void check_property(const Feature::Properties &props, std::string key, T value){
     assert(std::get<T>(var_value) == value);
 }
 
+void test_base_properties_types(const Feature::Properties &props){
+    check_property(props, "str_val",std::string("string"));
+    check_property(props,"bool_val",false);
+    check_property(props,"double_val",0.314);
+    check_property(props,"int_val",7);
+};
+
+void test_properties_quickaccess(const Feature::Properties &props){
+    assert(props.has("int_val"));
+    assert(!props.has("sdsadsdadsadsad"));
+
+    assert(props.holds<double>("double_val"));
+    assert(!props.holds<double>("str_val"));
+
+    assert(props.get<std::string>("str_val")==std::string("string"));
+    assert(props.get<bool>("bool_val")==false);
+    assert(props.get<double>("double_val")==0.314);
+    assert(props.get<int>("int_val")==7);
+}
+
 void test_properties(){
     QJsonDocument doc = readJson("test_properties.json");
     QVariantMap map = doc.toVariant().toMap();
@@ -139,30 +159,9 @@ void test_properties(){
     FeatureCollection collection = GeoJsonProvider::transformCollection(map);
     Feature *feature = dynamic_cast<Feature*>(collection[0]);
     assert(feature->properties.size() == 4);
-    check_property(feature->properties, "str_val",std::string("string"));
-    check_property(feature->properties,"bool_val",false);
-    check_property(feature->properties,"double_val",0.314);
-    check_property(feature->properties,"int_val",7);
-}
 
-void test_properties_quickaccess(){
-    QJsonDocument doc = readJson("test_properties.json");
-    QVariantMap map = doc.toVariant().toMap();
-
-    FeatureCollection collection = GeoJsonProvider::transformCollection(map);
-    Feature *feature = dynamic_cast<Feature*>(collection[0]);
-    assert(feature->properties.size() == 4);
-
-    assert(feature->properties.has("int_val"));
-    assert(!feature->properties.has("sdsadsdadsadsad"));
-
-    assert(feature->properties.holds<double>("double_val"));
-    assert(!feature->properties.holds<double>("str_val"));
-
-    assert(feature->properties.get<std::string>("str_val")==std::string("string"));
-    assert(feature->properties.get<bool>("bool_val")==false);
-    assert(feature->properties.get<double>("double_val")==0.314);
-    assert(feature->properties.get<int>("int_val")==7);
+    test_base_properties_types(feature->properties);
+    test_properties_quickaccess(feature->properties);
 }
 
 
@@ -170,7 +169,6 @@ int main(int argc, char *argv[]){
     test_types();
     test_serialize();
     test_properties();
-    test_properties_quickaccess();
 
     return 0;
 }
