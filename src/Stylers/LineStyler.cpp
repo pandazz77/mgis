@@ -15,7 +15,7 @@ void LineStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
 }
 
 bool LineStyler::isCompatibilityWith(const Geometry::Type &type){
-    return type == Geometry::Type::LINESTRING || type == Geometry::Type::LINEARRING || type == Geometry::Type::MULTILINESTRING;
+    return type == Geometry::Type::LINESTRING || type == Geometry::Type::MULTILINESTRING;
 }
 
 void LineStyler::setPen(const QPen &pen){

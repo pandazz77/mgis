@@ -19,10 +19,10 @@ int main(int argc, char *argv[]){
     Point ip5(48.52912652090629,69.30113643786777);
 
     LineString line({ep1.coordinates,ep2.coordinates,ep3.coordinates,ep4.coordinates,ep5.coordinates});
-    LinearRing ring(line);
+    LineString ring = line;
 
     Polygon poly(ring,{
-        LinearRing({
+        LineString({
             ip1.coordinates,
             ip2.coordinates,
             ip3.coordinates,
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
 
     Point<Point2D> pt_pr = proj->project(ep1_unprojected);
     LineString<Point2D> ls_pr = proj->project(line);
-    LinearRing<Point2D> lr_pr = proj->project(LinearRing(line));
+    LineString<Point2D> lr_pr = proj->project(line);
     Polygon<Point2D> pl_pr = proj->project(poly);
     MultiPoint<Point2D> mpt_pr = proj->project(points);
     MultiLineString<Point2D> mls_pr = proj->project(lines);
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
 
     Point<LatLng> pt_unpr = proj->unproject(pt_pr);
     LineString<LatLng> ls_unpr = proj->unproject(ls_pr);
-    LinearRing<LatLng> lr_unpr = proj->unproject(lr_pr);
+    LineString<LatLng> lr_unpr = proj->unproject(lr_pr);
     Polygon<LatLng> pl_unpr = proj->unproject(pl_pr);
     MultiPoint<LatLng> mpt_unpr = proj->unproject(mpt_pr);
     MultiLineString<LatLng> mls_unpr = proj->unproject(mls_pr);
