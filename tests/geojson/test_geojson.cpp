@@ -185,7 +185,7 @@ void test_properties(){
 
     FeatureCollection collection = GeoJsonProvider::transformCollection(map);
     Feature *feature = dynamic_cast<Feature*>(collection[0]);
-    assert(feature->properties.size() == 6);
+    assert(feature->properties.size() == 7);
 
     test_base_properties_types(feature->properties);
     test_properties_quickaccess(feature->properties);

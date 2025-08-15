@@ -58,7 +58,15 @@ class variant: public std::variant<Types...>{
 
 };
 
-using PropertyValue = variant<int,double,bool,std::string,PropertiesNode,PropertiesList>;
+using PropertyValue = variant<
+    int,
+    double,
+    bool,
+    std::string,
+    PropertiesNode,
+    PropertiesList,
+    std::nullptr_t
+>;
 
 class PropertiesList: public std::vector<PropertyValue>{
     public:

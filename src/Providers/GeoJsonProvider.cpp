@@ -178,6 +178,7 @@ QVariantMap GeoJsonProvider::transformGeometry(Geometry *geometry){
 
 PropertyValue GeoJsonProvider::transformProperty(QVariant property){
     switch(property.typeId()){
+        case QMetaType::Nullptr: return nullptr;
         case QMetaType::Double: return property.toDouble();
         case QMetaType::Int:
         case QMetaType::LongLong: return property.toInt();
@@ -193,6 +194,7 @@ PropertyValue GeoJsonProvider::transformProperty(QVariant property){
 }
 
 QVariant GeoJsonProvider::transformProperty(PropertyValue property){
+    if(std::holds_alternative<std::nullptr_t>(property)) return QVariant();
     if(std::holds_alternative<int>(property)) return std::get<int>(property);
     else if(std::holds_alternative<double>(property)) return std::get<double>(property);
     else if(std::holds_alternative<bool>(property)) return std::get<bool>(property);
