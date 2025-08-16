@@ -7,6 +7,14 @@
 
 #include "SimpleStyleProvider.h"
 
+QString qstr(const std::string &s){
+    return QString::fromStdString(s);
+}
+
+int opacity2alpha(double opacity){
+    return 255 * opacity;
+}
+
 int main(int argc, char *argv[]){
     QApplication app(argc,argv);
 
@@ -28,23 +36,38 @@ int main(int argc, char *argv[]){
     // ============================
     SimpleStyleProvider *styler = new SimpleStyleProvider([](FeatureLayer *layer){
         Feature *feature = layer->getFeature();
-        std::string featureName = std::get<std::string>(feature->properties["name"]);
-        qDebug() << featureName;
-        QPen pen(Qt::red,5);
-        pen.setCosmetic(true);
-        if(featureName=="line"){
-            LineStyler *styler = dynamic_cast<LineStyler*>(layer->styler);
-            QPen pen(Qt::red,5);
-            pen.setCosmetic(true);
-            styler->setPen(pen);
-        } else if(featureName=="polygon"){
-            PolyStyler *styler = dynamic_cast<PolyStyler*>(layer->styler);
-            QPen pen(Qt::blue,2);
-            pen.setCosmetic(true);
-            QBrush brush(QColor(0,255,0,100));
-            styler->setPen(pen);
-            styler->setBrush(brush);
+        Feature::Properties &prop = feature->properties;
+
+        PointStyler *point = dynamic_cast<PointStyler*>(layer->styler);
+        LineStyler *line = dynamic_cast<LineStyler*>(layer->styler);
+        PolyStyler *poly = dynamic_cast<PolyStyler*>(layer->styler);
+
+        QPen pen;
+        QBrush brush;
+
+        if(line) pen = line->getPen();
+        if(poly) brush = poly->getBrush();
+
+        if(prop.has("stroke")) 
+            pen.setColor(qstr(prop["stroke"].to<std::string>()));
+        if(prop.has("stroke-width")) 
+            pen.setWidth(prop["stroke-width"].to<int>());
+        if(prop.has("stroke-opacity")){
+            QColor color = pen.color();
+            color.setAlpha(opacity2alpha(prop["stroke-opacity"].to<double>()));
+            pen.setColor(color);
         }
+        if(prop.has("fill"))
+            brush.setColor(qstr(prop["fill"].to<std::string>()));
+        if(prop.has("fill-opacity")){
+            QColor color = brush.color();
+            color.setAlpha(opacity2alpha(prop["fill-opacity"].to<double>()));
+            brush.setColor(color);
+        }
+        
+        if(poly) poly->setBrush(brush);
+        if(line) line->setPen(pen);
+        if(point) void();
     });
 
     geojsonProvider->setStyleProvider(styler);

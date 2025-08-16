@@ -10,6 +10,12 @@ class PropertiesList;
 
 namespace {
 
+template<typename T,typename... Types>
+T cast_helper(std::variant<Types...> var){
+    if constexpr(std::is_same_v<T,double>)
+        if(std::holds_alternative<int>(var)) return static_cast<double>(std::get<int>(var));
+}
+
 template<typename... Types>
 class variant: public std::variant<Types...>{
     public:
@@ -17,7 +23,9 @@ class variant: public std::variant<Types...>{
 
         template<typename T>
         T to() const {
-            return std::get<T>(*this);
+            if(is<T>()) return std::get<T>(*this);
+
+            return cast_helper<T>(*this);
         }
 
         template<typename T>
