@@ -32,6 +32,9 @@ class GeoJsonProvider: public FeatureLayerProvider{
         static MultiPolygon<LatLng> transformMultiPolygon(QVariantList coords);
         static QVariantList transformMultiPolygon(MultiPolygon<LatLng> coords);
 
+        static PropertyValue transformProperty(QVariant property);
+        static QVariant transformProperty(PropertyValue property);
+
         static Feature::Properties transformProperites(QVariantMap properties);
         static QVariantMap transformProperties(Feature::Properties properties);
 

@@ -7,7 +7,18 @@
         "str_val": "string",
         "bool_val": false,
         "double_val": 0.314,
-        "int_val": 7
+        "int_val": 7,
+        "list_val": [3,"point",1,4],
+        "null_val": null,
+        "node_val":{
+          "node_num":1,
+          "node_val":{
+            "node_num":2,
+            "node_val":{
+              "node_num":3
+            }
+          }
+        }
       },
       "geometry": {
         "coordinates": [

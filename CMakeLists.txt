@@ -55,6 +55,7 @@ set(HDRS
     include/Features/IFeature.h
     include/Features/Feature.h
     include/Features/FeatureCollection.h
+    include/Features/FeatureProperties.hpp
 
     include/Stylers/IStyler.h
     include/Stylers/PointStyler.h

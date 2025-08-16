@@ -3,13 +3,11 @@
 #include "IFeature.h"
 #include "GeoTypes.hpp"
 
-#include <unordered_map>
-#include <string>
-#include <variant>
+#include "FeatureProperties.hpp"
 
 class Feature : public IFeature{
     public:
-        using Properties = std::unordered_map<std::string,std::variant<int,double,bool,std::string>>;
+        using Properties = FeatureProperties;
 
         Feature(Geometry *geometry);
         ~Feature();
