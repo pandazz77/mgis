@@ -22,7 +22,7 @@ class FeatureLayer: public IFeatureLayer{
 
         QGraphicsItem *getItem() override;
 
-        IStyler *styler = RandomStyler::getInstance(); /// TODO: styler field as shared ptr 
+        IStyler *styler; /// TODO: styler field as shared ptr 
 
     protected:
         static FGraphicsItem *buildFeature(Feature *feature,Projection *proj);

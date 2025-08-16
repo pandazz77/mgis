@@ -4,11 +4,11 @@ SimpleStyleProvider::SimpleStyleProvider(){
 
 }
 
-SimpleStyleProvider::SimpleStyleProvider(std::function<IStyler*(Feature*)> callback){
+SimpleStyleProvider::SimpleStyleProvider(std::function<void(FeatureLayer*)> callback){
     setCallback(callback);
 }
 
-void SimpleStyleProvider::setCallback(std::function<IStyler*(Feature*)> callback){
+void SimpleStyleProvider::setCallback(std::function<void(FeatureLayer*)> callback){
     this->onNewFeatureCallback = callback;
     /// TODO: APPLY NEW STYLER
 }
@@ -18,7 +18,6 @@ void SimpleStyleProvider::removeCallback(){
     /// TODO: APPLY NEW STYLER
 }
 
-IStyler *SimpleStyleProvider::onNewFeature(Feature *feature){
+void SimpleStyleProvider::onNewFeature(FeatureLayer *feature){
     if(onNewFeatureCallback) return onNewFeatureCallback(feature);
-    return nullptr;
 }

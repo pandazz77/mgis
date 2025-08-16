@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Stylers.h"
-#include "Feature.h"
+#include "FeatureLayer.h"
 
 class StyleProvider{
     public:
@@ -9,5 +8,5 @@ class StyleProvider{
 
     protected:
         friend class FeatureLayerProvider;
-        virtual IStyler *onNewFeature(Feature *feature) = 0;
+        virtual void onNewFeature(FeatureLayer *feature) = 0;
 };

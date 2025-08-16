@@ -26,23 +26,25 @@ int main(int argc, char *argv[]){
     GeoJsonProvider *geojsonProvider = new GeoJsonProvider(map);
 
     // ============================
-    SimpleStyleProvider *styler = new SimpleStyleProvider([](Feature *feature){
-        IStyler *result = RandomStyler::getInstance();
+    SimpleStyleProvider *styler = new SimpleStyleProvider([](FeatureLayer *layer){
+        Feature *feature = layer->getFeature();
         std::string featureName = std::get<std::string>(feature->properties["name"]);
         qDebug() << featureName;
         QPen pen(Qt::red,5);
         pen.setCosmetic(true);
         if(featureName=="line"){
+            LineStyler *styler = dynamic_cast<LineStyler*>(layer->styler);
             QPen pen(Qt::red,5);
             pen.setCosmetic(true);
-            result = new LineStyler(pen);
+            styler->setPen(pen);
         } else if(featureName=="polygon"){
+            PolyStyler *styler = dynamic_cast<PolyStyler*>(layer->styler);
             QPen pen(Qt::blue,2);
             pen.setCosmetic(true);
-            QBrush brush(Qt::green);
-            result = new PolyStyler(pen,brush);
+            QBrush brush(QColor(0,255,0,100));
+            styler->setPen(pen);
+            styler->setBrush(brush);
         }
-        return result;
     });
 
     geojsonProvider->setStyleProvider(styler);

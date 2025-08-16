@@ -60,6 +60,5 @@ StyleProvider *FeatureLayerProvider::getStyleProvider(){
 }
 
 void FeatureLayerProvider::processLayerWithStyleProvider(FeatureLayer *layer){
-    IStyler *styler = styleProvider->onNewFeature(layer->getFeature());
-    if(styler) layer->styler = styler;
+    styleProvider->onNewFeature(layer);
 }
