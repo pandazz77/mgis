@@ -15,6 +15,36 @@ int opacity2alpha(double opacity){
     return 255 * opacity;
 }
 
+QPolygon triangle(QRect rect){
+    return QPolygon({
+        QPoint{rect.width()/2,0}, // top
+        rect.bottomLeft(),
+        rect.bottomRight()
+    });
+}
+
+QPixmap createMarker(QString sym, QBrush brush, int size){
+    QPixmap pixmap(size,size);
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter(&pixmap);
+    QPen pen(Qt::black,1);
+    pen.setCosmetic(true);
+
+    painter.setPen(pen);
+    qDebug() << brush;
+    painter.setBrush(brush);
+
+    if(sym=="triangle") 
+        painter.drawPolygon(triangle(pixmap.rect()));
+    else if(sym=="circle")
+        painter.drawEllipse(pixmap.rect());
+    else if(sym=="rect")
+        painter.drawRect(pixmap.rect());
+
+    return pixmap;
+}
+
 int main(int argc, char *argv[]){
     QApplication app(argc,argv);
 
@@ -44,6 +74,7 @@ int main(int argc, char *argv[]){
 
         QPen pen;
         QBrush brush;
+        QPixmap pix;
 
         if(line) pen = line->getPen();
         if(poly) brush = poly->getBrush();
@@ -65,9 +96,19 @@ int main(int argc, char *argv[]){
             brush.setColor(color);
         }
         
+        if(point){
+            int size = 20;
+            QString sym = "circle";
+            brush.setStyle(Qt::SolidPattern);
+            if(prop.has("marker-color")) brush.setColor(qstr(prop["marker-color"].to<std::string>()));
+            if(prop.has("marker-symbol")) sym = qstr(prop["marker-symbol"].to<std::string>());
+            if(prop.has("marker-size")) size = prop["marker-size"].to<int>();
+            pix = createMarker(sym,brush,size);
+        }
+        
         if(poly) poly->setBrush(brush);
         if(line) line->setPen(pen);
-        if(point) void();
+        if(point) point->setPixmap(pix);
     });
 
     geojsonProvider->setStyleProvider(styler);
