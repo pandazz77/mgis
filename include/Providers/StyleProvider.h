@@ -8,5 +8,5 @@ class StyleProvider{
 
     protected:
         friend class FeatureLayerProvider;
-        virtual void onNewFeature(FeatureLayer *feature) = 0;
+        virtual void onNewFeature(const Feature *feature, IStyler *& styler) = 0;
 };

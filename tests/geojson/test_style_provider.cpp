@@ -64,13 +64,12 @@ int main(int argc, char *argv[]){
     GeoJsonProvider *geojsonProvider = new GeoJsonProvider(map);
 
     // ============================
-    SimpleStyleProvider *styler = new SimpleStyleProvider([](FeatureLayer *layer){
-        Feature *feature = layer->getFeature();
-        Feature::Properties &prop = feature->properties;
+    SimpleStyleProvider *styler = new SimpleStyleProvider([](const Feature *feature, IStyler *& styler){
+        const Feature::Properties &prop = feature->properties;
 
-        PointStyler *point = dynamic_cast<PointStyler*>(layer->styler);
-        LineStyler *line = dynamic_cast<LineStyler*>(layer->styler);
-        PolyStyler *poly = dynamic_cast<PolyStyler*>(layer->styler);
+        PointStyler *point = dynamic_cast<PointStyler*>(styler);
+        LineStyler *line = dynamic_cast<LineStyler*>(styler);
+        PolyStyler *poly = dynamic_cast<PolyStyler*>(styler);
 
         QPen pen;
         QBrush brush;

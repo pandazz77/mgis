@@ -89,6 +89,14 @@ class PropertiesNode: public std::map<std::string,PropertyValue>{
             auto it = find(key);
             return it != end();
         }
+
+        const PropertyValue operator[](const std::string &key) const{
+            return this->at(key);
+        }
+
+        PropertyValue &operator[](const std::string &key){
+            return std::map<std::string,PropertyValue>::map::operator[](key);
+        }
 };
 
 using FeatureProperties = PropertiesNode;

@@ -4,16 +4,18 @@
 #include <functional>
 
 class SimpleStyleProvider: public StyleProvider{
+    using sig = void(const Feature *feature, IStyler *& styler);
+
     public:
         SimpleStyleProvider();
-        SimpleStyleProvider(std::function<void(FeatureLayer*)> callback);
+        SimpleStyleProvider(std::function<sig> callback);
 
-        void setCallback(std::function<void(FeatureLayer*)> callback);
+        void setCallback(std::function<sig> callback);
         void removeCallback();
 
     protected:
-        void onNewFeature(FeatureLayer *feature) override;
+        void onNewFeature(const Feature *feature, IStyler *& styler) override;
 
     private:
-        std::function<void(FeatureLayer*)> onNewFeatureCallback;
+        std::function<sig> onNewFeatureCallback;
 };
