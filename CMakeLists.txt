@@ -42,6 +42,7 @@ set(SRCS
 
     src/Providers/Styles/StyleProvider.cpp
     src/Providers/Styles/SimpleStyleProvider.cpp
+    src/Providers/Styles/StyleSetProvider.cpp
 )
 
 set(HDRS
@@ -87,6 +88,8 @@ set(HDRS
 
     include/Providers/Styles/StyleProvider.h
     include/Providers/Styles/SimpleStyleProvider.h
+    include/Providers/Styles/StyleUnit.hpp
+    include/Providers/Styles/StyleSetProvider.h
 )
 
 find_package(Qt6 COMPONENTS 

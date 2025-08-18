@@ -40,3 +40,11 @@ set(SRCS_STYLE_PROVIDER
 )
 add_executable(StyleProviderTest ${SRCS_STYLE_PROVIDER})
 target_link_libraries(StyleProviderTest mgis Qt6::Core Qt6::Widgets)
+
+# ============================
+
+set(SRCS_STYLESET_PROVIDER
+    ./test_style_set_provider.cpp
+)
+add_executable(StyleSetProviderTest ${SRCS_STYLESET_PROVIDER})
+target_link_libraries(StyleSetProviderTest mgis Qt6::Core Qt6::Widgets)
