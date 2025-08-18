@@ -40,8 +40,8 @@ set(SRCS
     src/Providers/FeatureLayerProvider.cpp
     src/Providers/GeoJsonProvider.cpp
 
-    src/Providers/StyleProvider.cpp
-    src/Providers/SimpleStyleProvider.cpp
+    src/Providers/Styles/StyleProvider.cpp
+    src/Providers/Styles/SimpleStyleProvider.cpp
 )
 
 set(HDRS
@@ -85,8 +85,8 @@ set(HDRS
     include/Providers/FeatureLayerProvider.h
     include/Providers/GeoJsonProvider.h
 
-    include/Providers/StyleProvider.h
-    include/Providers/SimpleStyleProvider.h
+    include/Providers/Styles/StyleProvider.h
+    include/Providers/Styles/SimpleStyleProvider.h
 )
 
 find_package(Qt6 COMPONENTS 
@@ -112,6 +112,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     include/Stylers
     include/Features
     include/Providers
+    include/Providers/Styles
 )
 
 option(BUILD_TESTS "Build tests" ON)
