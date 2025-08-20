@@ -41,8 +41,7 @@ int main(int argc, char *argv[]){
         { // instructions
             StyleInstruction([](IStyler *& style){ 
                 PolyStyler *poly = dynamic_cast<PolyStyler*>(style);
-                QBrush brush = QBrush(Qt::red);
-                poly->setBrush(brush);
+                poly->setFill(Qt::red);
             })
         }
     ));

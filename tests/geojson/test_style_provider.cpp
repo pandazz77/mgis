@@ -71,43 +71,37 @@ int main(int argc, char *argv[]){
         LineStyler *line = dynamic_cast<LineStyler*>(styler);
         PolyStyler *poly = dynamic_cast<PolyStyler*>(styler);
 
-        QPen pen;
-        QBrush brush;
         QPixmap pix;
 
-        if(line) pen = line->getPen();
-        if(poly) brush = poly->getBrush();
-
         if(prop.has("stroke")) 
-            pen.setColor(qstr(prop["stroke"].to<std::string>()));
+            line->setStroke(qstr(prop["stroke"].to<std::string>()));
         if(prop.has("stroke-width")) 
-            pen.setWidth(prop["stroke-width"].to<int>());
+            line->setWidth(prop["stroke-width"].to<int>());
         if(prop.has("stroke-opacity")){
-            QColor color = pen.color();
+            QColor color = line->stroke();
             color.setAlpha(opacity2alpha(prop["stroke-opacity"].to<double>()));
-            pen.setColor(color);
+            line->setStroke(color);
         }
         if(prop.has("fill"))
-            brush.setColor(qstr(prop["fill"].to<std::string>()));
+            poly->setFill(qstr(prop["fill"].to<std::string>()));
         if(prop.has("fill-opacity")){
-            QColor color = brush.color();
+            QColor color = poly->fill();
             color.setAlpha(opacity2alpha(prop["fill-opacity"].to<double>()));
-            brush.setColor(color);
+            poly->setFill(color);
         }
         
         if(point){
             int size = 20;
             QString sym = "circle";
+            QBrush brush;
             brush.setStyle(Qt::SolidPattern);
             if(prop.has("marker-color")) brush.setColor(qstr(prop["marker-color"].to<std::string>()));
             if(prop.has("marker-symbol")) sym = qstr(prop["marker-symbol"].to<std::string>());
             if(prop.has("marker-size")) size = prop["marker-size"].to<int>();
             pix = createMarker(sym,brush,size);
+            point->setPixmap(pix);
         }
         
-        if(poly) poly->setBrush(brush);
-        if(line) line->setPen(pen);
-        if(point) point->setPixmap(pix);
     });
 
     geojsonProvider->setStyleProvider(styler);
