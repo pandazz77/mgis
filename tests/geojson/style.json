@@ -1,0 +1,23 @@
+{
+    "metadata":{
+        "mgis-jsonstyle-spec":"0.0.1"
+    },
+    "constants":{
+        "@BLACK_COLOR":"#000000",
+        "@RED_COLOR":"#ff0000"
+    },
+    "styles":[
+        {
+            "id":"someid",
+            "condition": [
+				"$PROPERTIES.country == russia",
+				"$GEOMETRY.type == $POLY"
+			],
+            "instruction":{
+                "fill":"@RED_COLOR",
+                "stroke":"@BLACK_COLOR",
+                "stroke-width":1
+            }
+        }
+    ]
+}
