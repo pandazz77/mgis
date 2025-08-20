@@ -10,10 +10,6 @@ QString qstr(const std::string &s){
     return QString::fromStdString(s);
 }
 
-int opacity2alpha(double opacity){
-    return 255 * opacity;
-}
-
 int main(int argc, char *argv[]){
     QApplication app(argc,argv);
 

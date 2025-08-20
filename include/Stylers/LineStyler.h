@@ -17,5 +17,8 @@ class LineStyler: public IStyler, public QPen{
         QColor color() = delete;
         QColor stroke();
 
+        void setStrokeOpacity(double opacity);
+        double strokeOpacity();
+
         bool isCompatibilityWith(const Geometry::Type &type) override;
 };

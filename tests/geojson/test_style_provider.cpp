@@ -11,10 +11,6 @@ QString qstr(const std::string &s){
     return QString::fromStdString(s);
 }
 
-int opacity2alpha(double opacity){
-    return 255 * opacity;
-}
-
 QPolygon triangle(QRect rect){
     return QPolygon({
         QPoint{rect.width()/2,0}, // top
@@ -77,18 +73,12 @@ int main(int argc, char *argv[]){
             line->setStroke(qstr(prop["stroke"].to<std::string>()));
         if(prop.has("stroke-width")) 
             line->setWidth(prop["stroke-width"].to<int>());
-        if(prop.has("stroke-opacity")){
-            QColor color = line->stroke();
-            color.setAlpha(opacity2alpha(prop["stroke-opacity"].to<double>()));
-            line->setStroke(color);
-        }
+        if(prop.has("stroke-opacity"))
+            line->setStrokeOpacity(prop["stroke-opacity"].to<double>());
         if(prop.has("fill"))
             poly->setFill(qstr(prop["fill"].to<std::string>()));
-        if(prop.has("fill-opacity")){
-            QColor color = poly->fill();
-            color.setAlpha(opacity2alpha(prop["fill-opacity"].to<double>()));
-            poly->setFill(color);
-        }
+        if(prop.has("fill-opacity"))
+            poly->setFillOpacity(prop["fill-opacity"].to<double>());
         
         if(point){
             int size = 20;

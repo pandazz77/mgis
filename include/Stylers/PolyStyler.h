@@ -13,6 +13,9 @@ class PolyStyler: public LineStyler, public QBrush{
         QColor color() = delete;
         QColor fill();
 
+        void setFillOpacity(double opacity);
+        double fillOpacity();
+
         void apply(QGraphicsItem *item,const Geometry::Type &type) override;
         bool isCompatibilityWith(const Geometry::Type &type) override;
 };

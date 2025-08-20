@@ -16,6 +16,17 @@ QColor PolyStyler::fill(){
     return QBrush::color();
 }
 
+void PolyStyler::setFillOpacity(double opacity){
+    QColor color = fill();
+    color.setAlphaF(opacity);
+    setFill(color);
+}
+
+double PolyStyler::fillOpacity(){
+    return fill().alphaF();
+}
+
+
 void PolyStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     if(dynamic_cast<QGraphicsItemGroup*>(item)) return applyCollection(item,type);
     QGraphicsPathItem *polyItem = dynamic_cast<QGraphicsPathItem*>(item);

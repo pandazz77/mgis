@@ -16,6 +16,17 @@ QColor LineStyler::stroke(){
     return QPen::color();
 }
 
+void LineStyler::setStrokeOpacity(double opacity){
+    QColor color = stroke();
+    color.setAlphaF(opacity);
+    setStroke(color);
+}
+
+double LineStyler::strokeOpacity(){
+    return stroke().alphaF();
+}
+
+
 void LineStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     if(dynamic_cast<QGraphicsItemGroup*>(item)) return applyCollection(item,type);
     QGraphicsPathItem *lineItem = dynamic_cast<QGraphicsPathItem*>(item);
