@@ -2,6 +2,7 @@
 
 #include <QFile>
 #include <QJsonDocument>
+#include <QJsonValue>
 #include "MagicValues.h"
 
 JsonStyleProvider::JsonStyleProvider(const QString &jsonPath){
@@ -21,14 +22,14 @@ void JsonStyleProvider::fromFile(const QString &filePath){
 }
 
 void JsonStyleProvider::load(const QJsonDocument &doc){
-    QVariantMap map = doc.toVariant().toMap();
+    currentMap = doc.toVariant().toMap();
 
-    if(map.contains("metadata")) parseMetadata(map["metadata"].toMap());
+    if(currentMap.contains("metadata")) parseMetadata(currentMap["metadata"].toMap());
     else qWarning() << "JsonStyle doesnt contains metadata";
 
-    if(map.contains("constants")) parseConstants(map["constants"].toMap());
+    if(currentMap.contains("constants")) parseConstants(currentMap["constants"].toMap());
 
-    QVariantList styles = map["styles"].toList();
+    QVariantList styles = currentMap["styles"].toList();
     for(QVariant styleVar: styles){
         parseStyle(styleVar.toMap());
     }
@@ -39,7 +40,14 @@ void JsonStyleProvider::parseMetadata(const QVariantMap &map){
 }
 
 void JsonStyleProvider::parseConstants(const QVariantMap &constans){
-    /// TODO: preprocessor
+    currentMap.remove("constants"); // we dont need this anymore
+    QByteArray raw = QJsonDocument::fromVariant(currentMap).toJson();
+    for(auto kv: constans.asKeyValueRange()){
+        QByteArray valueRaw = kv.second.toJsonValue().toJson();
+        QByteArray keyRaw = '"' + kv.first.toUtf8() + '"'; // we need to enquote key for right replacement
+        raw.replace(keyRaw,valueRaw);
+    }
+    currentMap = QJsonDocument::fromJson(raw).toVariant().toMap();
 }
 
 void JsonStyleProvider::parseStyle(const QVariantMap &style){

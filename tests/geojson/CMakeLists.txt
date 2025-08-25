@@ -48,3 +48,11 @@ set(SRCS_STYLESET_PROVIDER
 )
 add_executable(StyleSetProviderTest ${SRCS_STYLESET_PROVIDER})
 target_link_libraries(StyleSetProviderTest mgis Qt6::Core Qt6::Widgets)
+
+# ============================
+
+set(SRCS_JSON_STYLE
+    ./test_json_style.cpp
+)
+add_executable(JsonStyleTest ${SRCS_JSON_STYLE})
+target_link_libraries(JsonStyleTest mgis Qt6::Core Qt6::Widgets)

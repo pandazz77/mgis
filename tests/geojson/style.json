@@ -4,7 +4,8 @@
     },
     "constants":{
         "@BLACK_COLOR":"#000000",
-        "@RED_COLOR":"#ff0000"
+        "@RED_COLOR":"#ff0000",
+        "@BASE_WIDTH":1
     },
     "styles":[
         {

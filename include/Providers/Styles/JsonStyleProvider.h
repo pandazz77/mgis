@@ -22,4 +22,7 @@ class JsonStyleProvider: protected StyleSetProvider{
 
         static StyleCondition parseCondition(QString conditionExp);
         static StyleInstruction parseInstruction(QString key, QVariant val);
+
+    private:
+        QVariantMap currentMap;
 };
