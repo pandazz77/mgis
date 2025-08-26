@@ -11,7 +11,7 @@
         {
             "id":"someid",
             "condition": [
-				"$PROPERTIES.country == russia",
+				"$PROPERTIES.country == 'russia' ",
 				"$GEOMETRY.type == $POLY"
 			],
             "instruction":{

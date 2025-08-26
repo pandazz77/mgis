@@ -57,7 +57,7 @@ void JsonStyleProvider::parseStyle(const QVariantMap &style){
     QStringList conditionsExpr;
     if(style["condition"].typeId() == QMetaType::QString) 
         conditionsExpr << style["condition"].toString();
-    else if(style["condition"].typeId() == QMetaType::QStringList)
+    else if(style["condition"].typeId() == QMetaType::QVariantList)
         conditionsExpr = style["condition"].toStringList();
     else
         abort();

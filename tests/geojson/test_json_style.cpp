@@ -20,7 +20,7 @@ void testMagic(){
         {90,-180},
         {90,180}
     })));
-    // feature.properties["sss"]
+    feature.properties["name"] = "water";
 
     bool hasNext; 
     QString key;
@@ -50,6 +50,11 @@ void testMagic(){
     QString s3 = "$GEOMETRY.type == $POLY";
     MagicFactory::eval(s3,&feature,MCONSTANTS);
     result = ExpressionParser::evaluateExpression(s3.toStdString());
+    assert(std::get<bool>(result));
+
+    QString s4 = "$PROPERTIES.name == 'water' ";
+    MagicFactory::eval(s4,&feature,MCONSTANTS);
+    result = ExpressionParser::evaluateExpression(s4.toStdString());
     assert(std::get<bool>(result));
 }
 
