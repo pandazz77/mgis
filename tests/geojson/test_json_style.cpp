@@ -21,6 +21,8 @@ void testMagic(){
         {90,180}
     })));
     feature.properties["name"] = "water";
+    feature.properties["level"] = 5;
+    feature.properties["isEarth"] = false;
 
     bool hasNext; 
     QString key;
@@ -55,6 +57,16 @@ void testMagic(){
     QString s4 = "$PROPERTIES.name == 'water' ";
     MagicFactory::eval(s4,&feature,MCONSTANTS);
     result = ExpressionParser::evaluateExpression(s4.toStdString());
+    assert(std::get<bool>(result));
+
+    QString s5 = "$PROPERTIES.level > 3 and $PROPERTIES.level < 7";
+    MagicFactory::eval(s5,&feature,MCONSTANTS);
+    result = ExpressionParser::evaluateExpression(s5.toStdString());
+    assert(std::get<bool>(result));
+
+    QString s6 = "$PROPERTIES.isEarth != true";
+    MagicFactory::eval(s6,&feature,MCONSTANTS);
+    result = ExpressionParser::evaluateExpression(s6.toStdString());
     assert(std::get<bool>(result));
 }
 

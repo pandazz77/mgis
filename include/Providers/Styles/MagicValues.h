@@ -74,9 +74,11 @@ class MagicProperty: public MagicExp{
             bool hasNext;
             const QString currentKey = MagicExp::currentKey(mprop,hasNext);
             if(!hasNext) { // end
-                return std::make_unique<MagicConstant>(
-                    '\''+ QString::fromStdString(propeties[currentKey.toStdString()].to<std::string>()) + '\''
-                );
+                PropertyValue val = propeties[currentKey.toStdString()];
+                QString result = QString::fromStdString(val.to<std::string>());
+                if(val.is<std::string>()) result = '\'' + result + '\'';
+
+                return std::make_unique<MagicConstant>(result);
             }
             
             const QString nextKey = MagicExp::nextKey(currentKey);

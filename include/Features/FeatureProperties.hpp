@@ -14,6 +14,11 @@ template<typename T,typename... Types>
 T cast_helper(std::variant<Types...> var){
     if constexpr(std::is_same_v<T,double>)
         if(std::holds_alternative<int>(var)) return static_cast<double>(std::get<int>(var));
+    if constexpr(std::is_same_v<T,std::string>){
+        if(std::holds_alternative<int>(var)) return std::to_string(std::get<int>(var));
+        if(std::holds_alternative<double>(var)) return std::to_string(std::get<double>(var));
+        if(std::holds_alternative<bool>(var)) return std::get<bool>(var) ? "true": "false";
+    }
 }
 
 template<typename... Types>
