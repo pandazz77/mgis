@@ -22,6 +22,18 @@ void testMagic(){
     })));
     // feature.properties["sss"]
 
+    bool hasNext; 
+    QString key;
+
+    key = MagicExp::currentKey("$TEST1",hasNext);
+    assert(key == "$TEST1" && !hasNext);
+    
+    key = MagicExp::currentKey("$TEST1.test2",hasNext);
+    assert(key == "$TEST1" && hasNext);
+
+    key = MagicExp::nextKey("$TEST1.test2");
+    assert(key=="test2");
+
     ExpressionParser::Value result;
 
     QString s1 = "$SOMECONSTANT == 1337";
@@ -29,9 +41,15 @@ void testMagic(){
     result = ExpressionParser::evaluateExpression(s1.toStdString());
     assert(std::get<bool>(result));
 
+    /// @warning magic constants $SOMECONSTANT_1 are not passed
     QString s2 = "$SOMECONSTANT==$1_SOMECONSTANT";
     MagicFactory::eval(s2, nullptr,MCONSTANTS);
     result = ExpressionParser::evaluateExpression(s2.toStdString());
+    assert(std::get<bool>(result));
+
+    QString s3 = "$GEOMETRY.type == $POLY";
+    MagicFactory::eval(s3,&feature,MCONSTANTS);
+    result = ExpressionParser::evaluateExpression(s3.toStdString());
     assert(std::get<bool>(result));
 }
 

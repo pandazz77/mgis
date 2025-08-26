@@ -33,7 +33,8 @@ class MagicExp: public MagicValue{ // Magic expression
         }
 
         static QString nextKey(const QString &currentKey){
-            return currentKey.sliced('.');
+            int dotPos = currentKey.indexOf('.');
+            return currentKey.sliced(dotPos+1);
         }
 
         static QString currentKey(const QString &fullPath, bool &hasNext){
