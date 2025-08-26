@@ -2,6 +2,7 @@
 
 #include <QFile>
 #include <QJsonDocument>
+#include "MagicValues.h"
 
 JsonStyleProvider::JsonStyleProvider(const QString &jsonPath){
     fromFile(jsonPath);

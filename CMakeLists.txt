@@ -94,6 +94,7 @@ set(HDRS
     include/Providers/Styles/StyleSetProvider.h
     include/Providers/Styles/JsonStyleProvider.h
     include/Providers/Styles/ExpressionParser.h
+    include/Providers/Styles/MagicValues.h
 )
 
 find_package(Qt6 COMPONENTS 
