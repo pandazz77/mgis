@@ -13,14 +13,15 @@ class MagicValue{ // Base
 
 class MagicConstant: public MagicValue{ // Ex: $POLY
     public:
-        MagicConstant(QString value="") : value(value) {}
+        MagicConstant() : value("") {}
+        MagicConstant(QString value) : value(value) {}
         
         QString str() override{
             return value;
         }
 
     protected:
-        const QString value;
+        QString value;
 };
 
 class MagicExp: public MagicValue{ // Magic expression
@@ -100,7 +101,7 @@ namespace MagicFactory{
  * @param constants set of constants
  * @return std::unique_ptr<MagicValue> produced value 
  */
-std::unique_ptr<MagicValue> value(QString magic, Feature *feature , const MagicConstantSet &constants={}){
+inline std::unique_ptr<MagicValue> value(QString magic, Feature *feature , const MagicConstantSet &constants={}){
     if(constants.contains(magic)) 
         return std::make_unique<MagicConstant>(constants.value(magic));
     
@@ -108,6 +109,7 @@ std::unique_ptr<MagicValue> value(QString magic, Feature *feature , const MagicC
         return std::make_unique<MagicGeometry>(feature->geometry,MagicExp::nextKey(magic));
     if(magic.startsWith(MagicProperty::ID))
         return std::make_unique<MagicProperty>(feature->properties,MagicExp::nextKey(magic));
+    qWarning() << "UNREGISTRED MAGIC" << magic;
 }
 
 /**
@@ -117,7 +119,7 @@ std::unique_ptr<MagicValue> value(QString magic, Feature *feature , const MagicC
  * @param feature captured
  * @param constants set of constants
  */
-void eval(QString &strWithMagic, Feature *feature, const MagicConstantSet &constants={}){
+inline void eval(QString &strWithMagic, Feature *feature, const MagicConstantSet &constants={}){
     QRegularExpression re(R"(\$[\w\.]+)");
     QRegularExpressionMatchIterator i = re.globalMatch(strWithMagic);
 
