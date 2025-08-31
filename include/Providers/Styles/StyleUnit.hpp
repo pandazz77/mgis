@@ -3,9 +3,16 @@
 #include "IStyler.h"
 #include "Feature.h"
 
-using StyleCondition = std::function<bool(const Feature*)>;
+// StyleUnit visibility scope
+struct StyleScope{
+    StyleScope(const Feature *feature) : feature(feature) {}
+
+    const Feature *feature;
+};
+
+using StyleCondition = std::function<bool(const StyleScope&)>;
 using StyleConditionSet = std::vector<StyleCondition>;
-using StyleInstruction = std::function<void(IStyler*&)>;
+using StyleInstruction = std::function<void(IStyler*&, const StyleScope&)>;
 using StyleInstructionSet = std::vector<StyleInstruction>;
 
 struct StyleUnit{

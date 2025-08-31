@@ -55,7 +55,7 @@
                 "$PROPERTIES.city != false "
             ],
             "instruction":{
-                "text":"there is city"
+                "text":"$PROPERTIES.city"
             }
         },
         {

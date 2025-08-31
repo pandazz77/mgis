@@ -35,11 +35,11 @@ void StyleSetProvider::onNewFeature(const Feature *feature, IStyler *& styler){
     for(const StyleUnit &style: styles){
         bool ok = true;
         for(const StyleCondition &condition: style.conditions()){
-            ok = condition(feature);
+            ok = condition(StyleScope(feature));
             if(!ok) break;
         }
         if(!ok) continue; // do not apply style, because condition was not approved
         for(const StyleInstruction &instruction: style.instructions())
-            instruction(styler); // apply style instruction
+            instruction(styler,StyleScope(feature)); // apply style instruction
     }
 }

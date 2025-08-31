@@ -154,9 +154,9 @@ void JsonStyleProvider::parseStyle(const QVariantMap &style){
 }
 
 StyleCondition JsonStyleProvider::parseCondition(QString conditionExp){
-    return StyleCondition([conditionExp](const Feature * feature){
+    return StyleCondition([conditionExp](const StyleScope &scope){
         QString cond = conditionExp;
-        MagicFactory::eval(cond,feature,GEOMETRY_CONSTANTS);
+        MagicFactory::eval(cond,scope.feature,GEOMETRY_CONSTANTS);
         ExpressionParser::Value res = ExpressionParser::evaluateExpression(cond.toStdString());
         // qDebug() << conditionExp << "--->" << cond << "--->" << std::get<bool>(res);
         return std::get<bool>(res);
@@ -175,8 +175,15 @@ inline TStyle *sCast(IStyler *styler){
 #define spoly(styler) sCast<PolyStyler>(styler)
 // =====================================
 
-StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
-    return StyleInstruction([key,val](IStyler *& styler){
+StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant _val){
+    return StyleInstruction([key,_val](IStyler *& styler, const StyleScope &scope){
+        QVariant val = _val;
+        if(val.typeId()==QMetaType::QString){
+            QString sVal = val.toString();
+            MagicFactory::eval(sVal,scope.feature);
+            val = QVariant(sVal);
+        }
+
         if(key=="fill")
             spoly(styler)->setFill(val.toString());
         else if(key=="fill-opacity")

@@ -32,10 +32,10 @@ int main(int argc, char *argv[]){
     StyleSetProvider *styler = new StyleSetProvider();
     styler->add(StyleUnit(
         { // conditions
-            StyleCondition([](const Feature *feature){ return feature->properties["sovereignt"].to<std::string>() == "Russia"; })
+            StyleCondition([](const StyleScope &scope){ return scope.feature->properties["sovereignt"].to<std::string>() == "Russia"; })
         },
         { // instructions
-            StyleInstruction([](IStyler *& style){ 
+            StyleInstruction([](IStyler *& style,const StyleScope &scope){ 
                 PolyStyler *poly = dynamic_cast<PolyStyler*>(style);
                 poly->setFill(Qt::red);
             })
