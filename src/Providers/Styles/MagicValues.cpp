@@ -58,7 +58,7 @@ std::unique_ptr<MagicValue> MagicGeometry::dotFunc(QString mprop){
 // =======================
 // MARK: MagicProperty
 
-MagicProperty::MagicProperty(const Feature::Properties &properties, QString mprop): MagicExp(mprop), propeties(properties) {
+MagicProperty::MagicProperty(const Feature::Properties &properties, QString mprop): MagicExp(mprop), properties(properties) {
 
 }
 
@@ -66,9 +66,9 @@ std::unique_ptr<MagicValue> MagicProperty::dotFunc(QString mprop){
     bool hasNext;
     const QString currentKey = MagicExp::currentKey(mprop,hasNext);
     if(!hasNext) { // end
-        if(!propeties.has(currentKey.toStdString())) // does not exist
+        if(!properties.has(currentKey.toStdString())) // does not exist
             return std::make_unique<MagicConstant>("false");
-        PropertyValue val = propeties[currentKey.toStdString()];
+        PropertyValue val = properties[currentKey.toStdString()];
         QString result = QString::fromStdString(val.to<std::string>());
         if(val.is<std::string>()) result = '\'' + result + '\'';
 
@@ -77,7 +77,7 @@ std::unique_ptr<MagicValue> MagicProperty::dotFunc(QString mprop){
     
     const QString nextKey = MagicExp::nextKey(mprop);
     return std::make_unique<MagicProperty>(
-        propeties[currentKey.toStdString()].to<Feature::Properties>(),
+        properties[currentKey.toStdString()].to<Feature::Properties>(),
         nextKey
     );
 }
