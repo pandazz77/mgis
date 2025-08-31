@@ -98,16 +98,38 @@ StyleCondition JsonStyleProvider::parseCondition(QString conditionExp){
         QString cond = conditionExp;
         MagicFactory::eval(cond,feature,GEOMETRY_CONSTANTS);
         ExpressionParser::Value res = ExpressionParser::evaluateExpression(cond.toStdString());
-        qDebug() << conditionExp << "--->" << cond << "--->" << std::get<bool>(res);
+        // qDebug() << conditionExp << "--->" << cond << "--->" << std::get<bool>(res);
         return std::get<bool>(res);
         
     });
-    /// TODO: implement
 }
+
+// STYLE CAST HELPERS =================
+template <typename TStyle>
+inline TStyle *sCast(IStyler *styler){
+    return dynamic_cast<TStyle*>(styler);
+}
+
+#define spoint(styler) sCast<PointStyler>(styler)
+#define sline(styler) sCast<LineStyler>(styler)
+#define spoly(styler) sCast<PolyStyler>(styler)
+// =====================================
 
 StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
     return StyleInstruction([key,val](IStyler *& styler){
-        // qDebug() << key << val;
+        if(key=="fill")
+            spoly(styler)->setFill(val.toString());
+        else if(key=="fill-opacity")
+            spoly(styler)->setFillOpacity(val.toDouble());
+        else if(key=="stroke")
+            sline(styler)->setStroke(val.toString());
+        else if(key=="stroke-width")
+            sline(styler)->setWidth(val.toInt());
+        else if(key=="stroke-opacity")
+            sline(styler)->setStrokeOpacity(val.toDouble());
+
+
+        else
+            qWarning() << "UNSUPPORTED STYLE INSTRUCTION:" << key << "WITH VALUE" << val;
     });
-    /// TODO: implement
 }

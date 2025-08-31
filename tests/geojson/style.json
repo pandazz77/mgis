@@ -5,7 +5,7 @@
     "constants":{
         "@BLACK_COLOR":"#000000",
         "@RED_COLOR":"#ff0000",
-        "@BASE_WIDTH":1
+        "@BASE_WIDTH":3
     },
     "styles":[
         {
@@ -17,7 +17,7 @@
             "instruction":{
                 "fill":"@RED_COLOR",
                 "stroke":"@BLACK_COLOR",
-                "stroke-width":1
+                "stroke-width":"@BASE_WIDTH"
             }
         }
     ]
