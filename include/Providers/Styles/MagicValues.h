@@ -2,9 +2,10 @@
 
 #include <QString>
 #include <QHash>
-#include <QRegularExpression>
 
 #include "Feature.h"
+
+class Feature;
 
 class MagicValue{ // Base
     public:
@@ -13,12 +14,10 @@ class MagicValue{ // Base
 
 class MagicConstant: public MagicValue{ // Ex: $POLY
     public:
-        MagicConstant() : value("") {}
-        MagicConstant(QString value) : value(value) {}
+        MagicConstant();
+        MagicConstant(QString value);
         
-        QString str() override{
-            return value;
-        }
+        QString str() override;
 
     protected:
         QString value;
@@ -26,25 +25,12 @@ class MagicConstant: public MagicValue{ // Ex: $POLY
 
 class MagicExp: public MagicValue{ // Magic expression
     public:
-        MagicExp(QString mprop) : mprop(mprop) {}
+        MagicExp(QString mprop);
 
-        QString str() override{
-            return dotFunc(mprop)->str();
-        }
+        QString str() override;
 
-        static QString nextKey(const QString &currentKey){
-            int dotPos = currentKey.indexOf('.');
-            return currentKey.sliced(dotPos+1);
-        }
-
-        static QString currentKey(const QString &fullPath, bool &hasNext){
-            int dotPos = fullPath.indexOf('.');
-            hasNext = false;
-            
-            if(dotPos<0) return fullPath;
-            hasNext = true;
-            return fullPath.sliced(0,dotPos);
-        }
+        static QString nextKey(const QString &currentKey);
+        static QString currentKey(const QString &fullPath, bool &hasNext);
 
         virtual std::unique_ptr<MagicValue>dotFunc(QString mprop) = 0;
     private:
@@ -54,12 +40,9 @@ class MagicExp: public MagicValue{ // Magic expression
 class MagicGeometry: public MagicExp{
     public:
         inline static const char *ID = "$GEOMETRY";
-        MagicGeometry(Geometry *geometry, QString mprop): MagicExp(mprop), geometry(geometry) {}
+        MagicGeometry(Geometry *geometry, QString mprop);
 
-        std::unique_ptr<MagicValue> dotFunc(QString mprop){
-            if(mprop=="type") 
-                return std::make_unique<MagicConstant>(QString::number((int)geometry->type()));
-        }
+        std::unique_ptr<MagicValue> dotFunc(QString mprop) override;
 
     private:
         Geometry *geometry;
@@ -68,25 +51,9 @@ class MagicGeometry: public MagicExp{
 class MagicProperty: public MagicExp{
     public:
         inline static const char *ID = "$PROPERTIES";
-        MagicProperty(const Feature::Properties &properties, QString mprop): MagicExp(mprop), propeties(properties) {}
 
-        std::unique_ptr<MagicValue> dotFunc(QString mprop){
-            bool hasNext;
-            const QString currentKey = MagicExp::currentKey(mprop,hasNext);
-            if(!hasNext) { // end
-                PropertyValue val = propeties[currentKey.toStdString()];
-                QString result = QString::fromStdString(val.to<std::string>());
-                if(val.is<std::string>()) result = '\'' + result + '\'';
-
-                return std::make_unique<MagicConstant>(result);
-            }
-            
-            const QString nextKey = MagicExp::nextKey(currentKey);
-            return std::make_unique<MagicProperty>(
-                propeties[currentKey.toStdString()].to<Feature::Properties>(),
-                nextKey
-            );
-        }
+        MagicProperty(const Feature::Properties &properties, QString mprop);
+        std::unique_ptr<MagicValue> dotFunc(QString mprop) override;
 
     private:
         const Feature::Properties &propeties;
@@ -104,16 +71,7 @@ namespace MagicFactory{
  * @param constants set of constants
  * @return std::unique_ptr<MagicValue> produced value 
  */
-inline std::unique_ptr<MagicValue> value(QString magic, Feature *feature , const MagicConstantSet &constants={}){
-    if(constants.contains(magic)) 
-        return std::make_unique<MagicConstant>(constants.value(magic));
-    
-    if(magic.startsWith(MagicGeometry::ID))
-        return std::make_unique<MagicGeometry>(feature->geometry,MagicExp::nextKey(magic));
-    if(magic.startsWith(MagicProperty::ID))
-        return std::make_unique<MagicProperty>(feature->properties,MagicExp::nextKey(magic));
-    qWarning() << "UNREGISTRED MAGIC" << magic;
-}
+std::unique_ptr<MagicValue> value(QString magic, Feature *feature , const MagicConstantSet &constants={});
 
 /**
  * @brief MagicExpression evaluator
@@ -122,19 +80,6 @@ inline std::unique_ptr<MagicValue> value(QString magic, Feature *feature , const
  * @param feature captured
  * @param constants set of constants
  */
-inline void eval(QString &strWithMagic, Feature *feature, const MagicConstantSet &constants={}){
-    QRegularExpression re(R"(\$[\w\.]+)");
-    QRegularExpressionMatchIterator i = re.globalMatch(strWithMagic);
-
-    while(i.hasNext()){
-        QRegularExpressionMatch match = i.next();
-        QString captured = match.captured();
-
-        strWithMagic.replace(
-            captured,
-            value(captured,feature,constants)->str()
-        );
-    }
-}
+void eval(QString &strWithMagic, Feature *feature, const MagicConstantSet &constants={});
 
 };

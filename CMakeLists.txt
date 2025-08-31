@@ -45,6 +45,7 @@ set(SRCS
     src/Providers/Styles/StyleSetProvider.cpp
     src/Providers/Styles/JsonStyleProvider.cpp
     src/Providers/Styles/ExpressionParser.cpp
+    src/Providers/Styles/MagicValues.cpp
 )
 
 set(HDRS
