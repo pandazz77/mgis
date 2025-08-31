@@ -26,6 +26,13 @@ const QHash<QString,Qt::PenCapStyle> PEN_CAPS {
     {"round",Qt::RoundCap}
 };
 
+const QHash<QString,Qt::PenJoinStyle> PEN_JOIN {
+    {"miter",Qt::MiterJoin},
+    {"bevel",Qt::BevelJoin},
+    {"round",Qt::RoundJoin},
+    {"svgmiter",Qt::SvgMiterJoin}
+};
+
 JsonStyleProvider::JsonStyleProvider(const QString &jsonPath){
     fromFile(jsonPath);
 }
@@ -158,6 +165,10 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
             sline(styler)->setDashOffset(val.toDouble());
         else if(key=="cap")
             sline(styler)->setCapStyle(PEN_CAPS[val.toString()]);
+        else if(key=="cosmetic")
+            sline(styler)->setCosmetic(val.toDouble());
+        else if(key=="join")
+            sline(styler)->setJoinStyle(PEN_JOIN[val.toString()]);
 
 
         else

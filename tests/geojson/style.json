@@ -23,7 +23,9 @@
                 "stroke-width":"@BASE_WIDTH",
                 "dash-pattern":[5,2,5,2],
                 "dash-offset":2,
-                "cap":"flat"
+                "cap":"flat",
+                "cosmetic":true,
+                "join":"miter"
             }
         }
     ]
