@@ -10,6 +10,11 @@ class PolyStyler: public LineStyler, public QBrush{
         void setColor(const QColor &color) = delete;
         void setFill(const QColor &color);
 
+        void setStyle(Qt::BrushStyle) = delete;
+        Qt::BrushStyle style() = delete;
+        void setFillStyle(Qt::BrushStyle style);
+        Qt::BrushStyle fillStyle();
+
         QColor color() = delete;
         QColor fill();
 

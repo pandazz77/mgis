@@ -16,6 +16,15 @@ QColor PolyStyler::fill(){
     return QBrush::color();
 }
 
+void PolyStyler::setFillStyle(Qt::BrushStyle style){
+    QBrush::setStyle(style);
+}
+
+Qt::BrushStyle PolyStyler::fillStyle(){
+    return QBrush::style();
+}
+
+
 void PolyStyler::setFillOpacity(double opacity){
     QColor color = fill();
     color.setAlphaF(opacity);
@@ -28,7 +37,7 @@ double PolyStyler::fillOpacity(){
 
 void PolyStyler::setTextureSize(QSize size){
     QSize prSize = texture().size();
-    QTransform transform;
+    QTransform transform = QBrush::transform();
     transform.rotate(180); // mapview is rotated
     transform.scale(
         static_cast<qreal>(size.width()) / prSize.width(),

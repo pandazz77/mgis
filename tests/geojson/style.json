@@ -58,6 +58,17 @@
                 "fill-texture":"kangaroo.png",
                 "texture-size":[500000,500000]
             }
+        },
+        {
+            "id":"greenland",
+            "condition":[
+                "$PROPERTIES.admin == 'Greenland' ",
+                "$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
+            ],
+            "instruction":{
+                "fill-style":"cross",
+                "fill":"green"
+            }
         }
     ]
 }

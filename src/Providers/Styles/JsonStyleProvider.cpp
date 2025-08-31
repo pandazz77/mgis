@@ -42,6 +42,28 @@ const QHash<QString,Qt::PenStyle> PEN_STYLE {
     {"dash-dot-dot",Qt::DashDotDotLine}
 };
 
+const QHash<QString,Qt::BrushStyle> BRUSH_STYLE{
+    // {"nobrush",Qt::NoBrush},
+    {"solid",Qt::SolidPattern},
+    {"dense1",Qt::Dense1Pattern},
+    {"dense2",Qt::Dense2Pattern},
+    {"dense3",Qt::Dense3Pattern},
+    {"dense4",Qt::Dense4Pattern},
+    {"dense5",Qt::Dense5Pattern},
+    {"dense6",Qt::Dense6Pattern},
+    {"dense7",Qt::Dense7Pattern},
+    {"hor",Qt::HorPattern},
+    {"ver",Qt::VerPattern},
+    {"cross",Qt::CrossPattern},
+    {"bdiag",Qt::BDiagPattern},
+    {"fdiag",Qt::FDiagPattern},
+    {"diag-cross",Qt::DiagCrossPattern},
+    /// TODO: implement gradients ?
+    // {"linear-gradient",Qt::LinearGradientPattern},
+    // {"conical-gradient",Qt::ConicalGradientPattern},
+    // {"radial-gradient",Qt::RadialGradientPattern},
+};
+
 JsonStyleProvider::JsonStyleProvider(const QString &jsonPath){
     fromFile(jsonPath);
 }
@@ -165,6 +187,8 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
             QVariantList lst = val.toList();
             spoly(styler)->setTextureSize(QSize(lst[0].toInt(),lst[1].toInt()));
         }
+        else if(key=="fill-style")
+            spoly(styler)->setFillStyle(BRUSH_STYLE[val.toString()]);
 
 
         else if(key=="stroke")
@@ -187,7 +211,7 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
         else if(key=="stroke-join")
             sline(styler)->setJoinStyle(PEN_JOIN[val.toString()]);
         else if(key=="stroke-style")
-            sline(styler)->setStyle(PEN_STYLE[val.toString()]);
+            sline(styler)->setStrokeStyle(PEN_STYLE[val.toString()]);
 
         else if(key=="icon")
             spoint(styler)->setPixmap(QPixmap(val.toString()));

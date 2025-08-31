@@ -16,6 +16,15 @@ QColor LineStyler::stroke(){
     return QPen::color();
 }
 
+void LineStyler::setStrokeStyle(Qt::PenStyle style){
+    QPen::setStyle(style);
+}
+
+Qt::PenStyle LineStyler::strokeStyle(){
+    return QPen::style();
+}
+
+
 void LineStyler::setStrokeOpacity(double opacity){
     QColor color = stroke();
     color.setAlphaF(opacity);
