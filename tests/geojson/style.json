@@ -49,6 +49,16 @@
             }
         },
         {
+            "id":"city-text",
+            "condition":[
+                "$GEOMETRY.type == $POINT or $GEOMETRY.type == $MPOINT",
+                "$PROPERTIES.city != false "
+            ],
+            "instruction":{
+                "text":"there is city"
+            }
+        },
+        {
             "id":"australia",
             "condition": [
                 "$PROPERTIES.sovereignt == 'Australia' ",

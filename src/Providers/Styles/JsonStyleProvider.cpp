@@ -219,6 +219,8 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
             QVariantList lst = val.toList();
             spoint(styler)->setAnchor(QPointF(lst[0].toDouble(),lst[1].toDouble()));
         }
+        else if(key=="text")
+            spoint(styler)->setPixmap(PointStyler::TextPixmap(val.toString()));
 
 
         else

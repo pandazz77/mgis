@@ -1,5 +1,7 @@
 #include "PointStyler.h"
 
+#include <QPainter>
+
 PointStyler::PointStyler(){
 
 }
@@ -27,4 +29,20 @@ void PointStyler::setPixmap(const QPixmap &pixmap){
 
 void PointStyler::setAnchor(const QPointF &anchor){
     this->anchor = anchor;
+}
+
+QPixmap PointStyler::TextPixmap(const QString &text, const QFont &font,const QColor& textColor, const QColor &bgColor){
+    QFontMetrics fm(font);
+    QSize textSize = fm.size(Qt::TextSingleLine,text);
+    QSize pixSize(textSize*1.5);
+
+    QPixmap pix(pixSize);
+    pix.fill(bgColor);
+    QPainter painter(&pix);
+    QPen pen(textColor);
+    pen.setCosmetic(true);
+    painter.setPen(pen);
+    painter.setFont(font);
+    painter.drawText(10,10,text);
+    return pix;
 }

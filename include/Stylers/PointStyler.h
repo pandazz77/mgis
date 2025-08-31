@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QFont>
+
 #include "IStyler.h"
 
 class PointStyler: public IStyler{
@@ -12,6 +14,9 @@ class PointStyler: public IStyler{
 
         void setPixmap(const QPixmap &pixmap);
         void setAnchor(const QPointF &anchor);
+
+        static QPixmap TextPixmap(const QString &text, const QFont &font=QFont(), 
+            const QColor& textColor = Qt::black, const QColor &bgColor=Qt::transparent);
 
     protected:
         QPixmap pixmap;
