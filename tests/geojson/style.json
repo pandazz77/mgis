@@ -10,7 +10,7 @@
     },
     "styles":[
         {
-            "id":"someid",
+            "id":"rus",
             "condition": [
 				"$PROPERTIES.sovereignt == 'Russia' ",
 				"$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
@@ -23,9 +23,21 @@
                 "stroke-width":"@BASE_WIDTH",
                 "dash-pattern":[5,2,5,2],
                 "dash-offset":2,
-                "cap":"flat",
-                "cosmetic":true,
-                "join":"miter"
+                "stroke-cap":"flat",
+                "stroke-cosmetic":true,
+                "stroke-join":"miter"
+            }
+        },
+        {
+            "id":"us",
+            "condition": [
+				"$PROPERTIES.sovereignt == 'United States of America' ",
+				"$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
+			],
+            "instruction":{
+                "fill":"@BLUE_COLOR",
+                "stroke":"@RED_COLOR",
+                "stroke-style":"dash-dot"
             }
         }
     ]

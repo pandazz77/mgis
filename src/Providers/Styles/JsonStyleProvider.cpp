@@ -33,6 +33,15 @@ const QHash<QString,Qt::PenJoinStyle> PEN_JOIN {
     {"svgmiter",Qt::SvgMiterJoin}
 };
 
+const QHash<QString,Qt::PenStyle> PEN_STYLE {
+    // {"nopen",Qt::NoPen},
+    {"solid",Qt::SolidLine},
+    {"dash",Qt::DashLine},
+    {"dot",Qt::DotLine},
+    {"dash-dot",Qt::DashDotLine},
+    {"dash-dot-dot",Qt::DashDotDotLine}
+};
+
 JsonStyleProvider::JsonStyleProvider(const QString &jsonPath){
     fromFile(jsonPath);
 }
@@ -163,12 +172,14 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
         }   
         else if(key=="dash-offset")
             sline(styler)->setDashOffset(val.toDouble());
-        else if(key=="cap")
+        else if(key=="stroke-cap")
             sline(styler)->setCapStyle(PEN_CAPS[val.toString()]);
-        else if(key=="cosmetic")
+        else if(key=="stroke-cosmetic")
             sline(styler)->setCosmetic(val.toDouble());
-        else if(key=="join")
+        else if(key=="stroke-join")
             sline(styler)->setJoinStyle(PEN_JOIN[val.toString()]);
+        else if(key=="stroke-style")
+            sline(styler)->setStyle(PEN_STYLE[val.toString()]);
 
 
         else
