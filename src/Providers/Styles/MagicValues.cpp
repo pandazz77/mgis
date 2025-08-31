@@ -75,7 +75,7 @@ std::unique_ptr<MagicValue> MagicProperty::dotFunc(QString mprop){
         return std::make_unique<MagicConstant>(result);
     }
     
-    const QString nextKey = MagicExp::nextKey(currentKey);
+    const QString nextKey = MagicExp::nextKey(mprop);
     return std::make_unique<MagicProperty>(
         propeties[currentKey.toStdString()].to<Feature::Properties>(),
         nextKey
@@ -105,7 +105,8 @@ void MagicFactory::eval(QString &strWithMagic,const Feature *feature, const Magi
         QString captured = match.captured();
 
         strWithMagic.replace(
-            captured,
+            strWithMagic.indexOf(captured),
+            captured.size(),
             value(captured,feature,constants)->str()
         );
     }

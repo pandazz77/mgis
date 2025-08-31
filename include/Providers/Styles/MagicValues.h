@@ -56,7 +56,7 @@ class MagicProperty: public MagicExp{
         std::unique_ptr<MagicValue> dotFunc(QString mprop) override;
 
     private:
-        const Feature::Properties &propeties;
+        const Feature::Properties propeties;
 };
 
 using MagicConstantSet = QHash<QString,MagicConstant>;

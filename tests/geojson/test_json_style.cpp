@@ -14,7 +14,7 @@ void testMagic(){
         {"$LINE",MagicConstant(QString::number((int)Geometry::Type::LINESTRING))},
         {"$POINT",MagicConstant(QString::number((int)Geometry::Type::POINT))},
         {"$SOMECONSTANT",MagicConstant("1337")},
-        {"$1_SOMECONSTANT",MagicConstant("1337")}
+        {"$SOMECONSTANT_1",MagicConstant("1337")}
     };
 
     Feature feature(new Polygon(LinearRing({
@@ -27,6 +27,11 @@ void testMagic(){
     feature.properties["name"] = "water";
     feature.properties["level"] = 5;
     feature.properties["isEarth"] = false;
+    feature.properties["water_props"] = FeatureProperties({
+        {"depth",10},
+        {"depth_unit","m"}
+    });
+    
 
     bool hasNext; 
     QString key;
@@ -47,8 +52,7 @@ void testMagic(){
     result = ExpressionParser::evaluateExpression(s1.toStdString());
     assert(std::get<bool>(result));
 
-    /// @warning magic constants $SOMECONSTANT_1 are not passed
-    QString s2 = "$SOMECONSTANT==$1_SOMECONSTANT";
+    QString s2 = "$SOMECONSTANT==$SOMECONSTANT_1";
     MagicFactory::eval(s2, nullptr,MCONSTANTS);
     result = ExpressionParser::evaluateExpression(s2.toStdString());
     assert(std::get<bool>(result));
@@ -71,6 +75,11 @@ void testMagic(){
     QString s6 = "$PROPERTIES.isEarth != true";
     MagicFactory::eval(s6,&feature,MCONSTANTS);
     result = ExpressionParser::evaluateExpression(s6.toStdString());
+    assert(std::get<bool>(result));
+
+    QString s7= "$PROPERTIES.water_props.depth == 10 and $PROPERTIES.water_props.depth_unit == 'm' ";
+    MagicFactory::eval(s7,&feature,MCONSTANTS);
+    result = ExpressionParser::evaluateExpression(s7.toStdString());
     assert(std::get<bool>(result));
 
     qDebug() << "Magic tests passed";
