@@ -47,10 +47,25 @@ void JsonStyleProvider::load(const QJsonDocument &doc){
     for(QVariant styleVar: styles){
         parseStyle(styleVar.toMap());
     }
+
+    currentMap.clear();
+}
+
+const QVariantMap &JsonStyleProvider::metaData(){
+    return meta;
 }
 
 void JsonStyleProvider::parseMetadata(const QVariantMap &map){
-    /// TODO: implement
+    meta = map;
+
+    // ================
+    if(meta.contains("mgis-jsonstyle-spec")){
+        double ver = meta["mgis-jsonstyle-spec"].toDouble();
+        if(ver>VERSION) qWarning() << "Loaded JsonStyle version" << ver << "higher than supported" << VERSION;
+    } else {
+        qWarning() << "JsonStyle version not specified!";
+    }
+    // ================
 }
 
 void JsonStyleProvider::parseConstants(const QVariantMap &constans){

@@ -1,6 +1,6 @@
 {
     "metadata":{
-        "mgis-jsonstyle-spec":"0.0.1"
+        "mgis-jsonstyle-spec": 0.1
     },
     "constants":{
         "@BLACK_COLOR":"#000000",

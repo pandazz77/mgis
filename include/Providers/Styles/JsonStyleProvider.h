@@ -4,10 +4,12 @@
 
 class JsonStyleProvider: public StyleSetProvider{
     public:
+        static constexpr double VERSION = 0.1;
+
         JsonStyleProvider(const QString &jsonPath);
         JsonStyleProvider(const QJsonDocument &doc);
 
-        
+        const QVariantMap &metaData(); 
 
     protected:
         void parseMetaData();
@@ -25,4 +27,5 @@ class JsonStyleProvider: public StyleSetProvider{
 
     private:
         QVariantMap currentMap;
+        QVariantMap meta; // metadata
 };
