@@ -47,6 +47,17 @@
                 "icon":"placeholder.png",
                 "icon-anchor":[16,32]
             }
+        },
+        {
+            "id":"australia",
+            "condition": [
+                "$PROPERTIES.sovereignt == 'Australia' ",
+                "$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
+            ],
+            "instruction":{
+                "fill-texture":"kangaroo.png",
+                "texture-size":[500000,500000]
+            }
         }
     ]
 }

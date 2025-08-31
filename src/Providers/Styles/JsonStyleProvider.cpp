@@ -159,6 +159,14 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
             spoly(styler)->setFill(val.toString());
         else if(key=="fill-opacity")
             spoly(styler)->setFillOpacity(val.toDouble());
+        else if(key=="fill-texture")
+            spoly(styler)->setTexture(QPixmap(val.toString()));
+        else if(key=="texture-size"){
+            QVariantList lst = val.toList();
+            spoly(styler)->setTextureSize(QSize(lst[0].toInt(),lst[1].toInt()));
+        }
+
+
         else if(key=="stroke")
             sline(styler)->setStroke(val.toString());
         else if(key=="stroke-width")
