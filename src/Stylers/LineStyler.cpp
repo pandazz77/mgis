@@ -40,6 +40,7 @@ void LineStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     if(dynamic_cast<QGraphicsItemGroup*>(item)) return applyCollection(item,type);
     QGraphicsPathItem *lineItem = dynamic_cast<QGraphicsPathItem*>(item);
     lineItem->setPen(*this);
+    IStyler::apply(item,type);
 }
 
 bool LineStyler::isCompatibilityWith(const Geometry::Type &type){

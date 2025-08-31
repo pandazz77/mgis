@@ -7,3 +7,16 @@ void IStyler::applyCollection(QGraphicsItem *item, const Geometry::Type &type){
             apply(subItem,type);
     }
 }
+
+void IStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
+    if(!std::isnan(zValue))
+        item->setZValue(zValue);
+}
+
+void IStyler::setZValue(double zValue){
+    this->zValue = zValue;
+}
+
+double IStyler::getZValue(){
+    return zValue;
+}

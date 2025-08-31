@@ -20,6 +20,7 @@ void PointStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     else
         pixItem->setPixmap(_text.pixmap());
     pixItem->setOffset(-anchor.x(),-anchor.y());
+    IStyler::apply(item,type);
 }
 
 bool PointStyler::isCompatibilityWith(const Geometry::Type &type){

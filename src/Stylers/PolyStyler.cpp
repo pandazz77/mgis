@@ -51,6 +51,7 @@ void PolyStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     QGraphicsPathItem *polyItem = dynamic_cast<QGraphicsPathItem*>(item);
     polyItem->setPen(*this);
     polyItem->setBrush(*this);
+    IStyler::apply(item,type);
 }
 
 bool PolyStyler::isCompatibilityWith(const Geometry::Type &type){

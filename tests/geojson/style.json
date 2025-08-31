@@ -49,6 +49,13 @@
             }
         },
         {
+            "id":"points",
+            "condition": "$GEOMETRY.type == $POINT or $GEOMETRY.type == $MPOINT",
+            "instruction":{
+                "zvalue":100
+            }
+        },
+        {
             "id":"city-text",
             "condition":[
                 "$GEOMETRY.type == $POINT or $GEOMETRY.type == $MPOINT",

@@ -184,7 +184,10 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant _val)
             val = QVariant(sVal);
         }
 
-        if(key=="fill")
+        if(key=="zvalue")
+            styler->setZValue(val.toDouble());
+        
+        else if(key=="fill")
             spoly(styler)->setFill(val.toString());
         else if(key=="fill-opacity")
             spoly(styler)->setFillOpacity(val.toDouble());
