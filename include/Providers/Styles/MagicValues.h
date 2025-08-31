@@ -71,7 +71,7 @@ namespace MagicFactory{
  * @param constants set of constants
  * @return std::unique_ptr<MagicValue> produced value 
  */
-std::unique_ptr<MagicValue> value(QString magic, Feature *feature , const MagicConstantSet &constants={});
+std::unique_ptr<MagicValue> value(QString magic, const Feature *feature , const MagicConstantSet &constants={});
 
 /**
  * @brief MagicExpression evaluator
@@ -80,6 +80,6 @@ std::unique_ptr<MagicValue> value(QString magic, Feature *feature , const MagicC
  * @param feature captured
  * @param constants set of constants
  */
-void eval(QString &strWithMagic, Feature *feature, const MagicConstantSet &constants={});
+void eval(QString &strWithMagic, const Feature *feature, const MagicConstantSet &constants={});
 
 };

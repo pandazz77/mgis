@@ -4,6 +4,20 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 #include "MagicValues.h"
+#include "ExpressionParser.h"
+
+inline MagicConstant gTypeOf(const Geometry::Type &t){
+    return MagicConstant(QString::number((int)t));
+}
+
+const MagicConstantSet GEOMETRY_CONSTANTS = {
+    {"$POINT",    gTypeOf(Geometry::Type::POINT) },
+    {"$LINE",     gTypeOf(Geometry::Type::LINESTRING)},
+    {"$POLY",     gTypeOf(Geometry::Type::POLYGON) },
+    {"$MPOINT",   gTypeOf(Geometry::Type::MULTIPOINT)},
+    {"$MLINE",    gTypeOf(Geometry::Type::MULTILINESTRING)},
+    {"$MPOLY",    gTypeOf(Geometry::Type::MULTIPOLYGON)}
+};
 
 JsonStyleProvider::JsonStyleProvider(const QString &jsonPath){
     fromFile(jsonPath);
@@ -72,7 +86,7 @@ void JsonStyleProvider::parseStyle(const QVariantMap &style){
         instructions.push_back(parseInstruction(kv.first,kv.second));
     }
 
-    add(StyleUnit{
+    StyleSetProvider::add(StyleUnit{
         conditions,
         instructions,
         id.toStdString()
@@ -80,9 +94,20 @@ void JsonStyleProvider::parseStyle(const QVariantMap &style){
 }
 
 StyleCondition JsonStyleProvider::parseCondition(QString conditionExp){
+    return StyleCondition([conditionExp](const Feature * feature){
+        QString cond = conditionExp;
+        MagicFactory::eval(cond,feature,GEOMETRY_CONSTANTS);
+        ExpressionParser::Value res = ExpressionParser::evaluateExpression(cond.toStdString());
+        qDebug() << conditionExp << "--->" << cond << "--->" << std::get<bool>(res);
+        return std::get<bool>(res);
+        
+    });
     /// TODO: implement
 }
 
 StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
+    return StyleInstruction([key,val](IStyler *& styler){
+        // qDebug() << key << val;
+    });
     /// TODO: implement
 }

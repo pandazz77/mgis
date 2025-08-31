@@ -2,7 +2,7 @@
 
 #include "StyleSetProvider.h"
 
-class JsonStyleProvider: protected StyleSetProvider{
+class JsonStyleProvider: public StyleSetProvider{
     public:
         JsonStyleProvider(const QString &jsonPath);
         JsonStyleProvider(const QJsonDocument &doc);

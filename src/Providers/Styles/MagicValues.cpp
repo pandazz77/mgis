@@ -66,6 +66,8 @@ std::unique_ptr<MagicValue> MagicProperty::dotFunc(QString mprop){
     bool hasNext;
     const QString currentKey = MagicExp::currentKey(mprop,hasNext);
     if(!hasNext) { // end
+        if(!propeties.has(currentKey.toStdString())) // does not exist
+            return std::make_unique<MagicConstant>("false");
         PropertyValue val = propeties[currentKey.toStdString()];
         QString result = QString::fromStdString(val.to<std::string>());
         if(val.is<std::string>()) result = '\'' + result + '\'';
@@ -83,7 +85,7 @@ std::unique_ptr<MagicValue> MagicProperty::dotFunc(QString mprop){
 // =======================
 // MARK: MagicFactory
 
-std::unique_ptr<MagicValue> MagicFactory::value(QString magic, Feature *feature , const MagicConstantSet &constants){
+std::unique_ptr<MagicValue> MagicFactory::value(QString magic,const Feature *feature , const MagicConstantSet &constants){
     if(constants.contains(magic)) 
         return std::make_unique<MagicConstant>(constants.value(magic));
     
@@ -94,7 +96,7 @@ std::unique_ptr<MagicValue> MagicFactory::value(QString magic, Feature *feature 
     qWarning() << "UNREGISTRED MAGIC" << magic;
 }
 
-void MagicFactory::eval(QString &strWithMagic, Feature *feature, const MagicConstantSet &constants){
+void MagicFactory::eval(QString &strWithMagic,const Feature *feature, const MagicConstantSet &constants){
     QRegularExpression re(R"(\$[\w\.]+)");
     QRegularExpressionMatchIterator i = re.globalMatch(strWithMagic);
 

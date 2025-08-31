@@ -2,6 +2,10 @@
 #include "MagicValues.h"
 #include "ExpressionParser.h"
 
+#include <QApplication>
+
+#include "MapGraphicsView.h"
+#include "GeoJsonProvider.h"
 
 
 void testMagic(){
@@ -68,11 +72,24 @@ void testMagic(){
     MagicFactory::eval(s6,&feature,MCONSTANTS);
     result = ExpressionParser::evaluateExpression(s6.toStdString());
     assert(std::get<bool>(result));
+
+    qDebug() << "Magic tests passed";
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     testMagic();
 
-    // JsonStyleProvider styler("style.json");
-    return 0;
+    QApplication app(argc,argv);
+
+    JsonStyleProvider styler("style.json");
+    MapGraphicsView *map = new MapGraphicsView();
+
+    GeoJsonProvider *geojsonProvider = new GeoJsonProvider(map);
+    geojsonProvider->setStyleProvider(&styler);
+    geojsonProvider->fromFile("world.json");
+    geojsonProvider->addTo(map);
+
+    map->show();
+
+    return app.exec();
 }

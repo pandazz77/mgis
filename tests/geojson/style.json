@@ -11,8 +11,8 @@
         {
             "id":"someid",
             "condition": [
-				"$PROPERTIES.country == 'russia' ",
-				"$GEOMETRY.type == $POLY"
+				"$PROPERTIES.sovereignt == 'Russia' ",
+				"$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
 			],
             "instruction":{
                 "fill":"@RED_COLOR",
