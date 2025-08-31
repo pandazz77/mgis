@@ -16,6 +16,7 @@ set(SRCS
     src/Features/FeatureCollection.cpp
 
     src/Stylers/IStyler.cpp
+    src/Stylers/TextPixmap.cpp
     src/Stylers/PointStyler.cpp
     src/Stylers/LineStyler.cpp
     src/Stylers/PolyStyler.cpp
@@ -62,6 +63,7 @@ set(HDRS
     include/Features/FeatureProperties.hpp
 
     include/Stylers/IStyler.h
+    include/Stylers/TextPixmap.h
     include/Stylers/PointStyler.h
     include/Stylers/LineStyler.h
     include/Stylers/PolyStyler.h

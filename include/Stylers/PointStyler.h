@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QFont>
-
 #include "IStyler.h"
+
+#include "TextPixmap.h"
 
 class PointStyler: public IStyler{
     public:
@@ -15,10 +15,11 @@ class PointStyler: public IStyler{
         void setPixmap(const QPixmap &pixmap);
         void setAnchor(const QPointF &anchor);
 
-        static QPixmap TextPixmap(const QString &text, const QFont &font=QFont(), 
-            const QColor& textColor = Qt::black, const QColor &bgColor=Qt::transparent);
+        void setText(const TextPixmap &text);
+        TextPixmap &text();
 
     protected:
+        TextPixmap _text;
         QPixmap pixmap;
         QPointF anchor; // icon anchor
         bool scalable = false;

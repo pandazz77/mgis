@@ -55,7 +55,10 @@
                 "$PROPERTIES.city != false "
             ],
             "instruction":{
-                "text":"$PROPERTIES.city"
+                "text":"$PROPERTIES.city",
+                "text-color":"white",
+                "text-background":"transparent",
+                "text-font":"Free mono"
             }
         },
         {

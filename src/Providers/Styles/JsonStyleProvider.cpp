@@ -227,7 +227,13 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant _val)
             spoint(styler)->setAnchor(QPointF(lst[0].toDouble(),lst[1].toDouble()));
         }
         else if(key=="text")
-            spoint(styler)->setPixmap(PointStyler::TextPixmap(val.toString()));
+            spoint(styler)->text().str = val.toString();
+        else if(key=="text-color")
+            spoint(styler)->text().textColor = val.toString();
+        else if(key=="text-background")
+            spoint(styler)->text().bgColor = val.toString();
+        else if(key=="text-font")
+            spoint(styler)->text().font = val.toString();
 
 
         else

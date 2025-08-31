@@ -15,7 +15,10 @@ void PointStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     QGraphicsPixmapItem *pixItem = dynamic_cast<QGraphicsPixmapItem*>(item);
 
     if(!scalable) pixItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    pixItem->setPixmap(this->pixmap);
+    if(_text.str.isEmpty())
+        pixItem->setPixmap(this->pixmap);
+    else
+        pixItem->setPixmap(_text.pixmap());
     pixItem->setOffset(-anchor.x(),-anchor.y());
 }
 
@@ -31,18 +34,9 @@ void PointStyler::setAnchor(const QPointF &anchor){
     this->anchor = anchor;
 }
 
-QPixmap PointStyler::TextPixmap(const QString &text, const QFont &font,const QColor& textColor, const QColor &bgColor){
-    QFontMetrics fm(font);
-    QSize textSize = fm.size(Qt::TextSingleLine,text);
-    QSize pixSize(textSize*1.5);
-
-    QPixmap pix(pixSize);
-    pix.fill(bgColor);
-    QPainter painter(&pix);
-    QPen pen(textColor);
-    pen.setCosmetic(true);
-    painter.setPen(pen);
-    painter.setFont(font);
-    painter.drawText(10,10,text);
-    return pix;
+void PointStyler::setText(const TextPixmap &text){
+    _text = text;
+}
+TextPixmap &PointStyler::text(){
+    return _text;
 }
