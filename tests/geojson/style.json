@@ -39,6 +39,14 @@
                 "stroke":"@RED_COLOR",
                 "stroke-style":"dash-dot"
             }
+        },
+        {
+            "id":"marker",
+            "condition": "$GEOMETRY.type == $POINT or $GEOMETRY.type == $MPOINT",
+            "instruction":{
+                "icon":"placeholder.png",
+                "icon-anchor":[16,32]
+            }
         }
     ]
 }

@@ -75157,6 +75157,30 @@
             ]
           ]
         }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "city": "saint-p"
+        },
+        "geometry": {
+          "coordinates": [
+            30.30833907346917,
+            59.930354307393685
+          ],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "coordinates": [
+            29.117699849023154,
+            60.02804998843544
+          ],
+          "type": "Point"
+        }
       }
     ]
   }

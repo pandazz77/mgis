@@ -181,6 +181,13 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
         else if(key=="stroke-style")
             sline(styler)->setStyle(PEN_STYLE[val.toString()]);
 
+        else if(key=="icon")
+            spoint(styler)->setPixmap(QPixmap(val.toString()));
+        else if(key=="icon-anchor"){
+            QVariantList lst = val.toList();
+            spoint(styler)->setAnchor(QPointF(lst[0].toDouble(),lst[1].toDouble()));
+        }
+
 
         else
             qWarning() << "UNSUPPORTED STYLE INSTRUCTION:" << key << "WITH VALUE" << val;

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # copy geojson datasets =====
 
 # Find all .json files in the current directory
-file(GLOB JSON_FILES "*.json")
+file(GLOB JSON_FILES "*.json" "*.png")
 
 # Create the output binary directory if it doesn't exist
 set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
