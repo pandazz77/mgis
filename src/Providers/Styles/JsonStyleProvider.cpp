@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonValue>
+#include <QHash>
 #include "MagicValues.h"
 #include "ExpressionParser.h"
 
@@ -10,13 +11,19 @@ inline MagicConstant gTypeOf(const Geometry::Type &t){
     return MagicConstant(QString::number((int)t));
 }
 
-const MagicConstantSet GEOMETRY_CONSTANTS = {
+const MagicConstantSet GEOMETRY_CONSTANTS {
     {"$POINT",    gTypeOf(Geometry::Type::POINT) },
     {"$LINE",     gTypeOf(Geometry::Type::LINESTRING)},
     {"$POLY",     gTypeOf(Geometry::Type::POLYGON) },
     {"$MPOINT",   gTypeOf(Geometry::Type::MULTIPOINT)},
     {"$MLINE",    gTypeOf(Geometry::Type::MULTILINESTRING)},
     {"$MPOLY",    gTypeOf(Geometry::Type::MULTIPOLYGON)}
+};
+
+const QHash<QString,Qt::PenCapStyle> PEN_CAPS {
+    {"flat",Qt::FlatCap},
+    {"square",Qt::SquareCap},
+    {"round",Qt::RoundCap}
 };
 
 JsonStyleProvider::JsonStyleProvider(const QString &jsonPath){
@@ -142,6 +149,15 @@ StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant val){
             sline(styler)->setWidth(val.toInt());
         else if(key=="stroke-opacity")
             sline(styler)->setStrokeOpacity(val.toDouble());
+        else if(key=="dash-pattern"){
+            QList<qreal> pattern; 
+            for(auto var: val.toList()) pattern.append(var.toDouble());
+            sline(styler)->setDashPattern(pattern);
+        }   
+        else if(key=="dash-offset")
+            sline(styler)->setDashOffset(val.toDouble());
+        else if(key=="cap")
+            sline(styler)->setCapStyle(PEN_CAPS[val.toString()]);
 
 
         else

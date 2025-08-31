@@ -5,6 +5,7 @@
     "constants":{
         "@BLACK_COLOR":"#000000",
         "@RED_COLOR":"#ff0000",
+        "@BLUE_COLOR":"#1500ff",
         "@BASE_WIDTH":3
     },
     "styles":[
@@ -16,8 +17,13 @@
 			],
             "instruction":{
                 "fill":"@RED_COLOR",
-                "stroke":"@BLACK_COLOR",
-                "stroke-width":"@BASE_WIDTH"
+                "fill-opacity":0.5,
+                "stroke":"@BLUE_COLOR",
+                "stroke-opacity":0.5,
+                "stroke-width":"@BASE_WIDTH",
+                "dash-pattern":[5,2,5,2],
+                "dash-offset":2,
+                "cap":"flat"
             }
         }
     ]
