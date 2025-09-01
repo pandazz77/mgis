@@ -4,7 +4,8 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QHash>
-#include "MagicValues.h"
+#include <QFileInfo>
+#include <QDir>
 #include "ExpressionParser.h"
 
 inline MagicConstant gTypeOf(const Geometry::Type &t){
@@ -64,11 +65,13 @@ const QHash<QString,Qt::BrushStyle> BRUSH_STYLE{
     // {"radial-gradient",Qt::RadialGradientPattern},
 };
 
-JsonStyleProvider::JsonStyleProvider(const QString &jsonPath){
+JsonStyleProvider::JsonStyleProvider(const QString &jsonPath) : magicConstans(GEOMETRY_CONSTANTS){
+    QString dir = QFileInfo(jsonPath).absoluteDir().path();
+    magicConstans["$STYLEPATH"] = MagicConstant(dir);
     fromFile(jsonPath);
 }
 
-JsonStyleProvider::JsonStyleProvider(const QJsonDocument &doc){
+JsonStyleProvider::JsonStyleProvider(const QJsonDocument &doc) : magicConstans(GEOMETRY_CONSTANTS){
     load(doc);
 }
 
@@ -154,9 +157,9 @@ void JsonStyleProvider::parseStyle(const QVariantMap &style){
 }
 
 StyleCondition JsonStyleProvider::parseCondition(QString conditionExp){
-    return StyleCondition([conditionExp](const StyleScope &scope){
+    return StyleCondition([conditionExp,this](const StyleScope &scope){
         QString cond = conditionExp;
-        MagicFactory::eval(cond,scope.feature,GEOMETRY_CONSTANTS);
+        MagicFactory::eval(cond,scope.feature,magicConstans);
         ExpressionParser::Value res = ExpressionParser::evaluateExpression(cond.toStdString());
         // qDebug() << conditionExp << "--->" << cond << "--->" << std::get<bool>(res);
         return std::get<bool>(res);
@@ -176,11 +179,11 @@ inline TStyle *sCast(IStyler *styler){
 // =====================================
 
 StyleInstruction JsonStyleProvider::parseInstruction(QString key, QVariant _val){
-    return StyleInstruction([key,_val](IStyler *& styler, const StyleScope &scope){
+    return StyleInstruction([key,_val,this](IStyler *& styler, const StyleScope &scope){
         QVariant val = _val;
         if(val.typeId()==QMetaType::QString){
             QString sVal = val.toString();
-            MagicFactory::eval(sVal,scope.feature);
+            MagicFactory::eval(sVal,scope.feature,magicConstans);
             val = QVariant(sVal);
         }
 

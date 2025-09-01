@@ -44,7 +44,7 @@
             "id":"marker",
             "condition": "$GEOMETRY.type == $POINT or $GEOMETRY.type == $MPOINT",
             "instruction":{
-                "icon":"placeholder.png",
+                "icon":"$STYLEPATH/placeholder.png",
                 "icon-anchor":[16,32]
             }
         },
@@ -75,7 +75,7 @@
                 "$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
             ],
             "instruction":{
-                "fill-texture":"kangaroo.png",
+                "fill-texture":"$STYLEPATH/kangaroo.png",
                 "texture-size":[500000,500000]
             }
         },

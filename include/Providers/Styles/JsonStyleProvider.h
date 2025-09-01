@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StyleSetProvider.h"
+#include "MagicValues.h"
 
 class JsonStyleProvider: public StyleSetProvider{
     public:
@@ -22,10 +23,11 @@ class JsonStyleProvider: public StyleSetProvider{
         void parseConstants(const QVariantMap &constans);
         void parseStyle(const QVariantMap &style);
 
-        static StyleCondition parseCondition(QString conditionExp);
-        static StyleInstruction parseInstruction(QString key, QVariant val);
+        StyleCondition parseCondition(QString conditionExp);
+        StyleInstruction parseInstruction(QString key, QVariant val);
 
     private:
         QVariantMap currentMap;
         QVariantMap meta; // metadata
+        MagicConstantSet magicConstans;
 };
