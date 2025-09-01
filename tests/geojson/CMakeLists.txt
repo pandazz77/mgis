@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # copy geojson datasets =====
 
 # Find all .json files in the current directory
-file(GLOB JSON_FILES "*.json")
+file(GLOB JSON_FILES "*.json" "*.png")
 
 # Create the output binary directory if it doesn't exist
 set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
@@ -32,3 +32,27 @@ set(SRCS_GEOJSON_VIEWER
 )
 add_executable(GeojsonViewer ${SRCS_GEOJSON_VIEWER})
 target_link_libraries(GeojsonViewer mgis Qt6::Core Qt6::Widgets)
+
+# ============================
+
+set(SRCS_STYLE_PROVIDER
+    ./test_style_provider.cpp
+)
+add_executable(StyleProviderTest ${SRCS_STYLE_PROVIDER})
+target_link_libraries(StyleProviderTest mgis Qt6::Core Qt6::Widgets)
+
+# ============================
+
+set(SRCS_STYLESET_PROVIDER
+    ./test_style_set_provider.cpp
+)
+add_executable(StyleSetProviderTest ${SRCS_STYLESET_PROVIDER})
+target_link_libraries(StyleSetProviderTest mgis Qt6::Core Qt6::Widgets)
+
+# ============================
+
+set(SRCS_JSON_STYLE
+    ./test_json_style.cpp
+)
+add_executable(JsonStyleTest ${SRCS_JSON_STYLE})
+target_link_libraries(JsonStyleTest mgis Qt6::Core Qt6::Widgets)

@@ -16,6 +16,7 @@ set(SRCS
     src/Features/FeatureCollection.cpp
 
     src/Stylers/IStyler.cpp
+    src/Stylers/TextPixmap.cpp
     src/Stylers/PointStyler.cpp
     src/Stylers/LineStyler.cpp
     src/Stylers/PolyStyler.cpp
@@ -39,6 +40,13 @@ set(SRCS
 
     src/Providers/FeatureLayerProvider.cpp
     src/Providers/GeoJsonProvider.cpp
+
+    src/Providers/Styles/StyleProvider.cpp
+    src/Providers/Styles/SimpleStyleProvider.cpp
+    src/Providers/Styles/StyleSetProvider.cpp
+    src/Providers/Styles/JsonStyleProvider.cpp
+    src/Providers/Styles/ExpressionParser.cpp
+    src/Providers/Styles/MagicValues.cpp
 )
 
 set(HDRS
@@ -55,6 +63,7 @@ set(HDRS
     include/Features/FeatureProperties.hpp
 
     include/Stylers/IStyler.h
+    include/Stylers/TextPixmap.h
     include/Stylers/PointStyler.h
     include/Stylers/LineStyler.h
     include/Stylers/PolyStyler.h
@@ -81,6 +90,14 @@ set(HDRS
     include/Providers/LayerProvider.hpp
     include/Providers/FeatureLayerProvider.h
     include/Providers/GeoJsonProvider.h
+
+    include/Providers/Styles/StyleProvider.h
+    include/Providers/Styles/SimpleStyleProvider.h
+    include/Providers/Styles/StyleUnit.hpp
+    include/Providers/Styles/StyleSetProvider.h
+    include/Providers/Styles/JsonStyleProvider.h
+    include/Providers/Styles/ExpressionParser.h
+    include/Providers/Styles/MagicValues.h
 )
 
 find_package(Qt6 COMPONENTS 
@@ -106,6 +123,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     include/Stylers
     include/Features
     include/Providers
+    include/Providers/Styles
 )
 
 option(BUILD_TESTS "Build tests" ON)

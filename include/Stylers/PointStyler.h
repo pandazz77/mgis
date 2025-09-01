@@ -2,6 +2,8 @@
 
 #include "IStyler.h"
 
+#include "TextPixmap.h"
+
 class PointStyler: public IStyler{
     public:
         PointStyler();
@@ -13,7 +15,11 @@ class PointStyler: public IStyler{
         void setPixmap(const QPixmap &pixmap);
         void setAnchor(const QPointF &anchor);
 
+        void setText(const TextPixmap &text);
+        TextPixmap &text();
+
     protected:
+        TextPixmap _text;
         QPixmap pixmap;
         QPointF anchor; // icon anchor
         bool scalable = false;

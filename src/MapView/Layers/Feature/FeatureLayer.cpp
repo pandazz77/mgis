@@ -4,7 +4,7 @@
 #include "QFeatureConvertor.h"
 
 FeatureLayer::FeatureLayer(Feature *feature, QObject *parent) : IFeatureLayer(parent), feature(feature){
-
+    styler = RandomStyler::create(this);
 }
 
 FeatureLayer::~FeatureLayer(){

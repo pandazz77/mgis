@@ -10,6 +10,17 @@ class PropertiesList;
 
 namespace {
 
+template<typename T,typename... Types>
+T cast_helper(std::variant<Types...> var){
+    if constexpr(std::is_same_v<T,double>)
+        if(std::holds_alternative<int>(var)) return static_cast<double>(std::get<int>(var));
+    if constexpr(std::is_same_v<T,std::string>){
+        if(std::holds_alternative<int>(var)) return std::to_string(std::get<int>(var));
+        if(std::holds_alternative<double>(var)) return std::to_string(std::get<double>(var));
+        if(std::holds_alternative<bool>(var)) return std::get<bool>(var) ? "true": "false";
+    }
+}
+
 template<typename... Types>
 class variant: public std::variant<Types...>{
     public:
@@ -17,7 +28,9 @@ class variant: public std::variant<Types...>{
 
         template<typename T>
         T to() const {
-            return std::get<T>(*this);
+            if(is<T>()) return std::get<T>(*this);
+
+            return cast_helper<T>(*this);
         }
 
         template<typename T>
@@ -80,6 +93,14 @@ class PropertiesNode: public std::map<std::string,PropertyValue>{
         bool has(const std::string &key) const{
             auto it = find(key);
             return it != end();
+        }
+
+        const PropertyValue operator[](const std::string &key) const{
+            return this->at(key);
+        }
+
+        PropertyValue &operator[](const std::string &key){
+            return std::map<std::string,PropertyValue>::map::operator[](key);
         }
 };
 

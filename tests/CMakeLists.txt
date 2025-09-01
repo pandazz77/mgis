@@ -16,4 +16,12 @@ target_link_libraries(SampleWindow mgis Qt6::Core Qt6::Widgets)
 
 # =======================================================
 
+set(SRCS_TEST_EXP_PARSER
+    ./test_exp_parser.cpp
+)
+add_executable(ExpParserTest ${SRCS_TEST_EXP_PARSER})
+target_link_libraries(ExpParserTest mgis Qt6::Core Qt6::Widgets)
+
+# =======================================================
+
 add_subdirectory(./geojson)

@@ -1,0 +1,94 @@
+{
+    "metadata":{
+        "mgis-jsonstyle-spec": 0.1
+    },
+    "constants":{
+        "@BLACK_COLOR":"#000000",
+        "@RED_COLOR":"#ff0000",
+        "@BLUE_COLOR":"#1500ff",
+        "@BASE_WIDTH":3
+    },
+    "styles":[
+        {
+            "id":"rus",
+            "condition": [
+				"$PROPERTIES.sovereignt == 'Russia' ",
+				"$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
+			],
+            "instruction":{
+                "fill":"@RED_COLOR",
+                "fill-opacity":0.5,
+                "stroke":"@BLUE_COLOR",
+                "stroke-opacity":0.5,
+                "stroke-width":"@BASE_WIDTH",
+                "dash-pattern":[5,2,5,2],
+                "dash-offset":2,
+                "stroke-cap":"flat",
+                "stroke-cosmetic":true,
+                "stroke-join":"miter"
+            }
+        },
+        {
+            "id":"us",
+            "condition": [
+				"$PROPERTIES.sovereignt == 'United States of America' ",
+				"$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
+			],
+            "instruction":{
+                "fill":"@BLUE_COLOR",
+                "stroke":"@RED_COLOR",
+                "stroke-style":"dash-dot"
+            }
+        },
+        {
+            "id":"marker",
+            "condition": "$GEOMETRY.type == $POINT or $GEOMETRY.type == $MPOINT",
+            "instruction":{
+                "icon":"placeholder.png",
+                "icon-anchor":[16,32]
+            }
+        },
+        {
+            "id":"points",
+            "condition": "$GEOMETRY.type == $POINT or $GEOMETRY.type == $MPOINT",
+            "instruction":{
+                "zvalue":100
+            }
+        },
+        {
+            "id":"city-text",
+            "condition":[
+                "$GEOMETRY.type == $POINT or $GEOMETRY.type == $MPOINT",
+                "$PROPERTIES.city != false "
+            ],
+            "instruction":{
+                "text":"$PROPERTIES.city",
+                "text-color":"white",
+                "text-background":"transparent",
+                "text-font":"Free mono"
+            }
+        },
+        {
+            "id":"australia",
+            "condition": [
+                "$PROPERTIES.sovereignt == 'Australia' ",
+                "$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
+            ],
+            "instruction":{
+                "fill-texture":"kangaroo.png",
+                "texture-size":[500000,500000]
+            }
+        },
+        {
+            "id":"greenland",
+            "condition":[
+                "$PROPERTIES.admin == 'Greenland' ",
+                "$GEOMETRY.type == $POLY or $GEOMETRY.type == $MPOLY"
+            ],
+            "instruction":{
+                "fill-style":"cross",
+                "fill":"green"
+            }
+        }
+    ]
+}

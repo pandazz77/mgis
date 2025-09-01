@@ -3,6 +3,12 @@
 #include <QPainter>
 #include <QRandomGenerator>
 
+#include "FeatureLayer.h"
+
+#include "PointStyler.h"
+#include "LineStyler.h"
+#include "PolyStyler.h"
+
 QColor _randomColor(){
     return QColor(
         QRandomGenerator::global()->bounded(255),
@@ -11,35 +17,26 @@ QColor _randomColor(){
     );
 }
 
-RandomStyler::RandomStyler() : pointStyler(new PointStyler), lineStyler(new LineStyler), polyStyler(new PolyStyler) {
-    polyStyler->setBrush(QBrush(Qt::white)); // init brush
-    reloadPointStyler(); // init point styler
-}
+IStyler *RandomStyler::create(FeatureLayer *layer){
+    using T = Geometry::Type;
 
-RandomStyler::~RandomStyler(){
-    delete pointStyler;
-    delete lineStyler;
-    delete polyStyler;
-}
-
-void RandomStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
-    if(polyStyler->isCompatibilityWith(type)){
-        polyStyler->apply(item,type);
-        reloadPolyStyler();
-    } else if(lineStyler->isCompatibilityWith(type)){
-        lineStyler->apply(item,type);
-        reloadLineStyler();
-    } else if(pointStyler->isCompatibilityWith(type)){
-        pointStyler->apply(item,type);
-        reloadPointStyler();
+    switch(layer->getFeature()->geometry->type()){
+        case T::POINT:
+        case T::MULTIPOINT:
+            return createPointStyler();
+        case T::LINESTRING:
+        case T::LINEARRING:
+        case T::MULTILINESTRING:
+            return createLineStyler();
+        case T::POLYGON:
+        case T::MULTIPOLYGON:
+            return createPolyStyler();
+        default:
+            abort();
     }
 }
 
-bool RandomStyler::isCompatibilityWith(const Geometry::Type &type){
-    return true;
-}
-
-void RandomStyler::reloadPointStyler(){
+PointStyler *RandomStyler::createPointStyler(){
     QPixmap pixmap(12,12);
     pixmap.fill(Qt::transparent);
 
@@ -51,28 +48,22 @@ void RandomStyler::reloadPointStyler(){
     painter.setBrush(brush);
     painter.drawEllipse(pixmap.rect());
 
-    pointStyler->setPixmap(pixmap);
-    pointStyler->setAnchor(QPointF(pixmap.height()/2,pixmap.width()/2));
+    const QPointF anchor(pixmap.height()/2,pixmap.width()/2);
+
+    return new PointStyler(pixmap, anchor);
 }
 
-void RandomStyler::reloadLineStyler(){
-    QPen pen = lineStyler->getPen();
-    pen.setColor(_randomColor());
-    lineStyler->setPen(pen);
+LineStyler *RandomStyler::createLineStyler(){
+    QPen pen(_randomColor(),2);
+    pen.setCosmetic(true);
+
+    return new LineStyler(pen);
 }
 
-void RandomStyler::reloadPolyStyler(){
-    QPen pen = polyStyler->getPen();
-    QBrush brush = polyStyler->getBrush();
+PolyStyler *RandomStyler::createPolyStyler(){
+    QPen pen(_randomColor(),1.5);
+    pen.setCosmetic(true);
+    QBrush brush(_randomColor());
 
-    pen.setColor(_randomColor());
-    brush.setColor(_randomColor());
-    
-    polyStyler->setPen(pen);
-    polyStyler->setBrush(brush);
-}
-
-RandomStyler *RandomStyler::getInstance(){
-    if(!instance) instance = new RandomStyler();
-    return instance;
+    return new PolyStyler(pen,brush);
 }

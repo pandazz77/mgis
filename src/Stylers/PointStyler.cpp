@@ -1,5 +1,7 @@
 #include "PointStyler.h"
 
+#include <QPainter>
+
 PointStyler::PointStyler(){
 
 }
@@ -13,8 +15,12 @@ void PointStyler::apply(QGraphicsItem *item,const Geometry::Type &type){
     QGraphicsPixmapItem *pixItem = dynamic_cast<QGraphicsPixmapItem*>(item);
 
     if(!scalable) pixItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    pixItem->setPixmap(this->pixmap);
+    if(_text.str.isEmpty())
+        pixItem->setPixmap(this->pixmap);
+    else
+        pixItem->setPixmap(_text.pixmap());
     pixItem->setOffset(-anchor.x(),-anchor.y());
+    IStyler::apply(item,type);
 }
 
 bool PointStyler::isCompatibilityWith(const Geometry::Type &type){
@@ -27,4 +33,11 @@ void PointStyler::setPixmap(const QPixmap &pixmap){
 
 void PointStyler::setAnchor(const QPointF &anchor){
     this->anchor = anchor;
+}
+
+void PointStyler::setText(const TextPixmap &text){
+    _text = text;
+}
+TextPixmap &PointStyler::text(){
+    return _text;
 }

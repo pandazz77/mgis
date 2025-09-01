@@ -4,25 +4,12 @@
 #include "LineStyler.h"
 #include "PolyStyler.h"
 
-class RandomStyler: public IStyler{
-    public:
-        static RandomStyler *getInstance();
+class FeatureLayer;
 
-        void apply(QGraphicsItem *item,const Geometry::Type &type) override;
+namespace RandomStyler {
+    IStyler *create(FeatureLayer *layer);
 
-        bool isCompatibilityWith(const Geometry::Type &type) override;
-
-    private:
-        RandomStyler();
-        ~RandomStyler();
-
-        void reloadPointStyler();
-        void reloadLineStyler();
-        void reloadPolyStyler();
-
-        PointStyler *pointStyler;
-        LineStyler  *lineStyler;
-        PolyStyler  *polyStyler;
-
-        static inline RandomStyler *instance = nullptr;
+    PointStyler *createPointStyler();
+    LineStyler *createLineStyler();
+    PolyStyler *createPolyStyler();
 };
