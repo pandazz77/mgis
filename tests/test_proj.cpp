@@ -5,6 +5,53 @@
 #include "Mercator.h"
 #include "SphericalMercator.h"
 
+void ASSERT_LATLNG_EQUAL(const LatLng &ll1, const LatLng &ll2, const double delta=6e-9){
+    double latDif = std::abs(ll1.lat - ll2.lat);
+    double lngDif = std::abs(ll1.lng - ll2.lng);
+    assert(latDif <= delta && lngDif <= delta);
+}
+
+void ASSERT_POINT2D_EQUAL(const Point2D &p1, const Point2D &p2, const double delta=6e-9){
+    double xDif = std::abs(p1.x - p2.x);
+    double yDif = std::abs(p1.y - p2.y);
+    assert(xDif <= delta && yDif <= delta);
+}
+
+template<typename Unit>
+void ASSERT_UNIT_EQUAL(const Unit &u1, const Unit &u2, const double delta = 6e-9){
+    if constexpr (std::is_same_v<Unit, LatLng>) ASSERT_LATLNG_EQUAL(u1,u2,delta);
+    else if constexpr (std::is_same_v<Unit, Point2D>) ASSERT_POINT2D_EQUAL(u1,u2,delta); 
+}
+
+template<typename T>
+void ASSERT_POINT_EQUAL(const Point<T> &p1, const Point<T> &p2, const double delta = 6e-9) {
+    ASSERT_UNIT_EQUAL(p1.coordinates,p2.coordinates,delta);
+}
+
+template<typename T>
+void ASSERT_LINE_EQUAL(const LineString<T> &l1, const LineString<T> &l2, const double delta = 6e-9) {
+    assert(l1.size()==l2.size());
+    for(int i=0; i < l1.size(); i++)
+        ASSERT_UNIT_EQUAL(l1[i],l2[i],delta);
+}
+
+template<typename T>
+void ASSERT_POLY_EQUAL(const Polygon<T> &poly1, const Polygon<T> &poly2, const double delta = 6e-9) {
+    ASSERT_LINE_EQUAL(poly1.exterior,poly1.exterior,delta);
+    assert(poly1.interiors.size()==poly2.interiors.size());
+    for(int i=0; i < poly1.interiors.size(); i++)
+        ASSERT_LINE_EQUAL(poly1.interiors[i],poly2.interiors[i],delta);
+}
+
+/// TODO:
+// template<typename Unit>
+// void ASSERT_COLLECTION_EQUAL(const GeometryCollection<Unit> &col1, const GeometryCollection<Unit> &col2, const double delta = 6e-9){
+//     assert(col1.size()==col2.size());
+//     for(int i=0; i < col1.size(); i++){
+//         if constexpr((std::is_same_v<Unit, <>>))
+//     }
+// }
+
 int main(int argc, char *argv[]){
     Point ep1(47.51626409685045, 69.645822358462);
     Point ep2(47.51626409685045, 68.5207540327172);
@@ -44,20 +91,23 @@ int main(int argc, char *argv[]){
     
     Point2D ll1_projected = proj->project(ll1);
     LatLng ll1_unprojected = proj->unproject(ll1_projected);
-    //assert(ll1 == ll1_unprojected);
+    ASSERT_UNIT_EQUAL(ll1,ll1_unprojected);
 
     Point2D ll1_mercproj = merc->project(ll1);
     LatLng ll1_mercunproj = merc->unproject(ll1_mercproj);
-    //assert(ll1 == ll1_mercunproj);
+    ASSERT_UNIT_EQUAL(ll1,ll1_mercunproj);
 
     Point<Point2D> ep1_projected = proj->transform<LatLng,Point2D>(ep1);
     Point<LatLng> ep1_unprojected = proj->transform<Point2D,LatLng>(ep1_projected);
+    ASSERT_POINT_EQUAL(ep1, ep1_unprojected);
 
     LineString<Point2D> line_projected = proj->transform<LatLng,Point2D>(line);
     LineString<LatLng> line_unprojected = proj->transform<Point2D,LatLng>(line_projected);
+    ASSERT_LINE_EQUAL(line,line_unprojected);
 
     Polygon<Point2D> poly_projected = proj->transform<LatLng,Point2D>(poly);
     Polygon<LatLng> poly_unprojected = proj->transform<Point2D,LatLng>(poly_projected);
+    ASSERT_POLY_EQUAL(poly, poly_unprojected);
 
     MultiPoint<Point2D> points_projected = proj->transform<LatLng,Point2D>(points);
     MultiPoint<LatLng> points_unprojected = proj->transform<Point2D,LatLng>(points_projected);
