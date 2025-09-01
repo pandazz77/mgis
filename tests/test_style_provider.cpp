@@ -7,6 +7,8 @@
 
 #include "SimpleStyleProvider.h"
 
+#include "TestDefines.h"
+
 QString qstr(const std::string &s){
     return QString::fromStdString(s);
 }
@@ -50,7 +52,7 @@ int main(int argc, char *argv[]){
 
     parser.process(app);
 
-    QString filename = "style_properties.json";
+    QString filename =  qpath({DATASETS_DIR,"style_properties.json"});
     if(parser.isSet(input_file_option)){
         filename = parser.value(input_file_option);
     }

@@ -5,6 +5,8 @@
 #include <QFile>
 #include <QCommandLineParser>
 
+#include "TestDefines.h"
+
 int main(int argc, char *argv[]){
     QApplication app(argc,argv);
 
@@ -14,7 +16,7 @@ int main(int argc, char *argv[]){
 
     parser.process(app);
 
-    QString filename = "world.json";
+    QString filename = qpath({DATASETS_DIR,"world.json"});
     if(parser.isSet(input_file_option)){
         filename = parser.value(input_file_option);
     }

@@ -6,6 +6,8 @@
 
 #include "StyleSetProvider.h"
 
+#include "TestDefines.h"
+
 QString qstr(const std::string &s){
     return QString::fromStdString(s);
 }
@@ -19,7 +21,7 @@ int main(int argc, char *argv[]){
 
     parser.process(app);
 
-    QString filename = "world.json";
+    QString filename =  qpath({DATASETS_DIR,"world.json"});
     if(parser.isSet(input_file_option)){
         filename = parser.value(input_file_option);
     }
@@ -32,7 +34,10 @@ int main(int argc, char *argv[]){
     StyleSetProvider *styler = new StyleSetProvider();
     styler->add(StyleUnit(
         { // conditions
-            StyleCondition([](const StyleScope &scope){ return scope.feature->properties["sovereignt"].to<std::string>() == "Russia"; })
+            StyleCondition([](const StyleScope &scope){ 
+                return scope.feature->properties.has("sovereignt") &&
+                    scope.feature->properties["sovereignt"].to<std::string>() == "Russia"; 
+            })
         },
         { // instructions
             StyleInstruction([](IStyler *& style,const StyleScope &scope){ 

@@ -3,6 +3,8 @@
 #include <QFile>
 #include <QJsonDocument>
 
+#include "TestDefines.h"
+
 using namespace std::string_literals;
 
 QJsonDocument readJson(QString filename){
@@ -38,7 +40,7 @@ G *check_geometry(IFeature *ifeature){
 }
 
 void test_types(){
-    QJsonDocument doc = readJson("all_types.json");
+    QJsonDocument doc = readJson(qpath({DATASETS_DIR,"all_types.json"}));
     QVariantMap map = doc.toVariant().toMap();
     FeatureCollection collection = GeoJsonProvider::transformCollection(map);
 
@@ -115,7 +117,7 @@ void test_types(){
 void test_serialize(){
     const QString geojson_test_case = "all_types";
 
-    QString geojson_file_in = geojson_test_case + ".json";
+    QString geojson_file_in = qpath({DATASETS_DIR,geojson_test_case + ".json"});
     QString geojson_file_out = geojson_test_case + "_back.json";
 
     QJsonDocument doc = readJson(geojson_file_in);
@@ -180,7 +182,7 @@ void test_properties_list(Feature::Properties &props){
 }
 
 void test_properties(){
-    QJsonDocument doc = readJson("test_properties.json");
+    QJsonDocument doc = readJson( qpath({DATASETS_DIR,"test_properties.json"}));
     QVariantMap map = doc.toVariant().toMap();
 
     FeatureCollection collection = GeoJsonProvider::transformCollection(map);

@@ -1,0 +1,11 @@
+#define _DATASETS_DIR "@DATASETS_DIR@"
+
+#include <QString>
+#include <QDir>
+
+const QString DATASETS_DIR = _DATASETS_DIR;
+
+// build qstring file/folder path
+inline QString qpath(const QStringList &pathItems){
+    return QDir::toNativeSeparators(pathItems.join(QDir::separator()));
+}

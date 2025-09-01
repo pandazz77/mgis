@@ -7,6 +7,8 @@
 #include "MapGraphicsView.h"
 #include "GeoJsonProvider.h"
 
+#include "TestDefines.h"
+
 
 void testMagic(){
     const MagicConstantSet MCONSTANTS{
@@ -90,12 +92,12 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc,argv);
 
-    JsonStyleProvider styler("style.json");
+    JsonStyleProvider styler(qpath({DATASETS_DIR,"style.json"}));
     MapGraphicsView *map = new MapGraphicsView();
 
     GeoJsonProvider *geojsonProvider = new GeoJsonProvider(map);
     geojsonProvider->setStyleProvider(&styler);
-    geojsonProvider->fromFile("world.json");
+    geojsonProvider->fromFile(qpath({DATASETS_DIR,"world.json"}));
     geojsonProvider->addTo(map);
 
     map->show();
