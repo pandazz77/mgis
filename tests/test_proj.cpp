@@ -43,14 +43,13 @@ void ASSERT_POLY_EQUAL(const Polygon<T> &poly1, const Polygon<T> &poly2, const d
         ASSERT_LINE_EQUAL(poly1.interiors[i],poly2.interiors[i],delta);
 }
 
-/// TODO:
-// template<typename Unit>
-// void ASSERT_COLLECTION_EQUAL(const GeometryCollection<Unit> &col1, const GeometryCollection<Unit> &col2, const double delta = 6e-9){
-//     assert(col1.size()==col2.size());
-//     for(int i=0; i < col1.size(); i++){
-//         if constexpr((std::is_same_v<Unit, <>>))
-//     }
-// }
+template<typename Unit>
+void ASSERT_COLLECTION_EQUAL(const GeometryCollection<Unit> &col1, const GeometryCollection<Unit> &col2, const double delta = 6e-9){
+    assert(col1.size()==col2.size());
+    for(int i=0; i < col1.size(); i++){
+        if constexpr(std::is_same_v<Unit,Polygon<>>) ASSERT_POLY_EQUAL(col1[i],col2[i]);
+    }
+}
 
 int main(int argc, char *argv[]){
     Point ep1(47.51626409685045, 69.645822358462);
@@ -111,12 +110,15 @@ int main(int argc, char *argv[]){
 
     MultiPoint<Point2D> points_projected = proj->transform<LatLng,Point2D>(points);
     MultiPoint<LatLng> points_unprojected = proj->transform<Point2D,LatLng>(points_projected);
+    ASSERT_COLLECTION_EQUAL(points,points_unprojected);
 
     MultiLineString<Point2D> lines_projected = proj->transform<LatLng,Point2D>(lines);
     MultiLineString<LatLng> lines_unprojected = proj->transform<Point2D,LatLng>(lines_projected);
+    ASSERT_COLLECTION_EQUAL(lines,lines_unprojected);
 
     MultiPolygon<Point2D> polys_projected = proj->transform<LatLng,Point2D>(polys);
     MultiPolygon<LatLng> polys_unprojected = proj->transform<Point2D,LatLng>(polys_projected);
+    ASSERT_COLLECTION_EQUAL(polys,polys_unprojected);
 
 
     Point<Point2D> pt_pr = proj->project(ep1_unprojected);
