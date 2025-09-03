@@ -2,7 +2,7 @@
 
 #include <QFile>
 #include <QJsonDocument>
-#include <QJsonValue>
+#include <QJsonObject>
 #include <QHash>
 #include <QFileInfo>
 #include <QDir>
@@ -120,7 +120,7 @@ void JsonStyleProvider::parseConstants(const QVariantMap &constans){
     currentMap.remove("constants"); // we dont need this anymore
     QByteArray raw = QJsonDocument::fromVariant(currentMap).toJson();
     for(auto kv: constans.asKeyValueRange()){
-        QByteArray valueRaw = kv.second.toJsonValue().toJson();
+        QByteArray valueRaw = QJsonDocument(kv.second.toJsonObject()).toJson();
         QByteArray keyRaw = '"' + kv.first.toUtf8() + '"'; // we need to enquote key for right replacement
         raw.replace(keyRaw,valueRaw);
     }

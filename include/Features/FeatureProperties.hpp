@@ -19,6 +19,7 @@ T cast_helper(std::variant<Types...> var){
         if(std::holds_alternative<double>(var)) return std::to_string(std::get<double>(var));
         if(std::holds_alternative<bool>(var)) return std::get<bool>(var) ? "true": "false";
     }
+    abort();
 }
 
 template<typename... Types>
