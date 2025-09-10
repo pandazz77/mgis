@@ -38,11 +38,14 @@ class MapGraphicsView: public QGraphicsView, public MapPane{
         void onMouseClick(Point2D pos);
         void onMouseDoubleClick(Point2D pos);
 
+    private:
+        void rebuildAll();
+
     protected:
         void wheelEvent(QWheelEvent *event) override;
 
     private:
-        Projection *proj;
+        std::unique_ptr<Projection> proj;
         MapCamera *cam;
 
         double previousScale = 0;

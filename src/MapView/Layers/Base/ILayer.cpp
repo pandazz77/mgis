@@ -11,5 +11,5 @@ void ILayer::addTo(MapPane *pane){
 }
 
 void ILayer::removeFrom(MapPane *pane){
-    pane->addLayer(this);
+    pane->removeLayer(this);
 }

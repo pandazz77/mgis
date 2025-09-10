@@ -41,7 +41,12 @@ class TLayerGroupBase: public TLayerPrime, public LayerSet<TLayerUnit>{
     protected:
         void rebuildItem(MapPane *pane) override{
             assignedPane = pane;
-            if(group) delete group;
+            if(group){
+                for(QGraphicsItem *item: group->childItems()){
+                    group->removeFromGroup(item);
+                }
+                delete group;
+            } 
 
             group = new QGraphicsItemGroup;
             for(ILayer *l: this->getLayers()){

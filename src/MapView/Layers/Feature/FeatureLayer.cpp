@@ -16,12 +16,13 @@ QGraphicsItem *FeatureLayer::getItem(){
 }
 
 void FeatureLayer::rebuildItem(MapPane *pane){
-    MapGraphicsView *map = pane->map();
+    MapGraphicsView *map = pane ? pane->map() : nullptr;
     if(map){
         this->item = buildFeature(this->feature,map->getProjection());
         styler->apply(item,feature->geometry->type());
     } else {
         delete this->item;
+        this->item = nullptr;
     }
 }
 

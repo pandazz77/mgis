@@ -1,28 +1,13 @@
 #include "MapGraphicsView.h"
 #include "SphericalMercator.h"
 
-MapGraphicsView::MapGraphicsView(QWidget *parent) : QGraphicsView(new MapGraphicsScene,parent), proj(new SphericalMercator), cam(new MapCamera({0,0},1,this)){
+MapGraphicsView::MapGraphicsView(QWidget *parent) : QGraphicsView(new MapGraphicsScene,parent), cam(new MapCamera({0,0},1,this)){
     scale(1,-1);
 
     setRenderHint(QPainter::RenderHint::Antialiasing);
 
-    Bounds<Point2D> bounds = proj->bounds();
-    setSceneRect(
-        QRectF{
-            QPointF{bounds.SW.x,bounds.NE.y},
-            QPointF{bounds.NE.x,bounds.SW.y}
-        }
-    );
-    fitInView(sceneRect(),Qt::KeepAspectRatio);
 
-    const double widthM = this->widthMM() * 0.001,
-                 left = sceneRect().left(),
-                 right = sceneRect().right(),
-                 initScale = right-left/widthM;
-
-    previousScale = initScale;
-    cam->setScale(initScale);
-    qDebug() << "initial scale:" << cam->getScale();
+    setProjection(new SphericalMercator);
 
     connect(cam,&MapCamera::projectedPosChanged,this,&MapGraphicsView::onPosChanged);
     connect(cam,&MapCamera::scaleChanged,this,&MapGraphicsView::onScaleChanged);
@@ -66,9 +51,10 @@ void MapGraphicsView::onMouseDoubleClick(Point2D pos){
 void MapGraphicsView::addLayer(ILayer *layer){
     MapPane::addLayer(layer);
     layer->rebuildItem(this);
-    scene()->addItem(layer->getItem());
-    if(!layer->getItem()->zValue()){ // if not specified
-        layer->getItem()->setZValue(this->getLayers().size()*0.1);
+    QGraphicsItem *item = layer->getItem();
+    scene()->addItem(item);
+    if(!item){ // if not specified
+        item->setZValue(this->getLayers().size()*0.1);
     }
 }
 
@@ -79,15 +65,37 @@ MapGraphicsView *MapGraphicsView::map(){
 void MapGraphicsView::removeLayer(ILayer *layer){
     MapPane::removeLayer(layer);
     layer->rebuildItem(nullptr);
-    scene()->removeItem(layer->getItem());
+    QGraphicsItem *item = layer->getItem();
+    if(item)
+        scene()->removeItem(item);
 }
 
 void MapGraphicsView::setProjection(Projection *proj){
-    this->proj = proj;
+    this->proj.reset(proj);
+
+    Bounds<Point2D> bounds = proj->bounds();
+    setSceneRect(
+        QRectF{
+            QPointF{bounds.SW.x,bounds.NE.y},
+            QPointF{bounds.NE.x,bounds.SW.y}
+        }
+    );
+    fitInView(sceneRect(),Qt::KeepAspectRatio);
+
+    const double widthM = this->widthMM() * 0.001,
+                 left = sceneRect().left(),
+                 right = sceneRect().right(),
+                 initScale = right-left/widthM;
+
+    previousScale = initScale;
+    cam->setScale(initScale);
+    qDebug() << "initial scale:" << cam->getScale();
+
+    rebuildAll();
 }
 
 Projection *MapGraphicsView::getProjection(){
-    return proj;
+    return proj.get();
 }
 
 MapCamera *MapGraphicsView::getCam(){
@@ -98,6 +106,13 @@ void MapGraphicsView::wheelEvent(QWheelEvent *event){
     double zoom = 0.25;
     int sign = event->angleDelta().y() > 0 ? -1 : 1;
     cam->zoomBy(1+sign*zoom);
+}
+
+void MapGraphicsView::rebuildAll(){
+    for(ILayer *layer: getLayers()){
+        removeLayer(layer);
+        addLayer(layer);
+    }
 }
 
 MapGraphicsView::~MapGraphicsView(){

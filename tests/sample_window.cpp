@@ -10,6 +10,9 @@
 
 #include <cassert>
 
+#include <QTimer>
+#include "SimpleProjection.h"
+
 int main(int argc, char *argv[]){
     QApplication app(argc,argv);
 
@@ -26,6 +29,7 @@ int main(int argc, char *argv[]){
         {90,180}
     }))),map);
     water->styler = new PolyStyler(QPen(Qt::black),QBrush(Qt::blue));
+    water->styler->setZValue(-1);
     water->addTo(map);
 
     // ====
@@ -258,6 +262,11 @@ int main(int argc, char *argv[]){
 
     cam->connect(cam,&MapCamera::dblClicked,[=](LatLng pos){
         qDebug() << "Mouse dblclicked: " << pos.lat << pos.lng;
+    });
+
+    QTimer::singleShot(1500,[&](){
+        map->setProjection(new SimpleProjection);
+        qDebug() << "projection switched";
     });
 
     return app.exec();
