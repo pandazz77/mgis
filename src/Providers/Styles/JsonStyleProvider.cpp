@@ -120,8 +120,8 @@ void JsonStyleProvider::parseConstants(const QVariantMap &constans){
     currentMap.remove("constants"); // we dont need this anymore
     QByteArray raw = QJsonDocument::fromVariant(currentMap).toJson();
     for(auto kv: constans.asKeyValueRange()){
-        QByteArray valueRaw = QJsonDocument(kv.second.toJsonObject()).toJson();
-        QByteArray keyRaw = '"' + kv.first.toUtf8() + '"'; // we need to enquote key for right replacement
+        QByteArray valueRaw = kv.second.toByteArray();
+        QByteArray keyRaw = kv.first.toUtf8();
         raw.replace(keyRaw,valueRaw);
     }
     currentMap = QJsonDocument::fromJson(raw).toVariant().toMap();
