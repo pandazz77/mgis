@@ -7,7 +7,7 @@ MapGraphicsView::MapGraphicsView(QWidget *parent) : QGraphicsView(new MapGraphic
     setRenderHint(QPainter::RenderHint::Antialiasing);
 
 
-    setProjection(new SphericalMercator);
+    setProjection(std::make_unique<SphericalMercator>());
 
     connect(cam,&MapCamera::projectedPosChanged,this,&MapGraphicsView::onPosChanged);
     connect(cam,&MapCamera::scaleChanged,this,&MapGraphicsView::onScaleChanged);
@@ -70,8 +70,8 @@ void MapGraphicsView::removeLayer(ILayer *layer){
         scene()->removeItem(item);
 }
 
-void MapGraphicsView::setProjection(Projection *proj){
-    this->proj.reset(proj);
+void MapGraphicsView::setProjection(std::unique_ptr<Projection> _proj){
+    this->proj = std::move(_proj);
 
     Bounds<Point2D> bounds = proj->bounds();
     setSceneRect(

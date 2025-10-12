@@ -265,7 +265,7 @@ int main(int argc, char *argv[]){
     });
 
     QTimer::singleShot(1500,[&](){
-        map->setProjection(new SimpleProjection);
+        map->setProjection(std::make_unique<SimpleProjection>());
         qDebug() << "projection switched";
     });
 

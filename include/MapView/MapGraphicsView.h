@@ -16,7 +16,7 @@ class MapGraphicsView: public QGraphicsView, public MapPane{
         MapGraphicsView(QWidget *parent = nullptr);
         ~MapGraphicsView();
 
-        void setProjection(Projection *proj);
+        void setProjection(std::unique_ptr<Projection> proj);
         Projection *getProjection();
 
         MapCamera *getCam();
