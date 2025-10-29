@@ -41,7 +41,7 @@ class Projection{
 
             result.exterior = transform<SourceUnit,TargetUnit>(source.exterior);
             
-            for(LinearRing<SourceUnit> sInterior: source.interiors){
+            for(LineString<SourceUnit> sInterior: source.interiors){
                 result.interiors.push_back(transform<SourceUnit,TargetUnit>(sInterior));
             }
 

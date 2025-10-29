@@ -25,7 +25,6 @@ IStyler *RandomStyler::create(FeatureLayer *layer){
         case T::MULTIPOINT:
             return createPointStyler();
         case T::LINESTRING:
-        case T::LINEARRING:
         case T::MULTILINESTRING:
             return createLineStyler();
         case T::POLYGON:

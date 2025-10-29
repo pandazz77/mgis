@@ -66,7 +66,7 @@ QVariantList GeoJsonProvider::transformLineStrings(std::vector<LineString<LatLng
 
 Polygon<LatLng> GeoJsonProvider::transformPolygon(QVariantList lst){
     LineString<LatLng> exterior(transformLineString(lst[0].toList()));
-    std::vector<LinearRing<LatLng>> interiors;
+    std::vector<LineString<LatLng>> interiors;
     for(auto interior: transformLineStrings(lst.sliced(1))){
         interiors.push_back(interior);
     }

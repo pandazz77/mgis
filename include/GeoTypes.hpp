@@ -40,7 +40,6 @@ class Geometry{
         enum class Type{
             POINT,
             LINESTRING,
-            LINEARRING,
             POLYGON,
             MULTIPOINT,
             MULTILINESTRING,
@@ -83,32 +82,32 @@ class LineString: public Geometry, public std::vector<Unit>{
         Geometry::Type type() override{ return Geometry::Type::LINESTRING; }
 };
 
-template<class Unit = LatLng>
-class LinearRing: public LineString<Unit>{
-    public:
-        LinearRing(std::vector<Unit> line = {}) : LineString<Unit>(line) { 
-            if(!line.empty() && LineString<Unit>::front() != LineString<Unit>::back()){
-                LineString<Unit>::push_back(LineString<Unit>::front());
-            }
-        };
-        LinearRing(std::initializer_list<Unit> line) : LinearRing(std::vector<Unit>(line)) { } 
+namespace LinearRing{
+    template<class Unit = LatLng>
+    bool enclosed(const LineString<Unit> &line){
+        return line.cbegin() == line.cend(); 
+    }
 
-        Geometry::Type type() override{ return Geometry::Type::LINEARRING; };
+    template<class Unit = LatLng>
+    void enclose(LineString<Unit> &line){
+        if(!enclosed(line)) line.push_back(line.front());
+    }
 };
 
 template<class Unit = LatLng>
 class Polygon: public Geometry{
     public:
-        Polygon(LinearRing<Unit> exterior=LinearRing<Unit>(), std::vector<LinearRing<Unit>> interiors = {}) : 
+        Polygon(LineString<Unit> exterior={}, std::vector<LineString<Unit>> interiors = {}) : 
             exterior(exterior), 
             interiors(interiors){ 
-
+                LinearRing::enclose(exterior);
+                for(auto i: interiors) LinearRing::enclose(i);
             }
 
         Geometry::Type type() override{ return Geometry::Type::POLYGON; }
 
-        LinearRing<Unit> exterior;
-        std::vector<LinearRing<Unit>> interiors;
+        LineString<Unit> exterior;
+        std::vector<LineString<Unit>> interiors;
 };
 
 template<typename GeometryUnit>

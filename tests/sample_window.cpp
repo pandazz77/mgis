@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
     //map->setFixedSize(800,600);
     map->show();
 
-    FeatureLayer *water = new FeatureLayer(new Feature(new Polygon(LinearRing({
+    FeatureLayer *water = new FeatureLayer(new Feature(new Polygon(LineString({
         {90,180},
         {-90,180},
         {-90,-180},
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
     // ====
     
 
-    FeatureLayer *eurasia = new FeatureLayer(new Feature(new Polygon(LinearRing({
+    FeatureLayer *eurasia = new FeatureLayer(new Feature(new Polygon(LineString({
         {76.50781849872428, 103.39301162991251},
         {49.47925216395771, -1.327077670647867},
         {35.59509010109741, -6.069119450296284},
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
         {76.50781849872428, 103.39301162991251}
     }))),nullptr);
 
-    FeatureLayer *africa = new FeatureLayer(new Feature(new Polygon(LinearRing({
+    FeatureLayer *africa = new FeatureLayer(new Feature(new Polygon(LineString({
         {32.9836001676598, 9.342516333559956},
         {15.03835122749787, -16.343543306200075},
         {2.567746004855138, 9.342516333559956},
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
 
     LayerGroup *eurasia_N_africa = new LayerGroup({eurasia,africa},map);
 
-    FeatureLayer *northAmerica = new FeatureLayer(new Feature(new Polygon(LinearRing({
+    FeatureLayer *northAmerica = new FeatureLayer(new Feature(new Polygon(LineString({
         {69.57428548514784, -162.9516683269849},
         {57.02025455095847, -157.41928625072848},
         {57.6599967782054, -135.6849280940087},
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
         {69.57428548514784, -162.9516683269849}
     }))),map);
 
-    FeatureLayer *southAmerica = new FeatureLayer(new Feature(new Polygon(LinearRing({
+    FeatureLayer *southAmerica = new FeatureLayer(new Feature(new Polygon(LineString({
         {10.802603071948738, -70.87702377215247},
         {-6.113503742736924, -79.5707670348402},
         {-55.25921846226369, -70.87702377215247},
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
         {10.802603071948738, -70.87702377215247}
     }))),map);
 
-    FeatureLayer *australia = new FeatureLayer(new Feature(new Polygon(LinearRing({
+    FeatureLayer *australia = new FeatureLayer(new Feature(new Polygon(LineString({
         {-11.96476992059074, 131.84526230780085},
         {-27.174538377546632, 113.66743548581644},
         {-38.1240841178109, 144.4907070535288},
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]){
         {-11.96476992059074, 131.84526230780085}
     }))),map);
 
-    FeatureLayer *greenland = new FeatureLayer(new Feature(new Polygon(LinearRing({
+    FeatureLayer *greenland = new FeatureLayer(new Feature(new Polygon(LineString({
         {79.45527732360159, -19.504904492632335},
         {83.43688720357682, -26.617967162103923},
         {81.1788420689013, -64.94947154759201},
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]){
         {79.45527732360159, -19.504904492632335}
     }))),map);
 
-    FeatureLayer *antarctica = new FeatureLayer(new Feature(new Polygon(LinearRing({
+    FeatureLayer *antarctica = new FeatureLayer(new Feature(new Polygon(LineString({
         {-78,-180},
         {-90,-180},
         {-90,180},
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]){
         {-57.4991, -64.557},
     }));
 
-    Feature *ringTest = new Feature(new LinearRing({
+    Feature *ringTest = new Feature(new LineString({
         {-54.529, -37.2152},
         {-66.0551, -42.5316},
         {-65.745, -6.07595},
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]){
     }));
 
     Feature *polyTest = new Feature(new Polygon(
-        LinearRing({
+        LineString({
             {-53.638, 12.1519},
             {-64.4664, 5.31646},
             {-64.1371, 30.3797},
@@ -149,12 +149,12 @@ int main(int argc, char *argv[]){
             {-52.2654, 27.3418},
         }),
         {
-            LinearRing({
+            LineString({
                 {-59.2272, 16.9158},
                 {-63.4983, 25.6086},
                 {-63.4983, 10.4157},
             }),
-            LinearRing({
+            LineString({
                 {-54.3452, 13.235},
                 {-53.7012, 22.3194},
                 {-56.994, 16.4459},
@@ -188,14 +188,14 @@ int main(int argc, char *argv[]){
 
     Feature *multiPolygonTest = new Feature(new MultiPolygon({
         Polygon(
-            LinearRing({
+            LineString({
                 {-52.5269, 80.5571},
                 {-64.6115, 80.5571},
                 {-64.392, 89.7345},
                 {-52.5269, 94.0683},
             }),
             {
-                LinearRing({
+                LineString({
                     {-54.0841, 82.8783},
                     {-63.6098, 83.4866},
                     {-63.5082, 87.6685},
@@ -205,14 +205,14 @@ int main(int argc, char *argv[]){
         ),
 
         Polygon(
-            LinearRing({
+            LineString({
                 {-52.5269, 100.5571},
                 {-64.6115, 100.5571},
                 {-64.392, 109.7345},
                 {-52.5269, 114.0683},
             }),
             {
-                LinearRing({
+                LineString({
                     {-54.0841, 102.8783},
                     {-63.6098, 103.4866},
                     {-63.5082, 107.6685},
@@ -222,14 +222,14 @@ int main(int argc, char *argv[]){
         ),
 
         Polygon(
-            LinearRing({
+            LineString({
                 {-52.5269, 120.5571},
                 {-64.6115, 120.5571},
                 {-64.392, 129.7345},
                 {-52.5269, 134.0683},
             }),
             {
-                LinearRing({
+                LineString({
                     {-54.0841, 122.8783},
                     {-63.6098, 123.4866},
                     {-63.5082, 127.6685},

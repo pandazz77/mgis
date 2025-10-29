@@ -19,7 +19,7 @@ void testMagic(){
         {"$SOMECONSTANT_1",MagicConstant("1337")}
     };
 
-    Feature feature(new Polygon(LinearRing({
+    Feature feature(new Polygon(LineString({
         {90,180},
         {-90,180},
         {-90,-180},
